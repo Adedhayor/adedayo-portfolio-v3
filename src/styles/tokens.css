@@ -1,0 +1,481 @@
+/* ============================================================ */
+/* Inkwell · Design tokens                                        */
+/* Source of truth: /design.md                                    */
+/* Three layers: primitives → semantics → atmosphere              */
+/* ============================================================ */
+
+:root {
+  /* ────────────────────────────────────────────────────────── */
+  /* 1. PRIMITIVES — raw, theme-agnostic                        */
+  /*    Never reach for these directly in components            */
+  /* ────────────────────────────────────────────────────────── */
+
+  /* 1.1 Brand · Ink & Paper */
+  --opt-color-ink:   #0F0E0E;
+  --opt-color-paper: #FBFBF9;
+
+  /* 1.2 Neutral · 12 public stops */
+  --opt-color-neutral-0:   #FFFFFF;
+  --opt-color-neutral-50:  #FAFAFA;
+  --opt-color-neutral-100: #F0F0F0;
+  --opt-color-neutral-200: #E8E8E8;
+  --opt-color-neutral-300: #C4C4C4;
+  --opt-color-neutral-400: #8F8F8F;
+  --opt-color-neutral-500: #787878;
+  --opt-color-neutral-600: #4A4A4A;
+  --opt-color-neutral-700: #3A3A3A;
+  --opt-color-neutral-800: #2E2E2E;
+  --opt-color-neutral-900: #1C1C1C;
+  --opt-color-neutral-950: #161616;
+  /* Code-only intermediates (referenced by specific semantics) */
+  --opt-color-neutral-750:  #303030;
+  --opt-color-neutral-850:  #282828;
+  --opt-color-neutral-875:  #202020;
+  --opt-color-neutral-1000: #000000;
+
+  /* 1.3 Red · destructive only · 7 stops */
+  --opt-color-red-50:  #FCE8EA;
+  --opt-color-red-100: #FBD5D8;
+  --opt-color-red-400: #E04E5C;
+  --opt-color-red-500: #D72638; /* anchor */
+  --opt-color-red-600: #B81E2E;
+  --opt-color-red-700: #951825;
+
+  /* 1.4 Brand accents · 3 stops each */
+  --opt-color-yellow-100: #FEF5C7;
+  --opt-color-yellow-500: #F4C300;
+  --opt-color-yellow-700: #B89800;
+
+  --opt-color-cyan-100: #B5F2F3;
+  --opt-color-cyan-500: #22CED1;
+  --opt-color-cyan-700: #128184;
+
+  --opt-color-blue-100: #C5DAF0;
+  --opt-color-blue-500: #2364AA;
+  --opt-color-blue-700: #14416F;
+
+  /* 1.5 Status · 3 stops each */
+  --opt-color-green-100: #D6F4E5;
+  --opt-color-green-500: #34C48B;
+  --opt-color-green-700: #1F8C5E;
+
+  --opt-color-amber-100: #FBE6C4;
+  --opt-color-amber-500: #F0A030;
+  --opt-color-amber-700: #A86D18;
+
+  --opt-color-coral-100: #FBD6D6;
+  --opt-color-coral-500: #F06060;
+  --opt-color-coral-700: #A83838;
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 2. SEMANTICS — LIGHT (theme-aware roles)                   */
+  /*    THIS is what components consume                         */
+  /* ────────────────────────────────────────────────────────── */
+
+  /* 2.1 Surfaces · 4 roles */
+  --opt-surface-base:    var(--opt-color-paper);       /* canvas */
+  --opt-surface-low:     var(--opt-color-neutral-50);  /* recessed bg, inputs */
+  --opt-surface-raised:  var(--opt-color-neutral-0);   /* cards, popovers */
+  --opt-surface-overlay: rgba(0, 0, 0, 0.40);         /* modal scrim */
+
+  /* 2.2 Borders · 3 weights */
+  --opt-border-subtle:  var(--opt-color-neutral-100);  /* 1px */
+  --opt-border-default: var(--opt-color-neutral-200);  /* 1.5px STANDARD */
+  --opt-border-focus:   var(--opt-color-ink);          /* 2px focus ring */
+  --opt-border-width-hairline: 1px;
+  --opt-border-width-default:  1.5px;
+  --opt-border-width-focus:    2px;
+
+  /* 2.3 Text · 5 voices */
+  --opt-text-heading:     var(--opt-color-neutral-1000); /* #000 — highest contrast */
+  --opt-text-primary:     #1F1F23;                       /* body 13/400 default */
+  --opt-text-secondary:   var(--opt-color-neutral-500);
+  --opt-text-placeholder: var(--opt-color-neutral-400);
+  --opt-text-link:        var(--opt-color-ink);
+
+  /* 2.4 Interactive · 6 states (Ink anchors action) */
+  --opt-interactive-active-fill:   var(--opt-color-ink);
+  --opt-interactive-hover-fill:    var(--opt-color-neutral-800);
+  --opt-interactive-pressed-fill:  var(--opt-color-neutral-900);
+  --opt-interactive-ghost-hover:   var(--opt-color-neutral-100);
+  --opt-interactive-disabled-fill: var(--opt-color-neutral-100);
+  --opt-interactive-selection:     var(--opt-color-ink);
+
+  /* 2.5 Accents · 4 status roles · bg / fill / fg */
+  --opt-accent-info-bg:    var(--opt-color-blue-100);
+  --opt-accent-info-fill:  var(--opt-color-blue-500);
+  --opt-accent-info-fg:    var(--opt-color-blue-700);
+
+  --opt-accent-success-bg:   var(--opt-color-green-100);
+  --opt-accent-success-fill: var(--opt-color-green-500);
+  --opt-accent-success-fg:   var(--opt-color-green-700);
+
+  --opt-accent-warning-bg:   var(--opt-color-amber-100);
+  --opt-accent-warning-fill: var(--opt-color-amber-500);
+  --opt-accent-warning-fg:   var(--opt-color-amber-700);
+
+  --opt-accent-danger-bg:    var(--opt-color-red-50);
+  --opt-accent-danger-fill:  var(--opt-color-red-500);
+  --opt-accent-danger-fg:    var(--opt-color-red-700);
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 3. ATMOSPHERE                                              */
+  /* ────────────────────────────────────────────────────────── */
+
+  /* 3.1 Elevation · 3 steps (md is the ceiling) */
+  --opt-elevation-xs: 0 1px 1px rgba(0, 0, 0, 0.078);
+  --opt-elevation-sm: 0 1px 2px rgba(0, 0, 0, 0.059), 0 0 0 1px rgba(0, 0, 0, 0.039);
+  --opt-elevation-md: 0 4px 8px rgba(0, 0, 0, 0.078), 0 1px 3px rgba(0, 0, 0, 0.059);
+
+  /* 3.2 Motion · 4 speeds */
+  --opt-motion-instant: 0ms;
+  --opt-motion-fast:    120ms;
+  --opt-motion-default: 200ms;
+  --opt-motion-slow:    320ms;
+
+  --opt-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --opt-easing-linear:   linear;
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 4. TYPE                                                    */
+  /* ────────────────────────────────────────────────────────── */
+
+  --opt-font-family-sans: "Switzer", system-ui, -apple-system, sans-serif;
+  /* "mono" slot repointed to Switzer — Optimus is Recoleta + Switzer ONLY.
+     Numeric/kbd contexts keep alignment via tabular-nums (see index.css). */
+  --opt-font-family-mono: "Switzer", system-ui, -apple-system, sans-serif;
+
+  /* 6 sizes · paired line-height */
+  --opt-font-size-xs:  10px; --opt-line-height-xs:  14px;
+  --opt-font-size-sm:  12px; --opt-line-height-sm:  16px;
+  --opt-font-size-md:  13px; --opt-line-height-md:  18px;  /* BODY default */
+  --opt-font-size-lg:  14px; --opt-line-height-lg:  20px;
+  --opt-font-size-xl:  16px; --opt-line-height-xl:  22px;
+  --opt-font-size-2xl: 20px; --opt-line-height-2xl: 26px;  /* cap */
+
+  /* 3 weights (no 700) */
+  --opt-font-weight-regular:  400;
+  --opt-font-weight-medium:   500;
+  --opt-font-weight-semibold: 600;
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 5. SPACING — 7 stops, capped at 32, same across 3 axes     */
+  /* ────────────────────────────────────────────────────────── */
+  --opt-space-micro: 2px;
+  --opt-space-xs:    4px;
+  --opt-space-sm:    8px;
+  --opt-space-md:    12px;
+  --opt-space-lg:    16px;
+  --opt-space-xl:    24px;
+  --opt-space-2xl:   32px; /* cap — nothing above */
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 6. RADIUS — 4 + 1 reserved                                 */
+  /* ────────────────────────────────────────────────────────── */
+  --opt-radius-sm: 0;   /* controls default */
+  --opt-radius-md: 0;   /* chips, tags */
+  --opt-radius-lg: 0;   /* panels default */
+  --opt-radius-xl: 0;   /* modals, cards */
+  --opt-radius-full: 0; /* avatars / status only — NO pills */
+
+  /* ────────────────────────────────────────────────────────── */
+  /* 7. GRADIENTS — marketing only · 135° locked                */
+  /* ────────────────────────────────────────────────────────── */
+  --opt-gradient-warm:       linear-gradient(in oklab 135deg, #D72638 0%, #F4C300 100%);
+  --opt-gradient-warm-hover: linear-gradient(in oklab 135deg, #B81E2E 0%, #D6A700 100%);
+  --opt-gradient-cool:       linear-gradient(in oklab 135deg, #22CED1 0%, #2364AA 100%);
+  --opt-gradient-cool-hover: linear-gradient(in oklab 135deg, #1AAFB2 0%, #1B528C 100%);
+}
+
+/* ────────────────────────────────────────────────────────── */
+/* DARK MODE — semantic overrides only (primitives unchanged) */
+/* ────────────────────────────────────────────────────────── */
+.dark {
+  /* Surfaces */
+  --opt-surface-base:    var(--opt-color-neutral-950);
+  --opt-surface-low:     var(--opt-color-neutral-900);
+  --opt-surface-raised:  var(--opt-color-neutral-850);
+  --opt-surface-overlay: rgba(0, 0, 0, 0.40);
+
+  /* Borders */
+  --opt-border-subtle:  var(--opt-color-neutral-800);
+  --opt-border-default: var(--opt-color-neutral-700);
+  --opt-border-focus:   var(--opt-color-neutral-100);
+
+  /* Text */
+  --opt-text-heading:     var(--opt-color-neutral-200);
+  --opt-text-primary:     var(--opt-color-neutral-300);
+  --opt-text-secondary:   var(--opt-color-neutral-400);
+  --opt-text-placeholder: var(--opt-color-neutral-500);
+  --opt-text-link:        var(--opt-color-neutral-100);
+
+  /* Interactive (inverted — white anchors action in dark) */
+  --opt-interactive-active-fill:   var(--opt-color-neutral-0);
+  --opt-interactive-hover-fill:    var(--opt-color-neutral-100);
+  --opt-interactive-pressed-fill:  var(--opt-color-neutral-300);
+  --opt-interactive-ghost-hover:   var(--opt-color-neutral-800);
+  --opt-interactive-disabled-fill: var(--opt-color-neutral-850);
+  --opt-interactive-selection:     var(--opt-color-neutral-100);
+
+  /* Accents invert the light recipe. Light = bg-100 / fill-500 / fg-700.
+     Dark  = bg-700 / fill-500 / fg-100 — the tint deepens to the 700 step and
+     the foreground flips to the 100 step so text stays legible on it. Without
+     the -bg overrides, bg keeps its light 100 value and ends up equal to the
+     dark fg (e.g. green-100 on green-100) — invisible status text. */
+  --opt-accent-info-bg:    var(--opt-color-blue-700);
+  --opt-accent-info-fg:    var(--opt-color-blue-100);
+
+  --opt-accent-success-bg: var(--opt-color-green-700);
+  --opt-accent-success-fg: var(--opt-color-green-100);
+
+  --opt-accent-warning-bg: var(--opt-color-amber-700);
+  --opt-accent-warning-fg: var(--opt-color-amber-100);
+
+  --opt-accent-danger-bg:  var(--opt-color-red-700);
+  --opt-accent-danger-fg:  var(--opt-color-red-100);
+}
+
+/* ────────────────────────────────────────────────────────── */
+/* @theme — wire primitives + semantics to Tailwind utilities */
+/* All names prefixed `opt-` so Tailwind defaults remain intact */
+/* ────────────────────────────────────────────────────────── */
+@theme inline {
+  /* Colors — primitives (Tailwind utility classes only) */
+  --color-opt-ink:    var(--opt-color-ink);
+  --color-opt-paper:  var(--opt-color-paper);
+
+  --color-opt-neutral-0:   var(--opt-color-neutral-0);
+  --color-opt-neutral-50:  var(--opt-color-neutral-50);
+  --color-opt-neutral-100: var(--opt-color-neutral-100);
+  --color-opt-neutral-200: var(--opt-color-neutral-200);
+  --color-opt-neutral-300: var(--opt-color-neutral-300);
+  --color-opt-neutral-400: var(--opt-color-neutral-400);
+  --color-opt-neutral-500: var(--opt-color-neutral-500);
+  --color-opt-neutral-600: var(--opt-color-neutral-600);
+  --color-opt-neutral-700: var(--opt-color-neutral-700);
+  --color-opt-neutral-800: var(--opt-color-neutral-800);
+  --color-opt-neutral-900: var(--opt-color-neutral-900);
+  --color-opt-neutral-950: var(--opt-color-neutral-950);
+  /* In-between dark stops (code-only on the primitive scale) — exposed as
+     utilities for floating dark panels that step between 850 and 950, e.g. the
+     Fill Picker panel at 875 with surface-raised (850) chips reading above it. */
+  --color-opt-neutral-750: var(--opt-color-neutral-750);
+  --color-opt-neutral-850: var(--opt-color-neutral-850);
+  --color-opt-neutral-875: var(--opt-color-neutral-875);
+
+  --color-opt-red-50:  var(--opt-color-red-50);
+  --color-opt-red-100: var(--opt-color-red-100);
+  --color-opt-red-400: var(--opt-color-red-400);
+  --color-opt-red-500: var(--opt-color-red-500);
+  --color-opt-red-600: var(--opt-color-red-600);
+  --color-opt-red-700: var(--opt-color-red-700);
+
+  --color-opt-yellow-100: var(--opt-color-yellow-100);
+  --color-opt-yellow-500: var(--opt-color-yellow-500);
+  --color-opt-yellow-700: var(--opt-color-yellow-700);
+
+  --color-opt-cyan-100: var(--opt-color-cyan-100);
+  --color-opt-cyan-500: var(--opt-color-cyan-500);
+  --color-opt-cyan-700: var(--opt-color-cyan-700);
+
+  --color-opt-blue-100: var(--opt-color-blue-100);
+  --color-opt-blue-500: var(--opt-color-blue-500);
+  --color-opt-blue-700: var(--opt-color-blue-700);
+
+  --color-opt-green-100: var(--opt-color-green-100);
+  --color-opt-green-500: var(--opt-color-green-500);
+  --color-opt-green-700: var(--opt-color-green-700);
+
+  --color-opt-amber-100: var(--opt-color-amber-100);
+  --color-opt-amber-500: var(--opt-color-amber-500);
+  --color-opt-amber-700: var(--opt-color-amber-700);
+
+  --color-opt-coral-100: var(--opt-color-coral-100);
+  --color-opt-coral-500: var(--opt-color-coral-500);
+  --color-opt-coral-700: var(--opt-color-coral-700);
+
+  /* Colors — semantics (theme-aware) */
+  --color-opt-surface-base:    var(--opt-surface-base);
+  --color-opt-surface-low:     var(--opt-surface-low);
+  --color-opt-surface-raised:  var(--opt-surface-raised);
+  --color-opt-surface-overlay: var(--opt-surface-overlay);
+
+  --color-opt-border-subtle:  var(--opt-border-subtle);
+  --color-opt-border-default: var(--opt-border-default);
+  --color-opt-border-focus:   var(--opt-border-focus);
+
+  --color-opt-text-heading:     var(--opt-text-heading);
+  --color-opt-text-primary:     var(--opt-text-primary);
+  --color-opt-text-secondary:   var(--opt-text-secondary);
+  --color-opt-text-placeholder: var(--opt-text-placeholder);
+  --color-opt-text-link:        var(--opt-text-link);
+
+  --color-opt-interactive-active-fill:   var(--opt-interactive-active-fill);
+  --color-opt-interactive-hover-fill:    var(--opt-interactive-hover-fill);
+  --color-opt-interactive-pressed-fill:  var(--opt-interactive-pressed-fill);
+  --color-opt-interactive-ghost-hover:   var(--opt-interactive-ghost-hover);
+  --color-opt-interactive-disabled-fill: var(--opt-interactive-disabled-fill);
+  --color-opt-interactive-selection:     var(--opt-interactive-selection);
+
+  --color-opt-accent-info-bg:    var(--opt-accent-info-bg);
+  --color-opt-accent-info-fill:  var(--opt-accent-info-fill);
+  --color-opt-accent-info-fg:    var(--opt-accent-info-fg);
+  --color-opt-accent-success-bg:   var(--opt-accent-success-bg);
+  --color-opt-accent-success-fill: var(--opt-accent-success-fill);
+  --color-opt-accent-success-fg:   var(--opt-accent-success-fg);
+  --color-opt-accent-warning-bg:   var(--opt-accent-warning-bg);
+  --color-opt-accent-warning-fill: var(--opt-accent-warning-fill);
+  --color-opt-accent-warning-fg:   var(--opt-accent-warning-fg);
+  --color-opt-accent-danger-bg:    var(--opt-accent-danger-bg);
+  --color-opt-accent-danger-fill:  var(--opt-accent-danger-fill);
+  --color-opt-accent-danger-fg:    var(--opt-accent-danger-fg);
+
+  /* Spacing */
+  --spacing-opt-micro: var(--opt-space-micro);
+  --spacing-opt-xs:    var(--opt-space-xs);
+  --spacing-opt-sm:    var(--opt-space-sm);
+  --spacing-opt-md:    var(--opt-space-md);
+  --spacing-opt-lg:    var(--opt-space-lg);
+  --spacing-opt-xl:    var(--opt-space-xl);
+  --spacing-opt-2xl:   var(--opt-space-2xl);
+
+  /* Radius */
+  --radius-opt-sm:   var(--opt-radius-sm);
+  --radius-opt-md:   var(--opt-radius-md);
+  --radius-opt-lg:   var(--opt-radius-lg);
+  --radius-opt-xl:   var(--opt-radius-xl);
+  --radius-opt-full: var(--opt-radius-full);
+
+  /* Font family */
+  --font-opt-sans: var(--opt-font-family-sans);
+  --font-opt-mono: var(--opt-font-family-mono);
+
+  /* Font size — paired with line-height */
+  --text-opt-xs:               var(--opt-font-size-xs);
+  --text-opt-xs--line-height:  var(--opt-line-height-xs);
+  --text-opt-sm:               var(--opt-font-size-sm);
+  --text-opt-sm--line-height:  var(--opt-line-height-sm);
+  --text-opt-md:               var(--opt-font-size-md);
+  --text-opt-md--line-height:  var(--opt-line-height-md);
+  --text-opt-lg:               var(--opt-font-size-lg);
+  --text-opt-lg--line-height:  var(--opt-line-height-lg);
+  --text-opt-xl:               var(--opt-font-size-xl);
+  --text-opt-xl--line-height:  var(--opt-line-height-xl);
+  --text-opt-2xl:              var(--opt-font-size-2xl);
+  --text-opt-2xl--line-height: var(--opt-line-height-2xl);
+
+  /* Font weight */
+  --font-weight-opt-regular:  var(--opt-font-weight-regular);
+  --font-weight-opt-medium:   var(--opt-font-weight-medium);
+  --font-weight-opt-semibold: var(--opt-font-weight-semibold);
+
+  /* Elevation */
+  --shadow-opt-xs: var(--opt-elevation-xs);
+  --shadow-opt-sm: var(--opt-elevation-sm);
+  --shadow-opt-md: var(--opt-elevation-md);
+
+  /* Motion — duration + easing */
+  --duration-opt-instant: var(--opt-motion-instant);
+  --duration-opt-fast:    var(--opt-motion-fast);
+  --duration-opt-default: var(--opt-motion-default);
+  --duration-opt-slow:    var(--opt-motion-slow);
+
+  --ease-opt-standard: var(--opt-easing-standard);
+  --ease-opt-linear:   var(--opt-easing-linear);
+}
+
+/* ============================================================ */
+/* OPTIMUS ADDITIONS — layered on the Inkwell-forked base.      */
+/* Editorial display scale · lime accent · glass · extended     */
+/* spacing · expo/quint motion · font aliases. (CSS merges      */
+/* these extra :root / .dark / @theme blocks with the above.)   */
+/* ============================================================ */
+:root {
+  /* Font aliases so Optimus code (--opt-font-*) resolves */
+  --opt-font-family-display: "Recoleta", Georgia, serif;
+  --opt-font-sans:    var(--opt-font-family-sans);
+  --opt-font-mono:    var(--opt-font-family-mono);
+  --opt-font-display: var(--opt-font-family-display);
+
+  /* Editorial display type scale (blocks/portfolio) */
+  --opt-font-size-body:    17px; --opt-line-height-body:    1.55;
+  --opt-font-size-lead:    20px; --opt-line-height-lead:    1.5;
+  --opt-font-size-h3:      28px; --opt-line-height-h3:      1.12;
+  --opt-font-size-h2:      44px; --opt-line-height-h2:      1.04;
+  --opt-font-size-h1:      64px; --opt-line-height-h1:      1.02;
+  --opt-font-size-display: 96px; --opt-line-height-display: 0.98;
+
+  /* Lime — the one chromatic accent */
+  --opt-color-lime-100: #eef9cf;
+  --opt-color-lime-500: #c8f169;
+  --opt-color-lime-700: #8fb43a;
+  --opt-accent-lime-bg:   var(--opt-color-lime-100);
+  --opt-accent-lime-fill: var(--opt-color-lime-500);
+  --opt-accent-lime-fg:   var(--opt-color-lime-700);
+
+  /* Glass — first-class frosted surface (light) */
+  --opt-glass-bg:     rgba(255, 255, 255, 0.55);
+  --opt-glass-border: rgba(15, 14, 14, 0.08);
+  --opt-glass-shadow: 0 1px 2px rgba(15, 14, 14, 0.06), 0 12px 40px rgba(15, 14, 14, 0.08);
+  --opt-blur-glass:   16px;
+
+  /* Extended spacing for editorial section rhythm */
+  --opt-space-3xl: 48px;
+  --opt-space-4xl: 64px;
+  --opt-space-5xl: 96px;
+  --opt-space-6xl: 128px;
+
+  /* Motion additions (Framer/GSAP share these) */
+  --opt-motion-base:   250ms;
+  --opt-motion-slower: 700ms;
+  --opt-easing-expo:  cubic-bezier(0.16, 1, 0.3, 1);
+  --opt-easing-quint: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --opt-container: 1200px;
+}
+
+.dark {
+  /* Glass — darker frost */
+  --opt-glass-bg:     rgba(18, 17, 16, 0.5);
+  --opt-glass-border: rgba(255, 255, 255, 0.1);
+  --opt-glass-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+@theme inline {
+  /* Fonts */
+  --font-opt-display: var(--opt-font-family-display);
+
+  /* Editorial type scale utilities */
+  --text-opt-body:    var(--opt-font-size-body);    --text-opt-body--line-height:    var(--opt-line-height-body);
+  --text-opt-lead:    var(--opt-font-size-lead);    --text-opt-lead--line-height:    var(--opt-line-height-lead);
+  --text-opt-h3:      var(--opt-font-size-h3);      --text-opt-h3--line-height:      var(--opt-line-height-h3);
+  --text-opt-h2:      var(--opt-font-size-h2);      --text-opt-h2--line-height:      var(--opt-line-height-h2);
+  --text-opt-h1:      var(--opt-font-size-h1);      --text-opt-h1--line-height:      var(--opt-line-height-h1);
+  --text-opt-display: var(--opt-font-size-display); --text-opt-display--line-height: var(--opt-line-height-display);
+
+  /* Lime */
+  --color-opt-lime-100: var(--opt-color-lime-100);
+  --color-opt-lime-500: var(--opt-color-lime-500);
+  --color-opt-lime-700: var(--opt-color-lime-700);
+  --color-opt-accent-lime-bg:   var(--opt-accent-lime-bg);
+  --color-opt-accent-lime-fill: var(--opt-accent-lime-fill);
+  --color-opt-accent-lime-fg:   var(--opt-accent-lime-fg);
+
+  /* Glass */
+  --color-opt-glass-bg:     var(--opt-glass-bg);
+  --color-opt-glass-border: var(--opt-glass-border);
+  --shadow-opt-glass:       var(--opt-glass-shadow);
+  --blur-opt-glass:         var(--opt-blur-glass);
+
+  /* Extended spacing */
+  --spacing-opt-3xl: var(--opt-space-3xl);
+  --spacing-opt-4xl: var(--opt-space-4xl);
+  --spacing-opt-5xl: var(--opt-space-5xl);
+  --spacing-opt-6xl: var(--opt-space-6xl);
+
+  /* Motion */
+  --duration-opt-base:   var(--opt-motion-base);
+  --duration-opt-slower: var(--opt-motion-slower);
+  --ease-opt-expo:  var(--opt-easing-expo);
+  --ease-opt-quint: var(--opt-easing-quint);
+}
