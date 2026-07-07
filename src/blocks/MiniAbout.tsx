@@ -1,22 +1,95 @@
 // ============================================================
 // MiniAbout block — landing about band (BRIEF §4.3).
-// Portrait left · essay cut + work history + stack right.
-// Reference: v2 about band (photo, "Designing experiences that
-// solve real problems.", history stack).
+// Left column: portrait + identity + a STACKED DECK of the work
+// history (most-recent role on top; older roles peek underneath
+// in decreasing widths; "See all roles" fans the full list).
+// Right column: essay cut + stack/process.
 // ============================================================
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight, ChevronDown } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { about, profile, workHistory } from '@/data'
 import { dur, easeExpo, riseIn, stagger, revealOnce } from '@/lib/motion'
 
-const VISIBLE_HISTORY = 3
+type Role = (typeof workHistory)[number]
+
+function RoleCard({ w, className = '' }: { w: Role; className?: string }) {
+  return (
+    <div className={['border border-opt-border-subtle bg-opt-surface-raised p-4', className].join(' ')}>
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-[15px] font-medium text-opt-text-heading">{w.company}</span>
+        <span className="shrink-0 text-[12px] text-opt-text-secondary">{w.period}</span>
+      </div>
+      <p className="mt-1 text-[13px] leading-[1.45] text-opt-text-secondary">{w.role}</p>
+    </div>
+  )
+}
+
+/* Stacked deck — collapsed shows the top role with two narrower cards
+   peeking beneath; expanded fans out every role. */
+function WorkHistoryStack() {
+  const [open, setOpen] = useState(false)
+  const top = workHistory[0]
+  return (
+    <div className="mt-opt-2xl">
+      <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Work history</p>
+
+      <AnimatePresence initial={false} mode="wait">
+        {!open ? (
+          <motion.div
+            key="stack"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: dur.fast, ease: easeExpo }}
+          >
+            <div className="relative">
+              {/* Peek layers — decreasing width, offset down, behind the top card */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-0 h-full w-[84%] -translate-x-1/2 translate-y-[14px] border border-opt-border-subtle bg-opt-surface-low"
+              />
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute left-1/2 top-0 h-full w-[92%] -translate-x-1/2 translate-y-[7px] border border-opt-border-subtle bg-opt-surface-raised"
+              />
+              <RoleCard w={top} className="relative z-10" />
+            </div>
+            <button
+              onClick={() => setOpen(true)}
+              className="mt-6 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
+            >
+              See all roles ({workHistory.length}) <ChevronDown size={13} />
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list"
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: dur.base, ease: easeExpo }}
+          >
+            <div className="flex flex-col gap-2.5">
+              {workHistory.map((w) => (
+                <RoleCard key={w.company} w={w} />
+              ))}
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
+            >
+              Show less <ChevronUp size={13} />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 export default function MiniAbout({ className = '' }: { className?: string }) {
-  const [showAll, setShowAll] = useState(false)
-  const rows = showAll ? workHistory : workHistory.slice(0, VISIBLE_HISTORY)
-
   return (
     <section className={['container-opt py-opt-6xl', className].join(' ')}>
       {/* Display heading */}
@@ -29,18 +102,20 @@ export default function MiniAbout({ className = '' }: { className?: string }) {
       </motion.h2>
 
       <div className="mt-opt-3xl grid grid-cols-1 gap-opt-3xl md:grid-cols-[0.85fr_1.15fr]">
-        {/* Portrait + identity */}
+        {/* Portrait + identity + work-history stack */}
         <motion.div variants={riseIn} {...revealOnce}>
           <div className="overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised">
             <img src={about.portrait} alt={`${profile.shortName} Babalola`} loading="lazy" className="aspect-square w-full object-cover" />
           </div>
           <p className="mt-4 text-[16px] font-medium text-opt-text-heading">Adedayo Babalola</p>
-          <p className="label mt-0.5">
+          <p className="mt-0.5 text-[13px] text-opt-text-secondary">
             {profile.role} · {profile.location}
           </p>
+
+          <WorkHistoryStack />
         </motion.div>
 
-        {/* Essay cut + history + stack */}
+        {/* Essay cut + stack */}
         <motion.div variants={stagger(0.08)} {...revealOnce}>
           {about.bio.map((p) => (
             <motion.p
@@ -61,39 +136,8 @@ export default function MiniAbout({ className = '' }: { className?: string }) {
             </Link>
           </motion.div>
 
-          {/* Work history */}
-          <motion.div variants={riseIn} className="mt-opt-2xl">
-            <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Work history</p>
-            <ul className="border-t border-opt-border-default">
-              {rows.map((w) => (
-                <li
-                  key={w.company}
-                  className="flex items-baseline justify-between gap-4 border-b border-opt-border-subtle py-3.5"
-                >
-                  <div className="min-w-0">
-                    <span className="text-[15px] font-medium text-opt-text-heading">{w.company}</span>
-                    <span className="ml-2 text-[13px] text-opt-text-secondary">{w.role}</span>
-                  </div>
-                  <span className="label shrink-0">{w.period}</span>
-                </li>
-              ))}
-            </ul>
-            <AnimatePresence initial={false}>
-              {!showAll && (
-                <motion.button
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: dur.fast, ease: easeExpo }}
-                  onClick={() => setShowAll(true)}
-                  className="mt-3 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
-                >
-                  Show all <ChevronDown size={13} />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </motion.div>
-
           {/* Stack & process */}
-          <motion.div variants={riseIn} className="mt-opt-2xl">
+          <motion.div variants={riseIn} className="mt-opt-3xl">
             <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Stack &amp; process</p>
             <div className="flex flex-wrap gap-2">
               {about.stack.map((tool) => (

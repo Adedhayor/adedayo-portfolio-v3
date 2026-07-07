@@ -8,6 +8,7 @@ import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import Loader from '@/components/global/Loader'
 import AsciiField from '@/components/global/AsciiField'
+import FloatingContact from '@/components/global/FloatingContact'
 import Hero from '@/blocks/Hero'
 import WorkGrid from '@/blocks/WorkGrid'
 import MiniAbout from '@/blocks/MiniAbout'
@@ -50,6 +51,9 @@ export default function Home() {
       <div className="relative z-[1]">
         <FooterWordmark />
       </div>
+
+      {/* Floating contact toolbar — rides the bottom until #contact is reached */}
+      <FloatingContact />
     </div>
   )
 }
