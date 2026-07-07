@@ -432,6 +432,9 @@
   --opt-easing-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
   --opt-container: 1200px;
+
+  /* Page frame — the two vertical strokes that bound every page */
+  --opt-frame-inset: clamp(12px, 3vw, 40px);
 }
 
 .dark {

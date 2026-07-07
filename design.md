@@ -43,10 +43,13 @@ Inkwell architecture (3-layer tokens), with its own editorial identity.
    not decoration. Use it for floating pills, nav, and overlays — the contact
    widget is the reference. Blur is theme-aware via tokens.
 
-5. **Motion has one rhythm.** Durations and easings come from tokens and are
-   shared by CSS, GSAP, and Framer Motion alike. Enter with ease-out
-   (`--opt-easing-expo`), keep micro-interactions ≤ `base` (250ms), and always
-   respect `prefers-reduced-motion` (handled globally in `index.css`).
+5. **Motion has one rhythm — and motion is the experience.** Durations and
+   easings come from tokens and are shared by CSS, GSAP, and Framer Motion
+   alike. Enter with ease-out (`--opt-easing-expo`), keep micro-interactions
+   ≤ `base` (250ms). *Amended 2026-07-07 (owner decision):* signature sequences
+   (loader, island, scatter-to-bento, ASCII field, footer shader) always play —
+   under `prefers-reduced-motion`, simplify (shorter durations, fewer layers)
+   but never strip to a static render. No motionless variants.
 
 6. **Compose from blocks.** Pages are assembled from composable **blocks**
    (Hero, Project Grid, Testimonial, Contact, Footer). Blocks are built from

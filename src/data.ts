@@ -19,6 +19,7 @@ import tabuleraCover from './assets/work/tabulera-cover.png'
 import tabulera2 from './assets/work/tabulera-2.png'
 import tabulera3 from './assets/work/tabulera-3.png'
 import tabulera4 from './assets/work/tabulera-4.png'
+import portrait from './assets/hero.png'
 
 export const profile = {
   name: 'Babalola Adedayo',
@@ -132,6 +133,30 @@ export const caseStudies: CaseStudy[] = [
   },
 ]
 
+// ============================================================
+// Hero scatter — images floating around the hero that scroll
+// into their bento-grid slots (BRIEF §4.1). Items with a slug
+// land in the matching work-grid cell; the rest are decorative
+// and drift away on scroll.
+// ============================================================
+export type ScatterItem = {
+  id: string
+  slug?: string
+  src: string
+  top: string
+  left: string
+  w: number
+  rotate: number
+}
+export const heroScatter: ScatterItem[] = [
+  { id: 'sc-lithium', slug: 'lithium-staking', src: lithiumCover, top: '13%', left: '3%', w: 300, rotate: -7 },
+  { id: 'sc-lighthouse', slug: 'lighthouse-ds', src: lighthouseCover, top: '9%', left: '73%', w: 270, rotate: 6 },
+  { id: 'sc-zilliqa', slug: 'zilliqa-migration', src: zilliqaCover, top: '63%', left: '76%', w: 250, rotate: -5 },
+  { id: 'sc-tabulera', slug: 'tabulera', src: tabuleraCover, top: '66%', left: '5%', w: 260, rotate: 8 },
+  { id: 'sc-x1', src: lithium3, top: '40%', left: '-1%', w: 170, rotate: -12 },
+  { id: 'sc-x2', src: lighthouse4, top: '42%', left: '87%', w: 170, rotate: 11 },
+]
+
 // Lighter "more work" row
 export const moreWork = [
   { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts' },
@@ -141,29 +166,61 @@ export const moreWork = [
   { title: 'PostPaddy', tag: 'Social', year: '2022', note: '2K+ active users' },
 ]
 
-export const testimonials = [
-  {
-    quote:
-      'From concept to execution, Adedayo delivered beyond what we imagined. The work didn’t just look beautiful — it drove engagement and conversions.',
-    name: 'Thibaut Houdean',
-    title: 'CTO',
-    company: 'Lithium Digital',
-  },
-  {
-    quote:
-      'Adedayo has an incredible eye for detail. His ability to translate abstract ideas into stunning visuals is unmatched.',
-    name: 'Tofunmi Adewuyi',
-    title: 'Senior Engineer',
-    company: 'Check DC',
-  },
-  {
-    quote:
-      'Working with Adedayo was seamless. Professional, creative, and he truly understands how to bring a brand’s vision to life.',
-    name: 'Caleb Uzuegbunam',
-    title: 'Design Lead',
-    company: 'Vizible',
-  },
+// ============================================================
+// Testimonials — PLACEHOLDERS (owner decision, 2026-07-07).
+// Real references are being collected from referees: Seun, Caleb,
+// Dami, Tof, Ibukun, Temidayo, Martin. Nothing here is a real
+// quote; flip `placeholder: false` and drop the words in as they
+// land. v2 candidate quotes are kept in the vault (02 — Work),
+// pending re-confirmation.
+// ============================================================
+export type Testimonial = {
+  quote: string
+  name: string
+  title: string
+  company: string
+  /** true until the referee's real reference lands */
+  placeholder: boolean
+}
+
+const PLACEHOLDER_QUOTE =
+  'Reference on its way — this space is reserved for their words, not mine.'
+
+export const testimonials: Testimonial[] = [
+  { quote: PLACEHOLDER_QUOTE, name: 'Seun', title: 'Reference pending', company: '—', placeholder: true },
+  { quote: PLACEHOLDER_QUOTE, name: 'Dami', title: 'Reference pending', company: '—', placeholder: true },
+  { quote: PLACEHOLDER_QUOTE, name: 'Temidayo', title: 'Reference pending', company: '—', placeholder: true },
 ]
+
+// ============================================================
+// Mini about — landing-page cut of the About essay (BRIEF §4.3).
+// Full essay lives in the vault (08 — Portfolio / 01 — About)
+// and ships on /about.
+// ============================================================
+export const about = {
+  heading: 'Designing experiences that solve real problems.',
+  portrait,
+  bio: [
+    'I didn’t start in design — I started in mechanical engineering. What I loved was the systems part: understand how the thing works, find where it strains, change it, then measure whether the change held. That’s still exactly how I design.',
+    'Nearly five years across blockchain, fintech, legal tech, and infrastructure — interfaces managing $5M+ in on-chain value at Lithium Digital, Vizible’s first design system, and now RepliKit at RepliHaus. Then I did the same with code: I build and ship my designs to production, so the handoff gap I used to design around, I just close.',
+  ],
+  // Stack & process — text chips for now; swap in official SVG marks
+  // when collected (BRIEF §4.3 TODO — never redraw a brand from memory).
+  stack: [
+    'Figma',
+    'Paper',
+    'Claude',
+    'Claude Code',
+    'Obsidian',
+    'Notion',
+    'Storybook',
+    'Linear',
+    'React / TypeScript',
+    'Tailwind',
+    'GSAP',
+    'Framer Motion',
+  ],
+}
 
 export const workHistory = [
   { period: '2026 — Present', company: 'RepliHaus', role: 'UX Designer — RepliKit & Inkwell DS' },

@@ -78,15 +78,9 @@
   }
   a { color: inherit; text-decoration: none; }
 
-  /* Accessibility — respect reduced motion globally (ui-ux-pro-max §7) */
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
+  /* Motion is the experience (owner decision, 2026-07-07 — see BRIEF.md §0.6).
+     No global reduced-motion kill switch: it guts the signature sequences.
+     Components simplify per-effect where it matters instead. */
 }
 
 /* ============================================================
@@ -139,10 +133,58 @@
   }
   .link-underline:hover { background-size: 100% 1px; }
 
+  @keyframes opt-osc {
+    0%, 100% { transform: translateY(-2.5px); }
+    50%      { transform: translateY(2.5px); }
+  }
+
+  /* ---- Footer wordmark — metallic effects registry ----------
+     Animated gradient sweeps clipped to the wordmark text.
+     Cycled by the footer's reset easter egg (BRIEF §3.4).
+     TODO: fork in a true WebGL shader as another registry entry. */
+  .wordmark-metal {
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: opt-metal-sweep 6.5s linear infinite;
+  }
+  .wordmark-metal--chrome {
+    background-image: linear-gradient(
+      100deg,
+      #6e6e6e 0%, #f5f5f2 22%, #8a8a8a 38%,
+      #ffffff 50%, #7c7c7c 64%, #ececea 82%, #6e6e6e 100%
+    );
+  }
+  .wordmark-metal--gold {
+    background-image: linear-gradient(
+      100deg,
+      #7a5c1e 0%, #f4e3af 24%, #b58f3e 42%,
+      #fff7dd 52%, #a37c2c 68%, #ecd28c 86%, #7a5c1e 100%
+    );
+  }
+  .wordmark-metal--holo {
+    background-image: linear-gradient(
+      100deg,
+      #9aa7ff 0%, #ffc4ec 20%, #b8ffe1 40%,
+      #fff6b8 55%, #a8d8ff 72%, #e3b8ff 88%, #9aa7ff 100%
+    );
+  }
+  @keyframes opt-metal-sweep {
+    from { background-position: 0% 50%; }
+    to   { background-position: 220% 50%; }
+  }
+
   /* "mono" is now Switzer (brand rule) — keep numbers/kbd aligned. */
   .font-opt-mono {
     font-variant-numeric: tabular-nums;
     letter-spacing: 0.01em;
+  }
+
+  /* Nav island shapes — sine oscillation, phase-shifted via delay */
+  .nav-osc {
+    animation: opt-osc 1.8s ease-in-out infinite;
+    will-change: transform;
   }
 
   /* GLASS — first-class frosted surface (both themes via tokens) */

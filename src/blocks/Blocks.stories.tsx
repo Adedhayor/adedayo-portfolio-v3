@@ -50,20 +50,6 @@ export const ContactMobile: Story = {
 }
 
 /* ---------- Content variants ---------- */
-export const HeroAlt: Story = {
-  name: 'Hero — Alt content',
-  render: () => (
-    <Hero
-      eyebrow="Design Engineer · Lagos"
-      name="Emmanuel Adedayo"
-      lead="Systems, interfaces, and the small details that make software feel trustworthy in the first ten seconds."
-      ctas={[
-        { label: 'View work', href: '#work', icon: 'scroll' },
-        { label: 'Book a call', href: '#contact', icon: 'external' },
-      ]}
-    />
-  ),
-}
 export const ServicesTight: Story = {
   name: 'Services — Three',
   render: () => (
