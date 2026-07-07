@@ -16,7 +16,7 @@ export default function ClientLogos({ label = 'Trusted by teams at', className =
   return (
     <section className={['container-opt py-opt-3xl', className].join(' ')}>
       <motion.div variants={riseIn} {...revealOnce} className="border-y border-opt-border-default py-opt-xl">
-        <p className="eyebrow mb-opt-lg text-center">{label}</p>
+        <p className="mb-opt-lg text-center text-[13px] text-opt-text-secondary">{label}</p>
         <div className="flex flex-wrap items-center justify-center gap-x-opt-3xl gap-y-opt-lg sm:gap-x-opt-4xl">
           {CLIENT_LOGOS.map(({ name, Mark }) => (
             <span

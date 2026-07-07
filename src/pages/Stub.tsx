@@ -30,8 +30,7 @@ export default function Stub({ section, title, blurb, children }: Props) {
           >
             <ArrowLeft size={13} /> Home
           </Link>
-          <p className="eyebrow mt-6">{section}</p>
-          <h1 className="mt-4 font-display text-[clamp(2.5rem,6vw,var(--opt-font-size-h1))] leading-[1.02] text-opt-text-heading">
+          <h1 className="mt-6 font-display text-[clamp(2.5rem,6vw,var(--opt-font-size-h1))] leading-[1.02] text-opt-text-heading">
             {title}
           </h1>
           <p className="mt-6 max-w-[58ch] text-[var(--opt-font-size-lead)] leading-[1.5] text-opt-text-secondary">

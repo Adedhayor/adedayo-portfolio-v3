@@ -4,6 +4,7 @@
 **Owner:** Adedayo Babalola (Emmanuel Adedayo Babalola) — Design Engineer, Lagos, Nigeria
 **Date:** 2026-07-06
 **Design system:** Optimus — see `design.md` in this repo. `design.md` is law; this brief is the build order.
+**Origin:** the rough-idea note lives in the vault at `Adedayo I/Portfolio.md` (the *what & why*). This brief is the *how & in what order*. The two are reconciled as of 2026-07-07; see §11 for the two remaining open divergences.
 
 ---
 
@@ -17,6 +18,7 @@
 6. **Motion is the experience (owner decision, 2026-07-07).** The loader, island transitions, scatter-to-bento, ASCII field, and footer shader ship in full, by default, for everyone. Do **not** build static/gutted variants — that ruins the flow. This amends `design.md` Law 5's reduced-motion clause: where the OS sets `prefers-reduced-motion`, *simplify* (shorter durations, fewer layers) but never strip a signature sequence to a static render.
 7. **Build in the app, review on the dev server.** Pages and blocks are written in VSCode and reviewed live at `npm run dev` → **localhost:5173**. Storybook (6008) remains the home for the type specimen, foundations, and atoms — it is no longer the review gate for blocks/pages.
 8. Work in phases (§10), commit per phase, keep `npm run build` green (it is green as of this brief — `tsc -b` passes).
+9. **No eyebrow labels (owner rule, 2026-07-07 — see `design.md` Law 7).** No mono/uppercase eyebrow kickers above section headings or anywhere in page content. Sections lead with the heading; functional captions are plain small sans labels. The `eyebrow` prop on DS atoms stays.
 
 ---
 
@@ -194,3 +196,12 @@ calebuzu.com · launchfolio.framer.website · tolanidaniel.me · rauno.me · zer
 | 7 | Inner pages full (work, about, writing reader, 4 case studies) | Final pass |
 
 **Open TODOs for Adedayo (not Claude Code):** host résumé PDF · confirm availability line · **collect referee references for testimonials (Seun, Caleb, Dami, Tof, Ibukun, Temidayo, Martin) — placeholders until then** · client logo SVGs · final font call after Phase 0.
+
+---
+
+## 11. Reconciliation with the rough-idea note (2026-07-07)
+
+Every item in the vault rough-idea note (`Adedayo I/Portfolio.md`) is covered above. Two points where the two docs diverged and need an owner call — the build currently follows the **first** option in each:
+
+1. **Footer clock — RESOLVED 2026-07-07: show both.** The `LocalTime` component now shows the **visitor's own local time** (for them) alongside **Lagos (WAT)** (where Adedayo is). Dual-clock, visitor time first.
+2. **Notion page not yet pulled in.** The rough idea links `app.notion.com/…/Adedayo-275b867cf9f5800eaa53eb7a9b047e42` ("read this but ignore *what the team needs*"). Content there has **not** been folded into `data.ts` or this brief — the Notion connector needs auth. Owner to paste the relevant copy, or authorize the pull, before it counts as reconciled.

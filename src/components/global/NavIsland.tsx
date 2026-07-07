@@ -3,13 +3,15 @@
 // Anatomy: B mark left · active section center · dot/square/
 // triangle oscillating right.
 // Desktop: hover/focus expands along the x-axis to reveal links.
-// Mobile: tap expands along the y-axis into a dropdown panel.
-// Fixed-position glass surface → expansion never reflows the page.
+// Mobile: tapping the oscillating dots expands a y-axis dropdown
+// (no hamburger). Fixed-position glass surface + Framer `layout`
+// with popLayout → the island hugs its content and never
+// overshoots to full width or reflows the page.
 // ============================================================
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
-import { Moon, Sun, Menu, X, ArrowUpRight } from 'lucide-react'
+import { Moon, Sun, ArrowUpRight } from 'lucide-react'
 import { dur, easeExpo } from '@/lib/motion'
 import { profile } from '@/data'
 
@@ -94,8 +96,8 @@ function useActiveSection() {
 
 export default function NavIsland() {
   const active = useActiveSection()
-  const [expanded, setExpanded] = useState(false) // desktop x-expand
-  const [open, setOpen] = useState(false) // mobile y-dropdown
+  const [expanded, setExpanded] = useState(false) // desktop x-expand (hover/focus)
+  const [open, setOpen] = useState(false) // mobile y-dropdown (dots tap)
   const rootRef = useRef<HTMLDivElement>(null)
 
   // Close the mobile panel on Escape / outside click
@@ -113,10 +115,13 @@ export default function NavIsland() {
     }
   }, [open])
 
+  const swap = { duration: dur.fast, ease: easeExpo }
+
   return (
     <div ref={rootRef} className="fixed inset-x-0 top-4 z-50 flex justify-center px-4">
       <div className="relative">
-        {/* The island */}
+        {/* The island — `layout` animates the box; popLayout pops the
+            outgoing child out of flow so width hugs content, no overshoot. */}
         <motion.nav
           layout
           aria-label="Primary"
@@ -131,62 +136,73 @@ export default function NavIsland() {
         >
           <BMark />
 
-          {/* Desktop: expanded links between logo and shapes */}
-          <AnimatePresence initial={false}>
-            {expanded && (
-              <motion.ul
-                key="links"
-                initial={{ width: 0, opacity: 0 }}
-                animate={{ width: 'auto', opacity: 1 }}
-                exit={{ width: 0, opacity: 0 }}
-                transition={{ duration: dur.slow, ease: easeExpo }}
-                className="hidden items-center gap-5 overflow-hidden whitespace-nowrap md:flex"
-              >
-                {LINKS.map((l) => (
-                  <li key={l.label}>
-                    <a
-                      href={l.href}
-                      {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                      className={[
-                        'link-underline text-[14px] transition-colors duration-[var(--opt-motion-base)]',
-                        active === l.label
-                          ? 'font-medium text-opt-text-heading'
-                          : 'text-opt-text-secondary hover:text-opt-text-heading',
-                      ].join(' ')}
-                      aria-current={active === l.label ? 'true' : undefined}
-                    >
-                      {l.label}
-                    </a>
+          {/* Desktop: crossfade between the section label and the link row.
+              popLayout keeps the swap from pushing width mid-animation. */}
+          <div className="hidden md:block">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {expanded ? (
+                <motion.ul
+                  key="links"
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={swap}
+                  className="flex items-center gap-5 whitespace-nowrap"
+                >
+                  {LINKS.map((l) => (
+                    <li key={l.label}>
+                      <a
+                        href={l.href}
+                        {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                        className={[
+                          'link-underline text-[14px] transition-colors duration-[var(--opt-motion-base)]',
+                          active === l.label
+                            ? 'font-medium text-opt-text-heading'
+                            : 'text-opt-text-secondary hover:text-opt-text-heading',
+                        ].join(' ')}
+                        aria-current={active === l.label ? 'true' : undefined}
+                      >
+                        {l.label}
+                      </a>
+                    </li>
+                  ))}
+                  <li className="flex items-center border-l border-opt-border-subtle pl-3">
+                    <ThemeToggle />
                   </li>
-                ))}
-                <li className="flex items-center border-l border-opt-border-subtle pl-3">
-                  <ThemeToggle />
-                </li>
-              </motion.ul>
-            )}
-          </AnimatePresence>
+                </motion.ul>
+              ) : (
+                <motion.span
+                  key="label"
+                  layout
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={swap}
+                  className="block min-w-[72px] text-center text-[14px] font-medium text-opt-text-heading"
+                >
+                  {active}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </div>
 
-          {/* Collapsed: current section label (desktop) */}
-          {!expanded && (
-            <span className="hidden min-w-[72px] text-center text-[14px] font-medium text-opt-text-heading md:block">
-              {active}
-            </span>
-          )}
-
-          {/* Mobile: current section + menu toggle */}
-          <span className="min-w-[64px] text-center text-[14px] font-medium text-opt-text-heading md:hidden">
+          {/* Mobile: current section label (dots below act as the toggle) */}
+          <span className="min-w-[56px] text-center text-[14px] font-medium text-opt-text-heading md:hidden">
             {active}
           </span>
+
+          {/* Oscillating shapes — decorative on desktop; on mobile they ARE
+              the menu button (replaces the old hamburger). */}
           <button
+            type="button"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="grid size-8 cursor-pointer place-items-center rounded-none text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus md:hidden"
+            className="grid shrink-0 cursor-pointer place-items-center rounded-none px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus md:cursor-default"
           >
-            {open ? <X size={16} /> : <Menu size={16} />}
+            <OscShapes />
           </button>
-
-          <OscShapes />
         </motion.nav>
 
         {/* Mobile: y-axis dropdown panel */}

@@ -11,7 +11,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Segmented, SegmentedItem } from '@/components/ui/segmented'
-import { Cta } from '@/blocks/_parts'
+import { buttonVariants } from '@/components/ui/button'
 import { caseStudies, moreWork, type CaseStudy } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
 
@@ -135,9 +135,8 @@ export default function WorkGrid({ className = '' }: { className?: string }) {
       {/* Header row */}
       <div className="mb-opt-2xl flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Selected work</p>
-          <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
-            Work
+          <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
+            Selected work
           </h2>
         </div>
         <Segmented
@@ -166,9 +165,10 @@ export default function WorkGrid({ className = '' }: { className?: string }) {
 
       {/* See all */}
       <div className="mt-opt-2xl flex justify-center">
-        <Cta as="a" href="/work" variant="ghost" icon={<ArrowRight size={16} />}>
+        <Link to="/work" className={buttonVariants({ variant: 'ghost', iconPosition: 'trailing' })}>
           See all work
-        </Cta>
+          <ArrowRight size={16} />
+        </Link>
       </div>
     </section>
   )

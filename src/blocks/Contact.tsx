@@ -6,13 +6,12 @@
 import { motion } from 'framer-motion'
 import { FormField } from '@/components/ui/form-field'
 import { Input } from '@/components/ui/input'
-import { Cta } from '@/blocks/_parts'
+import { Button } from '@/components/ui/button'
 import { ContactWidget } from '@/blocks/_parts'
 import { ArrowUpRight } from 'lucide-react'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 type Props = {
-  eyebrow?: string
   title?: string
   lead?: string
   email?: string
@@ -21,7 +20,6 @@ type Props = {
 }
 
 export default function Contact({
-  eyebrow = 'Contact',
   title = 'Let’s build something clear.',
   lead = 'Tell me about the product, the problem, or the deadline. I read every message.',
   email = 'dayo@replikit.ai',
@@ -37,8 +35,7 @@ export default function Contact({
       >
         {/* Left — intro + widget */}
         <motion.div variants={riseIn}>
-          <p className="eyebrow">{eyebrow}</p>
-          <h2 className="mt-4 font-display text-[clamp(2rem,5vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
+          <h2 className="font-display text-[clamp(2rem,5vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
             {title}
           </h2>
           <p className="mt-4 max-w-[42ch] text-[var(--opt-font-size-lead)] leading-[1.5] text-opt-text-secondary">
@@ -70,9 +67,9 @@ export default function Contact({
             <Input placeholder="A sentence on what you need" />
           </FormField>
           <div className="pt-opt-sm">
-            <Cta type="submit" variant="solid" caps icon={<ArrowUpRight size={15} />} className="w-full sm:w-auto">
+            <Button type="submit" variant="primary" trailingIcon={<ArrowUpRight size={16} />} className="w-full sm:w-auto">
               Send message
-            </Cta>
+            </Button>
           </div>
         </motion.form>
       </motion.div>

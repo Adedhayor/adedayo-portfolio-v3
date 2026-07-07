@@ -6,7 +6,7 @@
 // ============================================================
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-import { Cta } from '@/blocks/_parts'
+import { ButtonLink } from '@/components/ui/button'
 import { writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
@@ -15,14 +15,20 @@ export default function WritingStrip({ className = '' }: { className?: string })
     <section className={['container-opt py-opt-5xl', className].join(' ')}>
       <div className="mb-opt-2xl flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="eyebrow">Writing — Adedayo 𓂀</p>
-          <h2 className="mt-3 font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
+          <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
             Essays, not case studies.
           </h2>
         </div>
-        <Cta as="a" href={substackUrl} variant="ghost" size="sm" icon={<ArrowUpRight size={14} />}>
+        <ButtonLink
+          href={substackUrl}
+          target="_blank"
+          rel="noreferrer"
+          variant="ghost"
+          size="compact"
+          trailingIcon={<ArrowUpRight size={14} />}
+        >
           Subscribe on Substack
-        </Cta>
+        </ButtonLink>
       </div>
 
       <motion.div

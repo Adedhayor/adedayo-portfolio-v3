@@ -63,7 +63,7 @@ export default function MiniAbout({ className = '' }: { className?: string }) {
 
           {/* Work history */}
           <motion.div variants={riseIn} className="mt-opt-2xl">
-            <p className="eyebrow mb-3">Work history</p>
+            <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Work history</p>
             <ul className="border-t border-opt-border-default">
               {rows.map((w) => (
                 <li
@@ -94,7 +94,7 @@ export default function MiniAbout({ className = '' }: { className?: string }) {
 
           {/* Stack & process */}
           <motion.div variants={riseIn} className="mt-opt-2xl">
-            <p className="eyebrow mb-3">Stack &amp; process</p>
+            <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Stack &amp; process</p>
             <div className="flex flex-wrap gap-2">
               {about.stack.map((tool) => (
                 <span

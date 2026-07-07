@@ -55,6 +55,13 @@ Inkwell architecture (3-layer tokens), with its own editorial identity.
    (Hero, Project Grid, Testimonial, Contact, Footer). Blocks are built from
    atoms; atoms are built from tokens. Never reach past a layer.
 
+7. **No eyebrow labels.** *(owner rule, 2026-07-07)* Never place a mono/uppercase
+   eyebrow kicker above a section heading — or anywhere in page content. Sections
+   lead with the heading itself; functional captions render as plain small sans
+   labels, not the tracked-uppercase eyebrow treatment. (The `eyebrow` *prop* on DS
+   atoms — Banner, EmptyState, Select group headers — is a component-internal slot
+   and stays.)
+
 ---
 
 ## 3. Token architecture (3 layers)
@@ -101,8 +108,8 @@ foundations/demos only — **components use semantics**.
 | `sm` | 14 | Switzer | meta / small |
 | `xs` | 12 | Switzer | labels |
 
-Eyebrows: mono, uppercase, `0.14em` tracking (`.eyebrow`). Display headings
-clamp fluidly (`clamp(2.75rem, 7vw, display)`).
+Display headings clamp fluidly (`clamp(2.75rem, 7vw, display)`). The `.eyebrow`
+utility exists only for DS-atom internals — **never** on page sections (Law 7).
 
 ---
 

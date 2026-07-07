@@ -63,7 +63,9 @@ export default function TestimonialBand({ className = '' }: { className?: string
   return (
     <section className={['bg-opt-surface-low', className].join(' ')}>
       <div className="container-opt py-opt-5xl">
-        <p className="eyebrow mb-opt-2xl">What they say — references incoming</p>
+        <h2 className="mb-opt-2xl font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
+          What they say
+        </h2>
         <motion.div
           variants={stagger(0.08)}
           {...revealOnce}

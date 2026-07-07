@@ -1,5 +1,10 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import {
+  forwardRef,
+  type AnchorHTMLAttributes,
+  type ButtonHTMLAttributes,
+  type ReactNode,
+} from "react";
 import { cn } from "@/lib/cn";
 
 const buttonVariants = cva(
@@ -117,6 +122,39 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 Button.displayName = "Button";
+
+type ButtonLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> &
+  Omit<VariantProps<typeof buttonVariants>, "iconPosition"> & {
+    leadingIcon?: ReactNode;
+    trailingIcon?: ReactNode;
+  };
+
+/** Same visual system as Button, rendered as an anchor for links/CTAs. */
+export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(
+  ({ className, variant, size, leadingIcon, trailingIcon, children, ...props }, ref) => {
+    const iconPosition =
+      !children && leadingIcon
+        ? "only"
+        : leadingIcon
+          ? "leading"
+          : trailingIcon
+            ? "trailing"
+            : "none";
+
+    return (
+      <a
+        ref={ref}
+        className={cn(buttonVariants({ variant, size, iconPosition }), className)}
+        {...props}
+      >
+        {leadingIcon}
+        {children}
+        {trailingIcon}
+      </a>
+    );
+  },
+);
+ButtonLink.displayName = "ButtonLink";
 
 export { buttonVariants };
 export type { ButtonProps };

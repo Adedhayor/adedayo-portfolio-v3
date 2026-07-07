@@ -6,7 +6,7 @@
 // ============================================================
 import { motion } from 'framer-motion'
 import { CornerRightDown, ArrowUpRight } from 'lucide-react'
-import { Cta } from '@/blocks/_parts'
+import { ButtonLink } from '@/components/ui/button'
 import { profile, heroScatter } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
@@ -45,12 +45,9 @@ export default function Hero({ className = '' }: Props) {
         {...revealOnce}
         className="container-opt relative z-[1] mx-auto max-w-[840px] text-center"
       >
-        <motion.p variants={riseIn} className="eyebrow">
-          {profile.role} — {profile.location.split(',')[0]}
-        </motion.p>
         <motion.h1
           variants={riseIn}
-          className="mt-5 font-display text-[clamp(3rem,9vw,var(--opt-font-size-display))] leading-[0.95] tracking-[-0.02em] text-opt-text-heading"
+          className="font-display text-[clamp(3rem,9vw,var(--opt-font-size-display))] leading-[0.95] tracking-[-0.02em] text-opt-text-heading"
         >
           {profile.shortName} {profile.name.split(' ')[0]}
         </motion.h1>
@@ -64,12 +61,18 @@ export default function Hero({ className = '' }: Props) {
           <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
         </motion.p>
         <motion.div variants={riseIn} className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <Cta as="a" href="#work" variant="solid" caps icon={<CornerRightDown size={15} />}>
+          <ButtonLink href="#work" variant="primary" trailingIcon={<CornerRightDown size={16} />}>
             View work
-          </Cta>
-          <Cta as="a" href={profile.calendly} variant="ghost" caps icon={<ArrowUpRight size={15} />}>
+          </ButtonLink>
+          <ButtonLink
+            href={profile.calendly}
+            target="_blank"
+            rel="noreferrer"
+            variant="secondary"
+            trailingIcon={<ArrowUpRight size={16} />}
+          >
             Book a call
-          </Cta>
+          </ButtonLink>
         </motion.div>
       </motion.div>
     </section>
