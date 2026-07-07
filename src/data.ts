@@ -19,6 +19,12 @@ import tabuleraCover from './assets/work/tabulera-cover.png'
 import tabulera2 from './assets/work/tabulera-2.png'
 import tabulera3 from './assets/work/tabulera-3.png'
 import tabulera4 from './assets/work/tabulera-4.png'
+// More-work covers (from the vault gallery — 08 — Portfolio/_assets/gallery)
+import ebankCover from './assets/work/ebank-cover.png'
+import emonieCover from './assets/work/emonie-cover.png'
+import westgateCover from './assets/work/westgate-cover.png'
+import nukodesCover from './assets/work/nukodes-cover.png'
+import postpaddyCover from './assets/work/postpaddy-cover.png'
 import portrait from './assets/hero.png'
 
 export const profile = {
@@ -133,13 +139,20 @@ export const caseStudies: CaseStudy[] = [
   },
 ]
 
-// Lighter "more work" row
-export const moreWork = [
-  { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts' },
-  { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase' },
-  { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system' },
-  { title: 'Nukodes', tag: 'Bookkeeping', year: '2026', note: 'Coming soon' },
-  { title: 'PostPaddy', tag: 'Social', year: '2022', note: '2K+ active users' },
+// Lighter "more work" row — real covers from the vault gallery
+export type MoreWorkItem = {
+  title: string
+  tag: string
+  year: string
+  note: string
+  cover: string
+}
+export const moreWork: MoreWorkItem[] = [
+  { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts', cover: westgateCover },
+  { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase', cover: emonieCover },
+  { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system', cover: ebankCover },
+  { title: 'Nukodes', tag: 'Bookkeeping', year: '2026', note: 'Coming soon', cover: nukodesCover },
+  { title: 'PostPaddy', tag: 'Social', year: '2022', note: '2K+ active users', cover: postpaddyCover },
 ]
 
 // ============================================================

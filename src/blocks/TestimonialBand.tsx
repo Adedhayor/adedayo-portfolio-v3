@@ -1,21 +1,23 @@
 // ============================================================
-// TestimonialBand block — references (BRIEF §4.5).
-// PLACEHOLDER MODE: real references are being collected from
-// referees; entries render in a clearly-marked awaiting state.
-// Fully data-driven from data.ts — when a real reference lands,
-// flip `placeholder: false` and it renders as a proper quote
-// with zero component changes.
+// TestimonialBand block — references (BRIEF §4.5, feedback #11/#12).
+// Horizontal carousel with prev/next controls. PLACEHOLDER MODE:
+// real references are being collected from referees; entries render
+// in a clearly-marked awaiting state. Fully data-driven — flip
+// `placeholder: false` and a real quote renders with no changes.
+// TODO (#13): drop a shader render effect behind this band, ported
+// from the effects-studio playground.
 // ============================================================
+import { useRef } from 'react'
 import { motion } from 'framer-motion'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { testimonials, type Testimonial } from '@/data'
-import { riseIn, stagger, revealOnce } from '@/lib/motion'
+import { revealOnce, riseIn } from '@/lib/motion'
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
-    <motion.figure
-      variants={riseIn}
+    <figure
       className={[
-        'flex flex-col justify-between p-6',
+        'flex h-full flex-col justify-between p-6',
         t.placeholder
           ? 'border border-dashed border-opt-border-default bg-transparent'
           : 'border border-opt-border-subtle bg-opt-surface-raised',
@@ -55,24 +57,51 @@ function TestimonialCard({ t }: { t: Testimonial }) {
           </div>
         </div>
       </figcaption>
-    </motion.figure>
+    </figure>
   )
 }
 
+const arrowCls =
+  'grid size-10 shrink-0 cursor-pointer place-items-center rounded-none border border-opt-border-default bg-opt-surface-raised text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-focus/40 hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus'
+
 export default function TestimonialBand({ className = '' }: { className?: string }) {
+  const trackRef = useRef<HTMLDivElement>(null)
+
+  const scrollByCards = (dir: 1 | -1) => {
+    const el = trackRef.current
+    if (!el) return
+    const card = el.querySelector<HTMLElement>('[data-card]')
+    const amount = card ? card.offsetWidth + 20 : el.clientWidth * 0.85
+    el.scrollBy({ left: dir * amount, behavior: 'smooth' })
+  }
+
   return (
     <section className={['bg-opt-surface-low', className].join(' ')}>
       <div className="container-opt py-opt-5xl">
-        <h2 className="mb-opt-2xl font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
-          What they say
-        </h2>
+        <div className="mb-opt-2xl flex items-end justify-between gap-4">
+          <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
+            What they say
+          </h2>
+          <div className="flex items-center gap-2">
+            <button type="button" aria-label="Previous reference" onClick={() => scrollByCards(-1)} className={arrowCls}>
+              <ChevronLeft size={16} />
+            </button>
+            <button type="button" aria-label="Next reference" onClick={() => scrollByCards(1)} className={arrowCls}>
+              <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+
         <motion.div
-          variants={stagger(0.08)}
+          variants={riseIn}
           {...revealOnce}
-          className="grid grid-cols-1 gap-5 md:grid-cols-3"
+          ref={trackRef}
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
           {testimonials.map((t) => (
-            <TestimonialCard key={t.name} t={t} />
+            <div key={t.name} data-card className="w-[86%] shrink-0 snap-start sm:w-[420px]">
+              <TestimonialCard t={t} />
+            </div>
           ))}
         </motion.div>
       </div>

@@ -89,18 +89,28 @@ function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
   return (
     <motion.div
       {...cardMotion}
-      className="group flex min-h-[150px] flex-col justify-between border border-opt-border-subtle bg-opt-surface-raised p-5 md:col-span-2"
+      className="group flex flex-col overflow-hidden border border-opt-border-subtle bg-opt-surface-raised md:col-span-2"
     >
-      <div className="flex items-start justify-between gap-2">
-        <h3 className="text-[16px] font-medium text-opt-text-heading">{item.title}</h3>
-        <span className="shrink-0 text-[13px] font-medium text-opt-text-secondary">{item.year}</span>
+      <div className="relative aspect-[16/10] overflow-hidden bg-opt-surface-low">
+        <img
+          src={item.cover}
+          alt={item.title}
+          loading="lazy"
+          className="size-full object-cover object-top transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.03]"
+        />
       </div>
-      <div>
-        <p className="text-[14px] leading-[1.5] text-opt-text-secondary">{item.note}</p>
-        <div className="mt-2.5">
-          <Tag variant="outline" size="sm">
-            {item.tag}
-          </Tag>
+      <div className="flex flex-1 flex-col justify-between gap-3 p-5">
+        <div className="flex items-start justify-between gap-2">
+          <h3 className="text-[16px] font-medium text-opt-text-heading">{item.title}</h3>
+          <span className="shrink-0 text-[13px] font-medium text-opt-text-secondary">{item.year}</span>
+        </div>
+        <div>
+          <p className="text-[14px] leading-[1.5] text-opt-text-secondary">{item.note}</p>
+          <div className="mt-2.5">
+            <Tag variant="outline" size="sm">
+              {item.tag}
+            </Tag>
+          </div>
         </div>
       </div>
     </motion.div>

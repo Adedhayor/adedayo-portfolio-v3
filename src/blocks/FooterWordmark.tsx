@@ -29,6 +29,7 @@ const FOOTER_LINKS = [
   { label: 'GitHub', href: 'https://github.com/Adedhayor' },
   { label: 'X', href: profile.twitter },
   { label: 'Instagram', href: profile.instagram },
+  { label: 'Photography', href: profile.instagramPhotography },
   { label: 'Substack', href: profile.substack },
 ]
 
