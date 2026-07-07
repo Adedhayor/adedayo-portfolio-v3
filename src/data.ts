@@ -37,6 +37,7 @@ export const profile = {
   timezone: 'WAT',
   email: 'dayo@replikit.ai',
   calendly: 'https://calendly.com/adedayobabalola/30min',
+  whatsapp: '', // TODO: WhatsApp number, intl format digits only (e.g. '2348012345678') — link hides until set
   linkedin: 'https://www.linkedin.com/in/emmanuel-adedayo-babalola/',
   instagram: 'https://instagram.com/__dedayo',
   instagramPhotography: 'https://www.instagram.com/optimus.randoms/',

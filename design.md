@@ -134,6 +134,21 @@ utility exists only for DS-atom internals — **never** on page sections (Law 7)
 
 ---
 
+## 6b. Icons (Inkwell §9 convention)
+
+Lucide (`lucide-react`) is the only icon pack — same as Inkwell. Match Inkwell's
+weights so glyphs read consistently:
+
+| Context | Size | Stroke |
+|---|---|---|
+| Button icon (leading/trailing/icon-only) | `14` | `2.5` (heavier, more present) |
+| Inline icon in running text | `14` | `2` |
+| Standalone control glyph (toolbar) | `20` | `2` |
+
+Icons inherit `currentColor` — never hardcode hex. Decorative icons (button has a
+visible label) get `aria-hidden`; icon-only controls get `aria-label`. No emoji as
+control glyphs, no one-off inline SVGs.
+
 ## 7. Accessibility (from ui-ux-pro-max)
 
 - Text contrast ≥ 4.5:1 (primary) / ≥ 3:1 (secondary) — **verified in both themes**.

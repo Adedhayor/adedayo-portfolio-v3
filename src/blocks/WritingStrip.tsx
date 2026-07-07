@@ -95,7 +95,7 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
           rel="noreferrer"
           variant="ghost"
           size="compact"
-          trailingIcon={<ArrowUpRight size={14} />}
+          trailingIcon={<ArrowUpRight size={14} strokeWidth={2.5} />}
         >
           Subscribe on Substack
         </ButtonLink>

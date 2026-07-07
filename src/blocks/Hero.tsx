@@ -9,7 +9,7 @@
 // ============================================================
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import { CornerRightDown, ArrowUpRight } from 'lucide-react'
+import { ArrowDownRight, ArrowUpRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button'
 import { profile, caseStudies } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
@@ -65,7 +65,7 @@ export default function Hero({ className = '' }: Props) {
             <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
           </motion.p>
           <motion.div variants={riseIn} className="mt-10 flex flex-wrap items-center gap-3">
-            <ButtonLink href="#work" variant="primary" trailingIcon={<CornerRightDown size={16} />}>
+            <ButtonLink href="#work" variant="primary" trailingIcon={<ArrowDownRight size={14} strokeWidth={2.5} />}>
               View work
             </ButtonLink>
             <ButtonLink
@@ -73,7 +73,7 @@ export default function Hero({ className = '' }: Props) {
               target="_blank"
               rel="noreferrer"
               variant="secondary"
-              trailingIcon={<ArrowUpRight size={16} />}
+              trailingIcon={<ArrowUpRight size={14} strokeWidth={2.5} />}
             >
               Book a call
             </ButtonLink>
@@ -96,14 +96,13 @@ export default function Hero({ className = '' }: Props) {
                 animate={{ opacity: 1, y: 0, rotate: c.rotate }}
                 transition={{ delay: 0.15 + i * 0.09, duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                 style={{ top: c.top, left: c.left, width: c.w, zIndex: c.z }}
-                className="absolute aspect-[4/3] overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised shadow-opt-md"
+                className="absolute aspect-[4/3] overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-low shadow-opt-md"
               >
                 <img
                   src={cs.cover}
                   alt=""
                   loading="eager"
-                  style={{ objectPosition: cs.coverPos }}
-                  className="size-full object-cover"
+                  className="size-full object-contain p-2"
                 />
               </motion.div>
             )
