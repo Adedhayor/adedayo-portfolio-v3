@@ -133,30 +133,6 @@ export const caseStudies: CaseStudy[] = [
   },
 ]
 
-// ============================================================
-// Hero scatter — images floating around the hero that scroll
-// into their bento-grid slots (BRIEF §4.1). Items with a slug
-// land in the matching work-grid cell; the rest are decorative
-// and drift away on scroll.
-// ============================================================
-export type ScatterItem = {
-  id: string
-  slug?: string
-  src: string
-  top: string
-  left: string
-  w: number
-  rotate: number
-}
-export const heroScatter: ScatterItem[] = [
-  { id: 'sc-lithium', slug: 'lithium-staking', src: lithiumCover, top: '13%', left: '3%', w: 300, rotate: -7 },
-  { id: 'sc-lighthouse', slug: 'lighthouse-ds', src: lighthouseCover, top: '9%', left: '73%', w: 270, rotate: 6 },
-  { id: 'sc-zilliqa', slug: 'zilliqa-migration', src: zilliqaCover, top: '63%', left: '76%', w: 250, rotate: -5 },
-  { id: 'sc-tabulera', slug: 'tabulera', src: tabuleraCover, top: '66%', left: '5%', w: 260, rotate: 8 },
-  { id: 'sc-x1', src: lithium3, top: '40%', left: '-1%', w: 170, rotate: -12 },
-  { id: 'sc-x2', src: lighthouse4, top: '42%', left: '87%', w: 170, rotate: 11 },
-]
-
 // Lighter "more work" row
 export const moreWork = [
   { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts' },

@@ -1,16 +1,16 @@
 // ============================================================
 // WorkGrid block — the bento work section (BRIEF §4.2).
 // Tabs: All · Case studies · Live projects · Playground.
-// Case-study cells carry data-bento-target/-cover so the hero
-// scatter images can land in them (lib/scatter.ts).
 // Sharp edges, hairline dividers, filter transitions never
-// bounce the page.
+// bounce the page. Card copy stays legible; tags use the
+// Optimus Tag atom.
 // ============================================================
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Segmented, SegmentedItem } from '@/components/ui/segmented'
+import { Tag } from '@/components/ui/tag'
 import { buttonVariants } from '@/components/ui/button'
 import { caseStudies, moreWork, type CaseStudy } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
@@ -45,12 +45,8 @@ function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
   return (
     <motion.div {...cardMotion} className={['group relative', span].join(' ')}>
       <Link to={`/case-study/${cs.slug}`} className="flex h-full flex-col">
-        <div
-          data-bento-target={cs.slug}
-          className="relative min-h-[220px] flex-1 overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised"
-        >
+        <div className="relative min-h-[220px] flex-1 overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised">
           <img
-            data-bento-cover={cs.slug}
             src={cs.cover}
             alt={cs.title}
             loading="lazy"
@@ -61,20 +57,27 @@ function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
             {cs.index}
           </span>
         </div>
-        <div className="flex items-start justify-between gap-3 pt-4">
-          <div className="min-w-0">
-            <h3 className="text-[16px] font-medium leading-snug text-opt-text-heading">{cs.title}</h3>
-            <p className="label mt-1">
-              {cs.tag} · {cs.client} · {cs.year}
-            </p>
+        <div className="pt-4">
+          <div className="flex items-start justify-between gap-3">
+            <h3 className="text-[18px] font-medium leading-snug text-opt-text-heading">{cs.title}</h3>
+            <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 text-[13px] font-semibold text-opt-text-secondary transition-colors group-hover:text-opt-text-heading">
+              {cs.metric}
+              <ArrowUpRight
+                size={14}
+                className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+              />
+            </span>
           </div>
-          <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 text-[12px] font-semibold text-opt-text-secondary transition-colors group-hover:text-opt-text-heading">
-            {cs.metric}
-            <ArrowUpRight
-              size={13}
-              className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-            />
-          </span>
+          <p className="mt-1.5 text-[14px] text-opt-text-secondary">
+            {cs.client} · {cs.year}
+          </p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {cs.tag.split('·').map((t) => (
+              <Tag key={t} variant="outline" size="sm">
+                {t.trim()}
+              </Tag>
+            ))}
+          </div>
         </div>
       </Link>
     </motion.div>
@@ -86,15 +89,19 @@ function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
   return (
     <motion.div
       {...cardMotion}
-      className="group flex min-h-[140px] flex-col justify-between border border-opt-border-subtle bg-opt-surface-raised p-5 md:col-span-2"
+      className="group flex min-h-[150px] flex-col justify-between border border-opt-border-subtle bg-opt-surface-raised p-5 md:col-span-2"
     >
       <div className="flex items-start justify-between gap-2">
-        <h3 className="text-[15px] font-medium text-opt-text-heading">{item.title}</h3>
-        <span className="label shrink-0">{item.year}</span>
+        <h3 className="text-[16px] font-medium text-opt-text-heading">{item.title}</h3>
+        <span className="shrink-0 text-[13px] font-medium text-opt-text-secondary">{item.year}</span>
       </div>
       <div>
-        <p className="text-[13px] text-opt-text-secondary">{item.note}</p>
-        <p className="label mt-1.5">{item.tag}</p>
+        <p className="text-[14px] leading-[1.5] text-opt-text-secondary">{item.note}</p>
+        <div className="mt-2.5">
+          <Tag variant="outline" size="sm">
+            {item.tag}
+          </Tag>
+        </div>
       </div>
     </motion.div>
   )

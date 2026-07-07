@@ -1,6 +1,6 @@
 // ============================================================
 // Home — the composed landing page (BRIEF §4).
-// Order: Loader → Hero (scatter) → Work bento → MiniAbout →
+// Order: Loader → Hero (cover cluster) → Work bento → MiniAbout →
 // Clients → Testimonials (placeholders) → Writing → Contact →
 // Footer. Global chrome: AsciiField + PageFrame + NavIsland.
 // ============================================================
@@ -16,11 +16,8 @@ import TestimonialBand from '@/blocks/TestimonialBand'
 import WritingStrip from '@/blocks/WritingStrip'
 import Contact from '@/blocks/Contact'
 import FooterWordmark from '@/blocks/FooterWordmark'
-import { useScatterToBento } from '@/lib/scatter'
 
 export default function Home() {
-  // Scatter-to-bento choreography — spans the hero and work grid
-  const scatterScope = useScatterToBento<HTMLElement>()
   return (
     <div id="top" className="min-h-screen">
       {/* Opening sequence — plays once per session, skippable */}
@@ -31,7 +28,7 @@ export default function Home() {
 
       <PageFrame />
       <NavIsland />
-      <main ref={scatterScope} className="relative z-[1]">
+      <main className="relative z-[1]">
         <section data-section="Home">
           <Hero />
         </section>
