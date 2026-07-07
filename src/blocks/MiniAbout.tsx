@@ -10,9 +10,33 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, ChevronDown, ChevronUp } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { about, profile, workHistory } from '@/data'
+import { TOOL_LOGOS, type ToolLogo } from '@/lib/toolLogos'
 import { dur, easeExpo, riseIn, stagger, revealOnce } from '@/lib/motion'
 
 type Role = (typeof workHistory)[number]
+
+/* Stack chip — real logo (accent-on-hover) or text-only for Paper */
+function ToolChip({ tool }: { tool: ToolLogo }) {
+  return (
+    <span
+      style={tool.hex ? ({ '--brand': tool.hex } as React.CSSProperties) : undefined}
+      className="group inline-flex items-center gap-2 border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
+    >
+      {tool.path && (
+        <svg
+          viewBox="0 0 24 24"
+          width="15"
+          height="15"
+          aria-hidden="true"
+          className="shrink-0 fill-current transition-colors duration-[var(--opt-motion-base)] group-hover:[fill:var(--brand)]"
+        >
+          <path d={tool.path} />
+        </svg>
+      )}
+      {tool.name}
+    </span>
+  )
+}
 
 function RoleCard({ w, className = '' }: { w: Role; className?: string }) {
   return (
@@ -89,7 +113,14 @@ function WorkHistoryStack() {
   )
 }
 
-export default function MiniAbout({ className = '' }: { className?: string }) {
+export default function MiniAbout({
+  className = '',
+  stackVariant = 'logos',
+}: {
+  className?: string
+  /** 'logos' = real brand marks (default); 'text' = the original text chips */
+  stackVariant?: 'logos' | 'text'
+}) {
   return (
     <section className={['container-opt py-opt-6xl', className].join(' ')}>
       {/* Display heading */}
@@ -140,14 +171,16 @@ export default function MiniAbout({ className = '' }: { className?: string }) {
           <motion.div variants={riseIn} className="mt-opt-3xl">
             <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Stack &amp; process</p>
             <div className="flex flex-wrap gap-2">
-              {about.stack.map((tool) => (
-                <span
-                  key={tool}
-                  className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
-                >
-                  {tool}
-                </span>
-              ))}
+              {stackVariant === 'text'
+                ? about.stack.map((tool) => (
+                    <span
+                      key={tool}
+                      className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
+                    >
+                      {tool}
+                    </span>
+                  ))
+                : TOOL_LOGOS.map((tool) => <ToolChip key={tool.name} tool={tool} />)}
             </div>
           </motion.div>
         </motion.div>
