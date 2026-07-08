@@ -7,14 +7,20 @@
 // TODO (#13): drop a shader render effect behind this band, ported
 // from the effects-studio playground.
 // ============================================================
-import { lazy, Suspense, useRef } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { useTheme } from 'next-themes'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { testimonials, type Testimonial } from '@/data'
 import { revealOnce, riseIn } from '@/lib/motion'
 
 // Lazy so the WebGL shader code-splits out of the initial bundle.
 const ShaderBackdrop = lazy(() => import('@/components/global/ShaderBackdrop'))
+
+// Light pastels read on the light surface; dark mode needs richer, darker
+// tones at higher opacity or the wash vanishes against the near-black bg.
+const SHADER_LIGHT = ['#F4F4F1', '#E7ECFF', '#DFF3C9', '#F0EAFF']
+const SHADER_DARK = ['#141420', '#33265E', '#1E4634', '#213152']
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
@@ -69,6 +75,10 @@ const arrowCls =
 
 export default function TestimonialBand({ className = '' }: { className?: string }) {
   const trackRef = useRef<HTMLDivElement>(null)
+  const { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => setMounted(true), [])
+  const dark = resolvedTheme === 'dark'
 
   const scrollByCards = (dir: 1 | -1) => {
     const el = trackRef.current
@@ -80,16 +90,19 @@ export default function TestimonialBand({ className = '' }: { className?: string
 
   return (
     <section className={['relative overflow-hidden bg-opt-surface-low', className].join(' ')}>
-      {/* Subtle Paper shader wash behind the band */}
-      <Suspense fallback={null}>
-        <ShaderBackdrop
-          colors={['#F4F4F1', '#E7ECFF', '#DFF3C9', '#F0EAFF']}
-          speed={0.25}
-          distortion={0.7}
-          swirl={0.4}
-          opacity={0.28}
-        />
-      </Suspense>
+      {/* Subtle Paper shader wash behind the band — theme-aware so it reads in
+          both light and dark (mounted-gated to avoid a wrong-theme flash). */}
+      {mounted && (
+        <Suspense fallback={null}>
+          <ShaderBackdrop
+            colors={dark ? SHADER_DARK : SHADER_LIGHT}
+            speed={0.25}
+            distortion={0.7}
+            swirl={0.4}
+            opacity={dark ? 0.6 : 0.28}
+          />
+        </Suspense>
+      )}
       <div className="relative z-[1] container-opt py-opt-5xl">
         <div className="mb-opt-2xl flex items-end justify-between gap-4">
           <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">

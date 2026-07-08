@@ -11,6 +11,7 @@
 // ============================================================
 import { lazy, Suspense, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
+import { useTheme } from 'next-themes'
 import gsap from 'gsap'
 import bLogo from '@/assets/b-logo.png'
 
@@ -28,6 +29,8 @@ export function loaderWillPlay() {
 }
 
 export default function Loader({ onDone }: { onDone?: () => void }) {
+  const { resolvedTheme } = useTheme()
+  const dark = resolvedTheme === 'dark'
   const [show, setShow] = useState(loaderWillPlay)
   const rootRef = useRef<HTMLDivElement>(null)
   const tlRef = useRef<gsap.core.Timeline | null>(null)
@@ -104,11 +107,11 @@ export default function Loader({ onDone }: { onDone?: () => void }) {
       {/* Paper mesh-gradient backdrop under the lockup (BRIEF §3.1) */}
       <Suspense fallback={null}>
         <ShaderBackdrop
-          colors={['#FBFBF9', '#E7ECFF', '#C8F169', '#DCE3FF']}
+          colors={dark ? ['#141420', '#2A2450', '#33552B', '#213152'] : ['#FBFBF9', '#E7ECFF', '#C8F169', '#DCE3FF']}
           speed={0.5}
           distortion={0.9}
           swirl={0.6}
-          opacity={0.7}
+          opacity={dark ? 0.85 : 0.7}
         />
       </Suspense>
 
