@@ -7,11 +7,14 @@
 // TODO (#13): drop a shader render effect behind this band, ported
 // from the effects-studio playground.
 // ============================================================
-import { useRef } from 'react'
+import { lazy, Suspense, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { testimonials, type Testimonial } from '@/data'
 import { revealOnce, riseIn } from '@/lib/motion'
+
+// Lazy so the WebGL shader code-splits out of the initial bundle.
+const ShaderBackdrop = lazy(() => import('@/components/global/ShaderBackdrop'))
 
 function TestimonialCard({ t }: { t: Testimonial }) {
   return (
@@ -76,8 +79,18 @@ export default function TestimonialBand({ className = '' }: { className?: string
   }
 
   return (
-    <section className={['bg-opt-surface-low', className].join(' ')}>
-      <div className="container-opt py-opt-5xl">
+    <section className={['relative overflow-hidden bg-opt-surface-low', className].join(' ')}>
+      {/* Subtle Paper shader wash behind the band */}
+      <Suspense fallback={null}>
+        <ShaderBackdrop
+          colors={['#F4F4F1', '#E7ECFF', '#DFF3C9', '#F0EAFF']}
+          speed={0.25}
+          distortion={0.7}
+          swirl={0.4}
+          opacity={0.28}
+        />
+      </Suspense>
+      <div className="relative z-[1] container-opt py-opt-5xl">
         <div className="mb-opt-2xl flex items-end justify-between gap-4">
           <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
             What they say

@@ -9,11 +9,13 @@
 // total ≤ 2.0s. Always plays (BRIEF §0.6 — motion is the
 // experience).
 // ============================================================
-import { useRef, useState } from 'react'
+import { lazy, Suspense, useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
-import AsciiField from '@/components/global/AsciiField'
 import bLogo from '@/assets/b-logo.png'
+
+// Lazy so the WebGL shader code-splits out of the initial bundle.
+const ShaderBackdrop = lazy(() => import('@/components/global/ShaderBackdrop'))
 
 const SESSION_KEY = 'opt-loader-seen'
 
@@ -99,8 +101,16 @@ export default function Loader({ onDone }: { onDone?: () => void }) {
       aria-hidden="true"
       className="fixed inset-0 z-[60] overflow-hidden bg-opt-surface-base"
     >
-      {/* Ambient field under the lockup — the "shader bg" layer */}
-      <AsciiField ambient />
+      {/* Paper mesh-gradient backdrop under the lockup (BRIEF §3.1) */}
+      <Suspense fallback={null}>
+        <ShaderBackdrop
+          colors={['#FBFBF9', '#E7ECFF', '#C8F169', '#DCE3FF']}
+          speed={0.5}
+          distortion={0.9}
+          swirl={0.6}
+          opacity={0.7}
+        />
+      </Suspense>
 
       {/* The lockup */}
       <div data-loader-lockup className="relative z-10 flex h-full items-center justify-center">
