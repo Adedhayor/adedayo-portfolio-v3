@@ -13,6 +13,7 @@ import { useRef, useState } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import AsciiField from '@/components/global/AsciiField'
+import bLogo from '@/assets/b-logo.png'
 
 const SESSION_KEY = 'opt-loader-seen'
 
@@ -110,12 +111,12 @@ export default function Loader({ onDone }: { onDone?: () => void }) {
           >
             Adedayo
           </span>
-          <span
+          <img
             data-loader-b
-            className="grid size-[clamp(3rem,8vw,4.5rem)] place-items-center rounded-none bg-opt-interactive-active-fill font-display text-[clamp(1.5rem,4.5vw,2.25rem)] leading-none text-opt-surface-base opacity-0"
-          >
-            B
-          </span>
+            src={bLogo}
+            alt=""
+            className="size-[clamp(3rem,8vw,4.5rem)] rounded-none opacity-0"
+          />
         </div>
       </div>
     </div>

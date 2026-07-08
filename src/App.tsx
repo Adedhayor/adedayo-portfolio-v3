@@ -1,12 +1,34 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useEffect } from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { Agentation } from 'agentation'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import Stub from '@/pages/Stub'
+import NotFound from '@/pages/NotFound'
+
+/* Makes /#section links scroll to their target after navigation, and
+   resets to the top on plain route changes (react-router doesn't do
+   hash scrolling itself). */
+function ScrollToHash() {
+  const { pathname, hash } = useLocation()
+  useEffect(() => {
+    if (hash) {
+      const id = decodeURIComponent(hash.slice(1))
+      // Wait a frame so the target route has rendered.
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      })
+      return
+    }
+    window.scrollTo({ top: 0 })
+  }, [pathname, hash])
+  return null
+}
 
 export default function App() {
   return (
     <>
+      <ScrollToHash />
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />
@@ -44,7 +66,7 @@ export default function App() {
           }
         />
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       {/* Visual feedback toolbar — dev only */}

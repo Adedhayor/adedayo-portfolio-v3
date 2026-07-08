@@ -10,32 +10,34 @@
 // ============================================================
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { useTheme } from 'next-themes'
 import { Moon, Sun, ArrowUpRight } from 'lucide-react'
 import { dur, easeExpo } from '@/lib/motion'
 import { profile } from '@/data'
+import bLogo from '@/assets/b-logo.png'
 
 type NavLink = { label: string; href: string; external?: boolean }
 
+// Internal links are /#section so they route + scroll from any page
+// (App's ScrollToHash handles the scroll). External links open in a tab.
 const LINKS: NavLink[] = [
-  { label: 'Home', href: '#top' },
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
-  { label: 'Writing', href: '#writing' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Home', href: '/#top' },
+  { label: 'Work', href: '/#work' },
+  { label: 'About', href: '/#about' },
+  { label: 'Writing', href: '/#writing' },
+  { label: 'Contact', href: '/#contact' },
   { label: 'Résumé', href: profile.resumeUrl, external: true },
 ]
+// Drop dead external links (e.g. résumé before the PDF is hosted).
+const NAV_LINKS = LINKS.filter((l) => !(l.external && (!l.href || l.href === '#')))
 
 /* ---------- The B mark — square ink tile ---------- */
 function BMark() {
   return (
-    <a
-      href="#top"
-      aria-label="Adedayo Babalola — home"
-      className="grid size-9 shrink-0 place-items-center rounded-none bg-opt-interactive-active-fill font-display text-[17px] leading-none text-opt-surface-base"
-    >
-      B
-    </a>
+    <Link to="/#top" aria-label="Adedayo Babalola — home" className="shrink-0">
+      <img src={bLogo} alt="" className="size-9 rounded-none" />
+    </Link>
   )
 }
 
@@ -150,23 +152,27 @@ export default function NavIsland() {
                   transition={swap}
                   className="flex items-center gap-5 whitespace-nowrap"
                 >
-                  {LINKS.map((l) => (
-                    <li key={l.label}>
-                      <a
-                        href={l.href}
-                        {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                        className={[
-                          'link-underline text-[14px] transition-colors duration-[var(--opt-motion-base)]',
-                          active === l.label
-                            ? 'font-medium text-opt-text-heading'
-                            : 'text-opt-text-secondary hover:text-opt-text-heading',
-                        ].join(' ')}
-                        aria-current={active === l.label ? 'true' : undefined}
-                      >
-                        {l.label}
-                      </a>
-                    </li>
-                  ))}
+                  {NAV_LINKS.map((l) => {
+                    const cls = [
+                      'link-underline text-[14px] transition-colors duration-[var(--opt-motion-base)]',
+                      active === l.label
+                        ? 'font-medium text-opt-text-heading'
+                        : 'text-opt-text-secondary hover:text-opt-text-heading',
+                    ].join(' ')
+                    return (
+                      <li key={l.label}>
+                        {l.external ? (
+                          <a href={l.href} target="_blank" rel="noreferrer" className={cls}>
+                            {l.label}
+                          </a>
+                        ) : (
+                          <Link to={l.href} className={cls} aria-current={active === l.label ? 'true' : undefined}>
+                            {l.label}
+                          </Link>
+                        )}
+                      </li>
+                    )
+                  })}
                   <li className="flex items-center border-l border-opt-border-subtle pl-3">
                     <ThemeToggle />
                   </li>
@@ -217,17 +223,28 @@ export default function NavIsland() {
               className="glass absolute inset-x-0 top-[calc(100%+8px)] overflow-hidden rounded-none md:hidden"
             >
               <ul className="flex flex-col px-5 py-3">
-                {LINKS.map((l) => (
+                {NAV_LINKS.map((l) => (
                   <li key={l.label} className="border-b border-opt-border-subtle last:border-b-0">
-                    <a
-                      href={l.href}
-                      {...(l.external ? { target: '_blank', rel: 'noreferrer' } : {})}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-between py-3 text-[16px] text-opt-text-heading"
-                    >
-                      {l.label}
-                      {l.external && <ArrowUpRight size={14} className="text-opt-text-secondary" />}
-                    </a>
+                    {l.external ? (
+                      <a
+                        href={l.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-between py-3 text-[16px] text-opt-text-heading"
+                      >
+                        {l.label}
+                        <ArrowUpRight size={14} className="text-opt-text-secondary" />
+                      </a>
+                    ) : (
+                      <Link
+                        to={l.href}
+                        onClick={() => setOpen(false)}
+                        className="flex items-center justify-between py-3 text-[16px] text-opt-text-heading"
+                      >
+                        {l.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
                 <li className="flex items-center justify-between py-3">
