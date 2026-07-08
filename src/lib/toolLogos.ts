@@ -5,16 +5,11 @@
 // ============================================================
 import {
   siFigma,
-  siClaude,
   siClaudecode,
   siObsidian,
   siNotion,
   siStorybook,
   siLinear,
-  siReact,
-  siTypescript,
-  siTailwindcss,
-  siGreensock,
   siFramer,
 } from 'simple-icons'
 
@@ -26,18 +21,14 @@ const mark = (name: string, icon: { path: string; hex: string }): ToolLogo => ({
   hex: `#${icon.hex}`,
 })
 
+// Design/PM tools only. Paper has no Simple Icon (see app.paper.design) → text chip.
 export const TOOL_LOGOS: ToolLogo[] = [
   mark('Figma', siFigma),
-  { name: 'Paper', path: null }, // no Simple Icon — text chip
-  mark('Claude', siClaude),
+  { name: 'Paper', path: null },
   mark('Claude Code', siClaudecode),
   mark('Obsidian', siObsidian),
   mark('Notion', siNotion),
   mark('Storybook', siStorybook),
   mark('Linear', siLinear),
-  mark('React', siReact),
-  mark('TypeScript', siTypescript),
-  mark('Tailwind', siTailwindcss),
-  mark('GSAP', siGreensock),
-  mark('Framer Motion', siFramer),
+  mark('Framer', siFramer),
 ]

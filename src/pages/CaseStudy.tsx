@@ -38,7 +38,7 @@ export default function CaseStudy() {
               </Link>
             </motion.div>
             <motion.p variants={riseIn} className="mt-6 text-[13px] text-opt-text-secondary">
-              {cs.index} · {cs.tag} · {cs.client} · {cs.year}
+              {cs.tag} · {cs.client} · {cs.year}
             </motion.p>
             <motion.h1
               variants={riseIn}

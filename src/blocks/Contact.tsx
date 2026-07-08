@@ -6,7 +6,7 @@
 // ============================================================
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Mail, MessageCircle, Calendar, Link2, ArrowUpRight } from 'lucide-react'
+import { Mail, Calendar, Link2, ArrowUpRight } from 'lucide-react'
 import { FormField } from '@/components/ui/form-field'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -51,9 +51,6 @@ export default function Contact({
 
   const channels: Channel[] = [
     { label: 'Email', href: `mailto:${email}`, Icon: Mail },
-    ...(profile.whatsapp
-      ? [{ label: 'WhatsApp', href: `https://wa.me/${profile.whatsapp}`, Icon: MessageCircle } as Channel]
-      : []),
     { label: 'Book a call', href: calendly, Icon: Calendar },
     { label: 'LinkedIn', href: profile.linkedin, Icon: Link2 },
   ]

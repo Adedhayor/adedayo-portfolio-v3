@@ -49,9 +49,11 @@ export default function FloatingContact() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 88, opacity: 0 }}
           transition={{ duration: dur.slow, ease: easeExpo }}
-          className="fixed inset-x-0 bottom-5 z-40 flex justify-center px-4"
+          className="pointer-events-none fixed inset-x-0 bottom-5 z-40 flex justify-center px-4"
         >
-          <ContactWidget email={profile.email} calendly={profile.calendly} />
+          {/* Only the pill is interactive — the full-width band must not eat
+              clicks meant for the footer beneath it. */}
+          <ContactWidget email={profile.email} calendly={profile.calendly} className="pointer-events-auto" />
         </motion.div>
       )}
     </AnimatePresence>

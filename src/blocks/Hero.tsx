@@ -33,9 +33,10 @@ export default function Hero({ className = '' }: Props) {
     target: ref,
     offset: ['start start', 'end start'],
   })
-  // Cluster exit — lift + fade as the hero scrolls away
-  const y = useTransform(scrollYProgress, [0, 1], [0, -110])
-  const opacity = useTransform(scrollYProgress, [0, 0.65], [1, 0])
+  // Cluster exit — parallax up, staying opaque until it's most of the way
+  // out (fading late reads as "scrolling away", not "disappearing").
+  const y = useTransform(scrollYProgress, [0, 1], [0, -120])
+  const opacity = useTransform(scrollYProgress, [0.6, 1], [1, 0])
 
   return (
     <section
@@ -48,7 +49,7 @@ export default function Hero({ className = '' }: Props) {
     >
       <div className="container-opt relative z-[1] grid w-full grid-cols-1 items-center gap-opt-3xl md:grid-cols-[1.05fr_0.95fr]">
         {/* Left — copy */}
-        <motion.div variants={stagger(0.09)} {...revealOnce} className="max-w-[54ch]">
+        <motion.div variants={stagger(0.13)} {...revealOnce} className="max-w-[54ch]">
           <motion.h1
             variants={riseIn}
             className="font-display text-[clamp(2.75rem,7vw,var(--opt-font-size-display))] leading-[0.95] tracking-[-0.02em] text-opt-text-heading"
@@ -57,14 +58,17 @@ export default function Hero({ className = '' }: Props) {
           </motion.h1>
           <motion.p
             variants={riseIn}
+            className="mt-4 font-mono text-[13px] uppercase tracking-[0.14em] text-opt-text-secondary"
+          >
+            Product, UX &amp; Design Systems
+          </motion.p>
+          <motion.p
+            variants={riseIn}
             className="mt-6 max-w-[52ch] text-[var(--opt-font-size-lead)] leading-[1.5] text-opt-text-secondary"
           >
             {profile.intro}
           </motion.p>
-          <motion.p variants={riseIn} className="mt-5 text-[15px] text-opt-text-secondary">
-            <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
-          </motion.p>
-          <motion.div variants={riseIn} className="mt-10 flex flex-wrap items-center gap-3">
+          <motion.div variants={riseIn} className="mt-9 flex flex-wrap items-center gap-3">
             <ButtonLink href="#work" variant="primary" trailingIcon={<ArrowDownRight size={14} strokeWidth={2.5} />}>
               View work
             </ButtonLink>

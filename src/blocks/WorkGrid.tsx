@@ -54,72 +54,65 @@ const cardMotion = {
   transition: { duration: dur.slow, ease: easeExpo },
 }
 
-/* ---------- Unified project card ---------- */
+/* ---------- Unified project card — cohesive: cover flush on top,
+   text in the same bordered shell; hover reveals a CTA over the image. */
 type CardProps = {
   cover: string
   coverPos?: string
   title: string
   meta: string
   tags: string[]
-  index?: string
-  metric?: string
+  cta: string
   to?: string
+  href?: string
 }
-function ProjectCard({ cover, coverPos, title, meta, tags, index, metric, to }: CardProps) {
+function ProjectCard({ cover, coverPos, title, meta, tags, cta, to, href }: CardProps) {
+  const hasDest = Boolean(to || href)
   const body = (
     <>
-      <div className="relative aspect-[16/10] overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-low">
+      <div className="relative aspect-[16/10] w-full overflow-hidden bg-opt-surface-low">
         <img
           src={cover}
           alt={title}
           loading="lazy"
           style={{ objectPosition: coverPos }}
-          className="absolute inset-0 size-full object-contain p-3 transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.02]"
+          className="absolute inset-0 size-full object-cover transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.04]"
         />
-        {index && (
-          <span className="absolute left-3 top-3 border border-opt-border-subtle bg-opt-surface-base/85 px-2 py-0.5 text-[11px] font-semibold tracking-[0.06em] text-opt-text-secondary backdrop-blur-sm">
-            {index}
-          </span>
+        {hasDest && (
+          <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
+            <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
+              {cta}
+              <ArrowUpRight size={14} strokeWidth={2.5} />
+            </span>
+          </div>
         )}
       </div>
-      <div className="pt-4">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="text-[18px] font-medium leading-snug text-opt-text-heading">{title}</h3>
-          {metric && (
-            <span className="mt-0.5 inline-flex shrink-0 items-center gap-1 text-[13px] font-semibold text-opt-text-secondary transition-colors group-hover:text-opt-text-heading">
-              {metric}
-              <ArrowUpRight
-                size={14}
-                className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-              />
-            </span>
-          )}
+      <div className="flex flex-1 flex-col justify-between gap-4 p-5">
+        <div>
+          <h3 className="text-[17px] font-medium leading-snug text-opt-text-heading">{title}</h3>
+          <p className="mt-1 text-[13px] text-opt-text-secondary">{meta}</p>
         </div>
-        <p className="mt-1.5 text-[14px] text-opt-text-secondary">{meta}</p>
         <TagRow tags={tags} />
       </div>
     </>
   )
-  return to ? (
-    <Link to={to} className="flex h-full flex-col">
-      {body}
-    </Link>
-  ) : (
-    <div className="flex h-full flex-col">{body}</div>
-  )
+  const shell =
+    'group flex h-full flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default'
+  if (to) return <Link to={to} className={shell}>{body}</Link>
+  if (href) return <a href={href} target="_blank" rel="noreferrer" className={shell}>{body}</a>
+  return <div className={shell}>{body}</div>
 }
 
 function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
   return (
-    <motion.div {...cardMotion} className={['group', span].join(' ')}>
+    <motion.div {...cardMotion} className={span}>
       <ProjectCard
         cover={cs.cover}
         coverPos={cs.coverPos}
         title={cs.title}
         meta={`${cs.client} · ${cs.year}`}
         tags={cs.tag.split('·').map((t) => t.trim())}
-        index={cs.index}
-        metric={cs.metric}
+        cta="Read case study"
         to={`/case-study/${cs.slug}`}
       />
     </motion.div>
@@ -128,8 +121,15 @@ function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
 
 function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
   return (
-    <motion.div {...cardMotion} className="group md:col-span-2">
-      <ProjectCard cover={item.cover} title={item.title} meta={`${item.note} · ${item.year}`} tags={[item.tag]} />
+    <motion.div {...cardMotion} className="md:col-span-2">
+      <ProjectCard
+        cover={item.cover}
+        title={item.title}
+        meta={`${item.note} · ${item.year}`}
+        tags={[item.tag]}
+        cta="View project"
+        href={item.url}
+      />
     </motion.div>
   )
 }

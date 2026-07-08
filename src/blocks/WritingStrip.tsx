@@ -26,12 +26,9 @@ function WritingList() {
             <span className="text-[13px] text-opt-text-secondary">
               {w.date} · {w.readTime}
             </span>
-            <div className="min-w-0">
-              <h3 className="font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.15] text-opt-text-heading">
-                {w.title}
-              </h3>
-              <p className="mt-2 max-w-[68ch] text-[14px] leading-[1.55] text-opt-text-secondary">{w.excerpt}</p>
-            </div>
+            <h3 className="min-w-0 font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
+              {w.title}
+            </h3>
             <ArrowUpRight
               size={18}
               className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-opt-text-heading md:block"
@@ -81,12 +78,12 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
   return (
     <section className={['container-opt py-opt-5xl', className].join(' ')}>
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="max-w-[54ch]">
+        <div>
           <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
             Essays, not case studies.
           </h2>
           <p className="mt-3 text-[15px] leading-[1.5] text-opt-text-secondary">
-            Notes on building, movement, and the human side of the work — written as Adedayo 𓂀.
+            Notes on building, movement, and the human side of the work.
           </p>
         </div>
         <ButtonLink

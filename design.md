@@ -62,6 +62,11 @@ Inkwell architecture (3-layer tokens), with its own editorial identity.
    atoms — Banner, EmptyState, Select group headers — is a component-internal slot
    and stays.)
 
+8. **No widows.** *(owner rule, 2026-07-08)* Text lines must never end on a lone
+   word. Enforced globally in `index.css`: `text-wrap: balance` on headings,
+   `text-wrap: pretty` on body copy. Don't fight it with manual `<br>` or forced
+   `nowrap`; if a specific line still breaks badly, adjust the copy.
+
 ---
 
 ## 3. Token architecture (3 layers)

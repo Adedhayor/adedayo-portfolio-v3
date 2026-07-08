@@ -148,6 +148,9 @@ export default function MiniAbout({
 
         {/* Essay cut + stack */}
         <motion.div variants={stagger(0.08)} {...revealOnce}>
+          <motion.p variants={riseIn} className="mb-6 text-[15px] leading-[1.5] text-opt-text-secondary">
+            <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
+          </motion.p>
           {about.bio.map((p) => (
             <motion.p
               key={p.slice(0, 24)}

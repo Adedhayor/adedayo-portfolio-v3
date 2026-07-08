@@ -31,7 +31,7 @@ export const profile = {
   name: 'Babalola Adedayo',
   fullName: 'Emmanuel Adedayo Babalola',
   shortName: 'Adedayo',
-  role: 'Design Engineer',
+  role: 'Product & UX Designer',
   secondaryRole: 'Product Designer',
   location: 'Lagos, Nigeria',
   timezone: 'WAT',
@@ -47,7 +47,7 @@ export const profile = {
 
   // Hero — calm, values-first (no metric-shouting)
   intro:
-    'I’m a design engineer — I turn complex, technical systems into experiences that feel simple, human, and trustworthy, then build and ship them in code. I care about clarity, craft, and the small details that make software feel right.',
+    'I’m a product & UX designer — I turn complex, technical systems into experiences that feel simple, human, and trustworthy. I care about clarity, craft, and the small details that make software feel right.',
   currently:
     'Shaping RepliKit at RepliHaus — and exploring where design meets intelligent systems.',
   question: 'Lately I’ve been asking: what does software feel like when it earns your trust in the first ten seconds?',
@@ -147,6 +147,7 @@ export type MoreWorkItem = {
   year: string
   note: string
   cover: string
+  url?: string // TODO: live project URL — activates the "View project" hover CTA
 }
 export const moreWork: MoreWorkItem[] = [
   { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts', cover: westgateCover },
@@ -196,28 +197,15 @@ export const about = {
   ],
   // Stack & process — text chips for now; swap in official SVG marks
   // when collected (BRIEF §4.3 TODO — never redraw a brand from memory).
-  stack: [
-    'Figma',
-    'Paper',
-    'Claude',
-    'Claude Code',
-    'Obsidian',
-    'Notion',
-    'Storybook',
-    'Linear',
-    'React / TypeScript',
-    'Tailwind',
-    'GSAP',
-    'Framer Motion',
-  ],
+  stack: ['Figma', 'Paper', 'Claude Code', 'Obsidian', 'Notion', 'Storybook', 'Linear', 'Framer'],
 }
 
 export const workHistory = [
-  { period: '2026 — Present', company: 'RepliHaus', role: 'UX Designer — RepliKit & Inkwell DS' },
-  { period: '2023 — 2025', company: 'Lithium Digital', role: 'Lead UX/UI Designer' },
-  { period: '2024 — 2025', company: 'Vizible Labs', role: 'Product Designer (Design Systems)' },
+  { period: '2026 — Present', company: 'RepliHaus', role: 'UX Designer' },
+  { period: '2023 — 2025', company: 'Lithium Digital', role: 'Founding Designer' },
+  { period: '2024 — 2025', company: 'Vizible Labs', role: 'Associate Product Designer' },
   { period: '2022 — 2023', company: 'Tabulerasa Inc.', role: 'Product Designer' },
-  { period: '2021 — 2022', company: 'Digital Figures Solutions', role: 'Designer' },
+  { period: '2021 — 2022', company: 'Digital Figures Solutions', role: 'Junior Product Designer' },
 ]
 
 // "Now" — what I'm into lately (personal). TODO: confirm real picks.

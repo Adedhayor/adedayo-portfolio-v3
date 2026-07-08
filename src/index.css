@@ -81,6 +81,11 @@
   /* Custom cursor active — hide the native pointer (fine-pointer only) */
   .cursor-none, .cursor-none * { cursor: none; }
 
+  /* No widows (owner rule, 2026-07-08) — balance headings, prettify body wrapping
+     so lines never end on a lone word. */
+  h1, h2, h3, h4 { text-wrap: balance; }
+  p, li, blockquote, figcaption, .font-display { text-wrap: pretty; }
+
   /* Motion is the experience (owner decision, 2026-07-07 — see BRIEF.md §0.6).
      No global reduced-motion kill switch: it guts the signature sequences.
      Components simplify per-effect where it matters instead. */
