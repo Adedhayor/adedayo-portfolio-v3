@@ -5,6 +5,7 @@ import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import Stub from '@/pages/Stub'
 import NotFound from '@/pages/NotFound'
+import CustomCursor from '@/components/global/CustomCursor'
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -29,6 +30,7 @@ export default function App() {
   return (
     <>
       <ScrollToHash />
+      <CustomCursor />
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />

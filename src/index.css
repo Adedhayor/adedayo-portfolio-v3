@@ -78,6 +78,9 @@
   }
   a { color: inherit; text-decoration: none; }
 
+  /* Custom cursor active — hide the native pointer (fine-pointer only) */
+  .cursor-none, .cursor-none * { cursor: none; }
+
   /* Motion is the experience (owner decision, 2026-07-07 — see BRIEF.md §0.6).
      No global reduced-motion kill switch: it guts the signature sequences.
      Components simplify per-effect where it matters instead. */
