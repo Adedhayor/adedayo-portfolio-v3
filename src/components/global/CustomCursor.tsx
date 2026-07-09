@@ -63,11 +63,11 @@ export default function CustomCursor() {
       transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
       className="pointer-events-none fixed z-[100] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
     >
-      <div className="relative grid size-9 place-items-center rounded-full border-[1.5px] border-white/70">
-        {/* Spinning lime accent arc */}
+      <div className="relative grid size-9 place-items-center rounded-none border-[1.5px] border-white/70">
+        {/* Spinning lime accent edge — square, sharp corners (Optimus) */}
         {!reduced && (
           <motion.span
-            className="absolute inset-0 rounded-full border-[1.5px] border-transparent border-t-opt-accent-lime-fill"
+            className="absolute inset-0 rounded-none border-[1.5px] border-transparent border-t-opt-accent-lime-fill"
             animate={{ rotate: 360 }}
             transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
           />

@@ -15,17 +15,18 @@ import { buttonVariants } from '@/components/ui/button'
 import { caseStudies, moreWork, type CaseStudy } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
 
-type TabKey = 'all' | 'case-studies' | 'live' | 'playground'
+type TabKey = 'all' | 'case-studies' | 'live'
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: 'all', label: 'All' },
   { key: 'case-studies', label: 'Case studies' },
   { key: 'live', label: 'Live projects' },
-  { key: 'playground', label: 'Playground' },
 ]
 
-/* Bento widths — alternate wide/narrow so each pair fills a 6-col row */
-const CS_SPANS = ['md:col-span-4', 'md:col-span-2', 'md:col-span-2', 'md:col-span-4']
+/* The flagship case study — rendered large + horizontal to emphasise
+   design-systems work (feedback #5). Everything else is a uniform
+   col-span-2 vertical card. */
+const FEATURED_SLUG = 'inkwell'
 
 /* Decorative colored tags — random-but-stable per label (feedback B#3) */
 const TAG_COLORS = ['accent', 'success', 'warning', 'danger'] as const
@@ -119,6 +120,48 @@ function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
   )
 }
 
+/* Flagship — full-width, image + copy side by side. Controlled height
+   (no towering aspect ratio), so it reads as the anchor of the section. */
+function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
+  return (
+    <motion.div {...cardMotion} className="md:col-span-6">
+      <Link
+        to={`/case-study/${cs.slug}`}
+        className="group flex h-full flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default md:min-h-[360px] md:flex-row"
+      >
+        <div className="relative aspect-[16/10] w-full overflow-hidden bg-opt-surface-low md:aspect-auto md:w-[56%]">
+          <img
+            src={cs.cover}
+            alt={cs.title}
+            loading="lazy"
+            style={{ objectPosition: cs.coverPos }}
+            className="absolute inset-0 size-full object-cover transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.04]"
+          />
+          <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
+            <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
+              Read case study
+              <ArrowUpRight size={14} strokeWidth={2.5} />
+            </span>
+          </div>
+        </div>
+        <div className="flex flex-1 flex-col justify-between gap-5 p-6 md:p-8">
+          <div>
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-opt-text-secondary">
+              Featured · Design system
+            </span>
+            <h3 className="mt-3 font-display text-[clamp(1.4rem,2.4vw,1.75rem)] font-medium leading-[1.1] text-opt-text-heading">
+              {cs.title}
+            </h3>
+            <p className="mt-1 text-[13px] text-opt-text-secondary">{`${cs.client} · ${cs.year}`}</p>
+            <p className="mt-4 max-w-[46ch] text-[15px] leading-[1.5] text-opt-text-secondary">{cs.blurb}</p>
+          </div>
+          <TagRow tags={cs.tag.split('·').map((t) => t.trim())} />
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
 function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
   return (
     <motion.div {...cardMotion} className="md:col-span-2">
@@ -134,31 +177,14 @@ function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
   )
 }
 
-function PlaygroundCell() {
-  return (
-    <motion.div {...cardMotion} className="group md:col-span-2">
-      <Link
-        to="/work"
-        className="flex h-full min-h-[160px] flex-col justify-between border border-dashed border-opt-border-default bg-transparent p-5"
-      >
-        <h3 className="text-[16px] font-medium text-opt-text-heading">Playground</h3>
-        <p className="text-[14px] leading-[1.5] text-opt-text-secondary">
-          Shipped experiments from GitHub — Community League, SPOB, Spotifeed &amp; more.
-          <span className="ml-1 inline-flex items-center gap-1 font-semibold text-opt-text-heading">
-            Browse <ArrowRight size={13} strokeWidth={2.5} />
-          </span>
-        </p>
-      </Link>
-    </motion.div>
-  )
-}
-
 export default function WorkGrid({ className = '' }: { className?: string }) {
   const [tab, setTab] = useState<TabKey>('all')
 
+  const featured = caseStudies.find((cs) => cs.slug === FEATURED_SLUG)
+  const rest = caseStudies.filter((cs) => cs.slug !== FEATURED_SLUG)
+
   const showCases = tab === 'all' || tab === 'case-studies'
   const showMore = tab === 'all' || tab === 'live'
-  const showPlayground = tab === 'all' || tab === 'playground'
 
   return (
     <section className={['container-opt py-opt-5xl', className].join(' ')}>
@@ -176,13 +202,12 @@ export default function WorkGrid({ className = '' }: { className?: string }) {
         </Segmented>
       </div>
 
-      {/* Bento — wide/narrow widths tile to full rows */}
-      <motion.div layout className="grid grid-cols-1 gap-4 md:auto-rows-fr md:grid-cols-6">
+      {/* Bento — flagship spans the full row, the rest tile as col-span-2 */}
+      <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-6">
         <AnimatePresence mode="popLayout">
-          {showCases &&
-            caseStudies.map((cs, i) => <CaseCell key={cs.slug} cs={cs} span={CS_SPANS[i] ?? 'md:col-span-2'} />)}
+          {showCases && featured && <FeaturedCaseCell key={featured.slug} cs={featured} />}
+          {showCases && rest.map((cs) => <CaseCell key={cs.slug} cs={cs} span="md:col-span-2" />)}
           {showMore && moreWork.map((m) => <MoreCell key={m.title} item={m} />)}
-          {showPlayground && <PlaygroundCell key="playground" />}
         </AnimatePresence>
       </motion.div>
 

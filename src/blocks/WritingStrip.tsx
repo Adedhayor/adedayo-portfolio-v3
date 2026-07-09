@@ -6,21 +6,20 @@
 // work. Links out for now; the in-site reader ships with /writing.
 // ============================================================
 import { motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { ButtonLink } from '@/components/ui/button'
 import { writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
-/* ---------- List (default) ---------- */
+/* ---------- List (default) — links to the in-app reader ---------- */
 function WritingList() {
   return (
     <motion.ul variants={stagger(0.07)} {...revealOnce} className="mt-opt-xl border-t border-opt-border-default">
       {writing.map((w) => (
         <motion.li key={w.title} variants={riseIn}>
-          <a
-            href={w.url}
-            target="_blank"
-            rel="noreferrer"
+          <Link
+            to={`/notes/${w.slug}`}
             className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
           >
             <span className="text-[13px] text-opt-text-secondary">
@@ -29,11 +28,11 @@ function WritingList() {
             <h3 className="min-w-0 font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
               {w.title}
             </h3>
-            <ArrowUpRight
+            <ArrowRight
               size={18}
-              className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-opt-text-heading md:block"
+              className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
             />
-          </a>
+          </Link>
         </motion.li>
       ))}
     </motion.ul>
@@ -86,16 +85,29 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
             Notes on building, movement, and the human side of the work.
           </p>
         </div>
-        <ButtonLink
-          href={substackUrl}
-          target="_blank"
-          rel="noreferrer"
-          variant="ghost"
-          size="compact"
-          trailingIcon={<ArrowUpRight size={14} strokeWidth={2.5} />}
-        >
-          Subscribe on Substack
-        </ButtonLink>
+        <div className="flex flex-wrap items-center gap-3">
+          <Link
+            to="/notes"
+            className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-opt-text-heading"
+          >
+            <span className="link-underline">All notes</span>
+            <ArrowRight
+              size={14}
+              strokeWidth={2.5}
+              className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1"
+            />
+          </Link>
+          <ButtonLink
+            href={substackUrl}
+            target="_blank"
+            rel="noreferrer"
+            variant="ghost"
+            size="compact"
+            trailingIcon={<ArrowUpRight size={14} strokeWidth={2.5} />}
+          >
+            Subscribe
+          </ButtonLink>
+        </div>
       </div>
 
       {variant === 'cards' ? <WritingCards /> : <WritingList />}

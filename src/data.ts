@@ -25,7 +25,13 @@ import emonieCover from './assets/work/emonie-cover.jpg'
 import westgateCover from './assets/work/westgate-cover.jpg'
 import nukodesCover from './assets/work/nukodes-cover.jpg'
 import postpaddyCover from './assets/work/postpaddy-cover.jpg'
+// Design-system studies — title-card placeholders (swap for real
+// Storybook captures once grabbed). SVGs resolve to URLs in Vite.
+import inkwellCover from './assets/work/inkwell-cover.svg'
+import propertyPanelCover from './assets/work/property-panel-cover.svg'
 import portrait from './assets/portrait.jpg'
+// Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
+import notesContent from './data/notesContent.json'
 
 export const profile = {
   name: 'Babalola Adedayo',
@@ -76,11 +82,41 @@ export type CaseStudy = {
   coverPos?: string
 }
 
-// The 4 deep case studies — lead with Lithium + Lighthouse DS
+// Deep case studies — lead with the current flagship design-system work
 export const caseStudies: CaseStudy[] = [
   {
-    slug: 'lithium-staking',
+    slug: 'inkwell',
     index: '01',
+    title: 'Inkwell — RepliHaus’s editor design system',
+    blurb:
+      'A neutral-first, closed-token design system that keeps a dense pro editor calm — built ground-up and shipped as Storybook components.',
+    tag: 'Design Systems',
+    client: 'RepliHaus',
+    year: '2026',
+    role: 'Design System Lead',
+    metric: 'Closed-token system',
+    accent: '#111111',
+    cover: inkwellCover,
+    coverPos: 'center',
+  },
+  {
+    slug: 'property-panel',
+    index: '02',
+    title: 'Redesigning the Property Panel',
+    blurb:
+      'Taking the editor’s most overloaded surface — an 800px wall of fields — apart, researching it against 11 tools, and rebuilding it as a semantic-first inspector.',
+    tag: 'UX Research · Design Systems',
+    client: 'RepliHaus',
+    year: '2026',
+    role: 'Lead Designer',
+    metric: '11-tool teardown',
+    accent: '#3b6ef5',
+    cover: propertyPanelCover,
+    coverPos: 'center',
+  },
+  {
+    slug: 'lithium-staking',
+    index: '03',
     title: 'Unified multi-protocol staking',
     blurb:
       'A single platform that makes staking across blockchains feel certain — designed for “minimum certainty in 10 seconds.”',
@@ -138,6 +174,21 @@ export const caseStudies: CaseStudy[] = [
     cover: tabuleraCover,
     coverPos: 'center',
   },
+  {
+    slug: 'westgate',
+    index: '07',
+    title: 'Westgate — an electronics store that converts',
+    blurb:
+      'An electronics retailer with traffic but a leaky checkout — rebuilt around a faster, clearer path from product to purchase.',
+    tag: 'eCommerce · B2C',
+    client: 'Westgate Technologies',
+    year: '2026',
+    role: 'Product Designer',
+    metric: '+25% completed checkouts',
+    accent: '#d98a1f',
+    cover: westgateCover,
+    coverPos: 'center',
+  },
 ]
 
 // Lighter "more work" row — real covers from the vault gallery
@@ -150,7 +201,6 @@ export type MoreWorkItem = {
   url?: string // TODO: live project URL — activates the "View project" hover CTA
 }
 export const moreWork: MoreWorkItem[] = [
-  { title: 'Westgate Technologies', tag: 'eCommerce', year: '2026', note: '25% lift in completed checkouts', cover: westgateCover },
   { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase', cover: emonieCover },
   { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system', cover: ebankCover },
   { title: 'Nukodes', tag: 'Bookkeeping', year: '2026', note: 'Coming soon', cover: nukodesCover },
@@ -200,6 +250,30 @@ export const about = {
   stack: ['Figma', 'Paper', 'Claude Code', 'Obsidian', 'Notion', 'Storybook', 'Linear', 'Framer'],
 }
 
+// How I work — numbered process for the About page (§ about, feedback #13)
+export const process = [
+  {
+    no: '01',
+    title: 'Understand the system',
+    body: 'Before pixels: how does the thing actually work, and where does it strain? I read the flows, the tickets, and the code — the delta between what was intended and what shipped.',
+  },
+  {
+    no: '02',
+    title: 'Frame the bet',
+    body: 'Turn friction into a point of view. Research earns the opinion — competitive teardowns and named patterns become a few composable directions, not a mood board.',
+  },
+  {
+    no: '03',
+    title: 'Design every state',
+    body: 'Not just the happy path — empty, single, multiple, mixed, error. Grounded in a design system, so each decision is also a contribution to it.',
+  },
+  {
+    no: '04',
+    title: 'Finish in code',
+    body: 'Ship the design as real, token-driven components. The work isn’t done until an engineer can build from it — so I close the handoff gap by building it myself.',
+  },
+]
+
 export const workHistory = [
   { period: '2026 — Present', company: 'RepliHaus', role: 'UX Designer' },
   { period: '2023 — 2025', company: 'Lithium Digital', role: 'Founding Designer' },
@@ -226,10 +300,15 @@ export const now = {
   },
 }
 
-// Writing — personal essays from Substack (dedayo.substack.com)
+// Writing — personal essays from Substack (dedayo.substack.com).
+// Full article bodies are pre-fetched from the Substack RSS feed and
+// stored in ./data/notesContent.json (keyed by slug) so they read
+// in-app on /notes/:slug without leaving the site. Re-run the
+// scratchpad extractor to refresh when new essays publish.
 export const substackUrl = 'https://dedayo.substack.com/'
 export const writing = [
   {
+    slug: 'channeling-your-inner-child-chasing',
     title: 'Channeling Your Inner Child: Chasing Your Dreams',
     date: 'May 27, 2026',
     readTime: '7 min',
@@ -239,6 +318,7 @@ export const writing = [
     quote: 'We don’t give up on our dreams because we forget them. We give up because we get tired of defending them.',
   },
   {
+    slug: 'for-my-27th-i-write-to-my-mum',
     title: 'For my 27th, I write to my Mum.',
     date: 'Mar 28, 2026',
     readTime: '9 min',
@@ -248,6 +328,7 @@ export const writing = [
     quote: 'Maybe you knew you wouldn’t always be here… so you did everything you could while you were here.',
   },
   {
+    slug: 'you-can-just-do-things-i-did',
     title: 'You can just do things. I did.',
     date: 'Jan 1, 2026',
     readTime: '5 min',
@@ -257,6 +338,16 @@ export const writing = [
     quote: 'Movement creates clarity, not the other way around.',
   },
 ] as const
+
+export type Note = (typeof writing)[number]
+const noteBodies = notesContent as Record<string, string>
+
+/** The essay by slug, with its pre-fetched in-app body (may be empty). */
+export function getNote(slug: string): { meta: Note; body: string } | undefined {
+  const meta = writing.find((w) => w.slug === slug)
+  if (!meta) return undefined
+  return { meta, body: noteBodies[slug] ?? '' }
+}
 
 // Lab — experiments & explorations. TODO: replace with real experiments.
 export const labs = [
@@ -292,6 +383,112 @@ export type CaseDetail = {
 }
 
 export const caseDetails: Record<string, CaseDetail> = {
+  inkwell: {
+    tagline:
+      'A neutral-first, closed-token design system that keeps a dense professional editor calm — built ground-up and carried all the way into shipping React components.',
+    deliverables: ['Three-layer design tokens', 'Component library (Storybook)', 'Contribution rules & docs'],
+    overview:
+      'RepliKit is an AI-powered, brand-safe template editor — a tool people live in for hours. As it grew, styling started to creep in ad-hoc: one-off colours, inconsistent spacing, components diverging surface to surface. Inkwell is the design system I lead to fix that: a closed, neutral-first token contract and a component library tuned for editor density, obeyed rather than merely documented.',
+    sections: [
+      {
+        heading: 'A system for people who live in the tool',
+        body: [
+          'An editor is not a landing page. The people using RepliKit sit in it eight hours a day, so colour has to stay quiet and every control has to be legible at a glance. The friction wasn’t any single ugly screen — it was drift: the same idea styled five different ways because there was no single answer to reach for.',
+        ],
+        list: [
+          'Ad-hoc colours and off-step neutrals appearing per feature.',
+          'Controls sized and spaced differently across surfaces.',
+          'No shared contract between design files and the shipped UI.',
+        ],
+      },
+      {
+        heading: 'Tokens before components',
+        body: [
+          'Inkwell is built as three layers — primitive → semantic → component — under a single `--rk-*` namespace, and the schema is deliberately closed: no new colours, no off-step neutrals, ever. It’s neutral-first by design. Chroma is reserved for exactly four semantic roles — info, success, warning, danger — and never spent on a generic UI accent. Getting the foundations right first meant every component assembled from an already-aligned palette.',
+        ],
+      },
+      {
+        heading: 'The Ink aesthetic',
+        body: [
+          'The visual language is tuned for density and calm: a 300px rail, 32px controls at a 2px radius, hairline dividers instead of shadows, numeric values in monospace, and Lucide for standard glyphs. A no-pills rule and a quiet neutral state keep the surface from shouting. Constraints like these aren’t a cage — an off-token colour is just a sign the real answer hasn’t been found yet.',
+        ],
+      },
+      {
+        heading: 'Shipped, not just documented',
+        body: [
+          'Inkwell isn’t a static kit — it’s a living system that ships. Components are built as real, token-driven React in Storybook, reusing shared atoms rather than hand-rolling, so the design-to-code handoff gap closes instead of widening. That discipline is exactly what let the Property Panel redesign stand on solid ground.',
+        ],
+      },
+    ],
+    outcomes: [
+      { value: 'Closed', label: 'token schema, obeyed' },
+      { value: '4 roles', label: 'chroma reserved for meaning' },
+      { value: 'Storybook', label: 'components that ship' },
+    ],
+  },
+
+  'property-panel': {
+    tagline:
+      'The editor’s most overloaded surface — a 197KB, 800px-tall wall of fields — taken apart, researched against eleven competing tools, and rebuilt as a labeled, semantic-first inspector grounded in a closed design-token schema.',
+    deliverables: ['UX audit', 'Competitive research (11 tools)', 'IA & feature briefs', 'React / Storybook components'],
+    overview:
+      'In a canvas editor, the property panel is where the work happens — sizing a node, styling it, binding it to a token, tagging it with meaning. In RepliKit it was also the single most overloaded thing in the product: the largest file in the codebase, rendering 10+ context-driven sections as one continuous 800px scroll. And it was quietly doing two jobs at once — inspecting a node and authoring a template schema — while only really doing the first.',
+    sections: [
+      {
+        heading: 'The most overloaded surface',
+        body: [
+          'The work began inside a surface-by-surface UX audit of the editor, framed as the delta between the intended flow (the PRDs) and the actual implementation (the code). The Property Panel was one of the worst offenders, and the audit produced a concrete friction inventory.',
+        ],
+        list: [
+          'Zone tagging — a core workflow — sat dead last, under an 800px scroll.',
+          'Model config was gated behind selecting the root frame, with nothing pointing there.',
+          'No grouping, labels, or collapse: 10+ sections separated only by thin dividers.',
+          'Multi-select collapsed to Align/Distribute only — every per-node property hidden.',
+        ],
+      },
+      {
+        heading: 'Research earns the right to an opinion',
+        body: [
+          'I wanted decisions grounded in precedent, not taste — so for each state (empty and selected) I ran a structured teardown of eleven tools, ordered closest-precedent to most-distinctive, with Figma Buzz weighted heaviest as the direct competitor. Every claim was tied to a source; gaps were flagged, not smoothed over.',
+        ],
+        list: [
+          'Buzz — the template schema literally is the marketer’s UI; order typed/semantic controls first.',
+          'Sketch — edit through a named, resettable override model, not the raw node.',
+          'Penpot — best-in-class multi-select: show the union, mark conflicts “Mixed”, keep them editable.',
+          'Cross-cutting: nobody pins AI in the empty state — it’s always contextual.',
+        ],
+      },
+      {
+        heading: 'Semantic-first — lead with meaning',
+        body: [
+          'The teardowns collapsed into named patterns so the conversation could happen at the level of ideas. Two of the best — a live-preview feedback loop and full token-chain transparency — turned out to already exist inside the product, just siloed; a lot of the “redesign” was propagating internal wins. The confirmed bet layered three directions: a grouped, collapsible IA as the foundation, a pinned “Identity” group (Semantic Type · Zone · Variant binding · Token bindings) as the organising principle, and an override model for components — with Penpot’s “Mixed” cross-cutting all of it.',
+        ],
+        list: [
+          'Align & distribute pinned at the top, always — the one control identical across every node.',
+          'Zone promoted from last to the pinned Identity group, hover-highlighting on canvas.',
+          'Predictable, fixed section order with collapse state that persists across selections and reloads.',
+        ],
+      },
+      {
+        heading: 'Grounded in Inkwell — and in subtraction',
+        body: [
+          'None of this floats free of Inkwell’s closed token schema: every surface, divider, tone, radius, and step had to resolve to a token already wired in the system — a constraint that caught a stray blue active-ring more than once. The clearest lesson came from the Stroke section, the most-iterated of all: it cycled through cap/join/dash and per-side models before resetting to basics only, because the underlying stroke is just a CSS border. When the model is simple, fight to keep the UI simple. The Fill picker, by contrast, earned its complexity — near-duplicate detection, contrast checks, and token-drift re-linking that operationalise “keep the palette closed” at the point of creation.',
+        ],
+      },
+      {
+        heading: 'Finished in code',
+        body: [
+          'A panel design that only lives in design files isn’t finished. The molecules convert into real, token-driven React shipped to Storybook — reusing Inkwell atoms rather than hand-rolling. Shipped so far: FillSection + FillPicker, StrokeSection, and a wave of section components (Intelligence, Effects, Guides, Typography, Fit & Asset), with Position + Layout mid-flight. The work isn’t real until it’s a component an engineer can build from.',
+        ],
+      },
+    ],
+    outcomes: [
+      { value: '11 tools', label: 'competitive teardown' },
+      { value: 'Semantic-first', label: 'meaning above CSS' },
+      { value: 'Shipped', label: 'token-driven components' },
+    ],
+  },
+
   'lithium-staking': {
     tagline:
       'A unified platform that makes staking across blockchains feel certain — built for “minimum certainty in 10 seconds.”',
@@ -462,6 +659,46 @@ export const caseDetails: Record<string, CaseDetail> = {
       { value: '30+', label: 'lawyer interviews' },
       { value: '10%', label: 'drafting-time reduction' },
       { value: 'Solo → firm', label: 'one system, every tier' },
+    ],
+  },
+
+  // NOTE: Westgate content is a first draft — verify specifics (funnel
+  // numbers, exact scope, timeline) against your own record before ship.
+  westgate: {
+    tagline:
+      'An electronics retailer with real demand but a leaky checkout — rebuilt around a faster, clearer path from product to purchase.',
+    deliverables: ['UX audit', 'Storefront & product-page redesign', 'Checkout flow'],
+    overview:
+      'Westgate Technologies had products people wanted and traffic to match — but too many shoppers dropped out between the product page and a completed order. The redesign focused on one thing: reduce the friction and uncertainty on the path to buy, so intent turns into purchases.',
+    sections: [
+      {
+        heading: 'Where the funnel leaked',
+        body: [
+          'The store wasn’t short on interest; it was short on follow-through. Carts filled and stalled. Mapping the journey from landing to confirmation surfaced the usual, costly culprits — unclear pricing and shipping, a long multi-step checkout, and too little reassurance at the exact moments a buyer hesitates.',
+        ],
+        list: [
+          'Total cost (shipping, fees) surfaced late — a classic abandonment trigger.',
+          'Checkout asked for too much, too early, with no guest path.',
+          'Thin trust cues at the point of payment.',
+        ],
+      },
+      {
+        heading: 'A clearer path to buy',
+        body: [
+          'The redesign tightened the whole path from product to purchase: cleaner product pages that answer the buying questions up front, transparent pricing before checkout, a condensed flow with a guest option, and trust cues placed where doubt actually shows up. Fewer steps, fewer surprises, more completed orders.',
+        ],
+      },
+      {
+        heading: 'What moved',
+        body: [
+          'The clearer, shorter path paid off where it counts — a 25% lift in completed checkouts, with the biggest gains on the steps that used to leak most.',
+        ],
+      },
+    ],
+    outcomes: [
+      { value: '+25%', label: 'completed checkouts' },
+      { value: 'Guest', label: 'checkout, fewer steps' },
+      { value: 'Upfront', label: 'pricing & trust cues' },
     ],
   },
 }

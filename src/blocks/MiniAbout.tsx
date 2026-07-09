@@ -116,10 +116,13 @@ function WorkHistoryStack() {
 export default function MiniAbout({
   className = '',
   stackVariant = 'logos',
+  hideFullStory = false,
 }: {
   className?: string
   /** 'logos' = real brand marks (default); 'text' = the original text chips */
   stackVariant?: 'logos' | 'text'
+  /** hide the "full story → /about" link when this IS the about page */
+  hideFullStory?: boolean
 }) {
   return (
     <section className={['container-opt py-opt-6xl', className].join(' ')}>
@@ -161,14 +164,16 @@ export default function MiniAbout({
             </motion.p>
           ))}
 
-          <motion.div variants={riseIn}>
-            <Link
-              to="/about"
-              className="link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-opt-text-heading"
-            >
-              The full story <ArrowUpRight size={14} />
-            </Link>
-          </motion.div>
+          {!hideFullStory && (
+            <motion.div variants={riseIn}>
+              <Link
+                to="/about"
+                className="link-underline inline-flex items-center gap-1.5 text-[14px] font-medium text-opt-text-heading"
+              >
+                The full story <ArrowUpRight size={14} />
+              </Link>
+            </motion.div>
+          )}
 
           {/* Stack & process */}
           <motion.div variants={riseIn} className="mt-opt-3xl">

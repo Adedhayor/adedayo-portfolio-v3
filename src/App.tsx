@@ -1,8 +1,12 @@
 import { useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Agentation } from 'agentation'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
+import About from '@/pages/About'
+import Play from '@/pages/Play'
+import Notes from '@/pages/Notes'
+import NoteReader from '@/pages/NoteReader'
 import Stub from '@/pages/Stub'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
@@ -36,34 +40,23 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/case-study/:slug" element={<CaseStudy />} />
 
-        {/* v1.1 pages — structured stubs for now (BRIEF §5) */}
+        {/* Full pages */}
+        <Route path="/about" element={<About />} />
+        <Route path="/play" element={<Play />} />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/notes/:slug" element={<NoteReader />} />
+
+        {/* Renamed: /writing → /notes (feedback #9) */}
+        <Route path="/writing" element={<Navigate to="/notes" replace />} />
+
+        {/* Still a structured stub */}
         <Route
           path="/work"
           element={
             <Stub
               section="Work"
               title="All work."
-              blurb="The full bento — case studies, live projects, and the Playground tab fetched from GitHub (Community League, SPOB, Spotifeed & more)."
-            />
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Stub
-              section="About"
-              title="I build software that earns trust."
-              blurb="From a mechanical-engineering lab in Ibadan to design systems and shipped code — the full essay, process, stack, and what I'm reading now."
-            />
-          }
-        />
-        <Route
-          path="/writing"
-          element={
-            <Stub
-              section="Writing"
-              title="Adedayo 𓂀 — existing."
-              blurb="Personal essays from the Substack, readable right here without leaving the site. The in-site reader lands with the build-time RSS fetch."
+              blurb="The full bento — case studies and live projects. Side projects and experiments now live on the Play page."
             />
           }
         />

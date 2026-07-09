@@ -24,9 +24,9 @@ type NavLink = { label: string; href: string; external?: boolean }
 const LINKS: NavLink[] = [
   { label: 'Home', href: '/#top' },
   { label: 'Work', href: '/#work' },
-  { label: 'About', href: '/#about' },
-  { label: 'Writing', href: '/#writing' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'Play', href: '/play' },
+  { label: 'Notes', href: '/notes' },
+  { label: 'About', href: '/about' },
   { label: 'Résumé', href: profile.resumeUrl, external: true },
 ]
 // Drop dead external links (e.g. résumé before the PDF is hosted).
@@ -98,9 +98,22 @@ function useActiveSection() {
 
 export default function NavIsland() {
   const active = useActiveSection()
-  const [expanded, setExpanded] = useState(false) // desktop x-expand (hover/focus)
+  const [hovered, setHovered] = useState(false) // desktop x-expand (hover/focus)
+  const [atTop, setAtTop] = useState(true) // viewport parked at the top of the page
   const [open, setOpen] = useState(false) // mobile y-dropdown (dots tap)
   const rootRef = useRef<HTMLDivElement>(null)
+
+  // At the top of the page the desktop nav rides open as a full-width bar;
+  // once the user scrolls it collapses into the compact island (feedback #2).
+  useEffect(() => {
+    const onScroll = () => setAtTop(window.scrollY < 40)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Expanded when parked at the top OR on hover/focus while scrolled.
+  const expanded = atTop || hovered
 
   // Close the mobile panel on Escape / outside click
   useEffect(() => {
@@ -127,14 +140,22 @@ export default function NavIsland() {
         <motion.nav
           layout
           aria-label="Primary"
-          onMouseEnter={() => setExpanded(true)}
-          onMouseLeave={() => setExpanded(false)}
-          onFocus={() => setExpanded(true)}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          onFocus={() => setHovered(true)}
           onBlur={(e) => {
-            if (!e.currentTarget.contains(e.relatedTarget as Node)) setExpanded(false)
+            if (!e.currentTarget.contains(e.relatedTarget as Node)) setHovered(false)
           }}
           transition={{ duration: dur.slow, ease: easeExpo }}
-          className="glass flex h-14 items-center gap-4 rounded-none px-3"
+          className={[
+            'glass flex h-14 items-center rounded-none',
+            // At the top (desktop): a full-width bar — logo left, links,
+            // controls right. Scrolled, or on mobile: the compact island
+            // hugs its content. (feedback #2)
+            atTop
+              ? 'gap-4 px-4 md:w-[min(92vw,var(--opt-container))] md:justify-between md:gap-6 md:px-5'
+              : 'gap-4 px-3',
+          ].join(' ')}
         >
           <BMark />
 

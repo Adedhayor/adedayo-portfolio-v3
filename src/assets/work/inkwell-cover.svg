@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Inkwell design system">
+  <rect width="1600" height="1000" fill="#111111"/>
+  <!-- hairline grid -->
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="800" y1="0" x2="800" y2="1000"/>
+    <line x1="1200" y1="0" x2="1200" y2="1000"/>
+  </g>
+  <text x="120" y="150" fill="#f5f3ef" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">DESIGN SYSTEM · REPLIHAUS</text>
+  <text x="116" y="560" fill="#f5f3ef" font-family="Georgia, 'Times New Roman', serif" font-size="220" font-weight="600" letter-spacing="-6">Inkwell</text>
+  <text x="120" y="670" fill="#f5f3ef" fill-opacity="0.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="34" letter-spacing="0">A closed-token, neutral-first system for the RepliKit editor.</text>
+  <!-- four semantic swatches (info / success / warning / danger), sharp -->
+  <g>
+    <rect x="120" y="770" width="120" height="120" fill="#3b6ef5"/>
+    <rect x="256" y="770" width="120" height="120" fill="#2fa36b"/>
+    <rect x="392" y="770" width="120" height="120" fill="#d98a1f"/>
+    <rect x="528" y="770" width="120" height="120" fill="#d1483f"/>
+    <rect x="664" y="770" width="120" height="120" fill="#1a1a1a" stroke="#ffffff" stroke-opacity="0.15"/>
+  </g>
+  <!-- lime accent tick -->
+  <rect x="120" y="150" width="0" height="0"/>
+  <rect x="1420" y="120" width="60" height="60" fill="#c8ff2d"/>
+</svg>

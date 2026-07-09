@@ -7,6 +7,7 @@
 // Sits on ink in both themes. Wordmark drifts on scroll.
 // ============================================================
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { RotateCcw } from 'lucide-react'
 import { ContactWidget } from '@/blocks/_parts'
@@ -23,14 +24,11 @@ const EFFECTS = [
 ] as const
 
 const FOOTER_LINKS = [
-  { label: 'Email', href: `mailto:${profile.email}` },
-  { label: 'Calendly', href: profile.calendly },
   { label: 'LinkedIn', href: profile.linkedin },
   { label: 'GitHub', href: 'https://github.com/Adedhayor' },
   { label: 'X', href: profile.twitter },
-  { label: 'Instagram', href: profile.instagram },
   { label: 'Photography', href: profile.instagramPhotography },
-  { label: 'Substack', href: profile.substack },
+  { label: 'Notes', href: '/notes' },
 ]
 
 type Props = {
@@ -63,22 +61,32 @@ export default function FooterWordmark({
       {/* Links · time · availability */}
       <div className="container-opt flex flex-wrap items-center justify-between gap-x-8 gap-y-3 border-t border-white/10 py-6">
         <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
-          {FOOTER_LINKS.map((l) => (
-            <li key={l.label}>
-              <a
-                href={l.href}
-                target={l.href.startsWith('mailto') ? undefined : '_blank'}
-                rel="noreferrer"
-                className="link-underline text-[13px] text-opt-paper/70 transition-colors hover:text-opt-paper"
-              >
-                {l.label}
-              </a>
-            </li>
-          ))}
+          {FOOTER_LINKS.map((l) => {
+            const internal = l.href.startsWith('/')
+            const cls = 'link-underline text-[13px] text-opt-paper/70 transition-colors hover:text-opt-paper'
+            return (
+              <li key={l.label}>
+                {internal ? (
+                  <Link to={l.href} className={cls}>
+                    {l.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={l.href}
+                    target={l.href.startsWith('mailto') ? undefined : '_blank'}
+                    rel="noreferrer"
+                    className={cls}
+                  >
+                    {l.label}
+                  </a>
+                )}
+              </li>
+            )
+          })}
         </ul>
         <div className="flex items-center gap-5 text-[13px] text-opt-paper/70">
           <LocalTime />
-          <span>© {new Date().getFullYear()} Adedayo Babalola</span>
+          <span>Designed by Adedayo · Built with Claude Code</span>
         </div>
       </div>
 

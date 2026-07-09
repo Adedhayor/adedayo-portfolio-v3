@@ -13,7 +13,6 @@ const QUICK = [
   { label: 'Work', to: '/#work' },
   { label: 'About', to: '/#about' },
   { label: 'Writing', to: '/#writing' },
-  { label: 'Contact', to: '/#contact' },
 ]
 
 export default function NotFound() {
