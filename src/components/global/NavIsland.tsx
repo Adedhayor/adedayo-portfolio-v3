@@ -23,7 +23,7 @@ type NavLink = { label: string; href: string; external?: boolean }
 // (App's ScrollToHash handles the scroll). External links open in a tab.
 const LINKS: NavLink[] = [
   { label: 'Home', href: '/#top' },
-  { label: 'Work', href: '/#work' },
+  { label: 'Work', href: '/work' },
   { label: 'Play', href: '/play' },
   { label: 'Notes', href: '/notes' },
   { label: 'About', href: '/about' },
@@ -101,7 +101,12 @@ export default function NavIsland() {
   const [hovered, setHovered] = useState(false) // desktop x-expand (hover/focus)
   const [atTop, setAtTop] = useState(true) // viewport parked at the top of the page
   const [open, setOpen] = useState(false) // mobile y-dropdown (dots tap)
+  const [canHover, setCanHover] = useState(false) // fine pointer — hover-expand is desktop-only
   const rootRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setCanHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches)
+  }, [])
 
   // At the top of the page the desktop nav rides open as a full-width bar;
   // once the user scrolls it collapses into the compact island (feedback #2).
@@ -140,21 +145,21 @@ export default function NavIsland() {
         <motion.nav
           layout
           aria-label="Primary"
-          onMouseEnter={() => setHovered(true)}
+          onMouseEnter={() => canHover && setHovered(true)}
           onMouseLeave={() => setHovered(false)}
-          onFocus={() => setHovered(true)}
+          onFocus={() => canHover && setHovered(true)}
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget as Node)) setHovered(false)
           }}
           transition={{ duration: dur.slow, ease: easeExpo }}
           className={[
-            'glass flex h-14 items-center rounded-none',
-            // At the top (desktop): a full-width bar — logo left, links,
-            // controls right. Scrolled, or on mobile: the compact island
-            // hugs its content. (feedback #2)
-            atTop
-              ? 'gap-4 px-4 md:w-[min(92vw,var(--opt-container))] md:justify-between md:gap-6 md:px-5'
-              : 'gap-4 px-3',
+            'glass flex h-14 items-center rounded-none [-webkit-tap-highlight-color:transparent]',
+            // Mobile: one stable compact style — no atTop-driven relayout,
+            // so tapping never bounces the island (feedback 2026-07-12 #1).
+            'gap-4 px-3',
+            // Desktop at the top: a roomier open island — items evenly
+            // spaced, width hugs content, never full-width.
+            atTop ? 'md:gap-7 md:px-6' : 'md:gap-4 md:px-3',
           ].join(' ')}
         >
           <BMark />
@@ -171,7 +176,7 @@ export default function NavIsland() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={swap}
-                  className="flex items-center gap-5 whitespace-nowrap"
+                  className="flex items-center gap-7 whitespace-nowrap"
                 >
                   {NAV_LINKS.map((l) => {
                     const cls = [
@@ -194,7 +199,7 @@ export default function NavIsland() {
                       </li>
                     )
                   })}
-                  <li className="flex items-center border-l border-opt-border-subtle pl-3">
+                  <li className="flex items-center border-l border-opt-border-subtle pl-4">
                     <ThemeToggle />
                   </li>
                 </motion.ul>
@@ -226,7 +231,7 @@ export default function NavIsland() {
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="grid shrink-0 cursor-pointer place-items-center rounded-none px-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus md:cursor-default"
+            className="grid shrink-0 cursor-pointer place-items-center rounded-none px-1 [-webkit-tap-highlight-color:transparent] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus md:cursor-default"
           >
             <OscShapes />
           </button>

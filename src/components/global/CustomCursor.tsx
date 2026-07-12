@@ -64,13 +64,17 @@ export default function CustomCursor() {
       className="pointer-events-none fixed z-[100] -translate-x-1/2 -translate-y-1/2 mix-blend-difference"
     >
       <div className="relative grid size-9 place-items-center rounded-none border-[1.5px] border-white/70">
-        {/* Spinning lime accent edge — square, sharp corners (Optimus) */}
+        {/* Lime accent box travelling the inside perimeter (Optimus) */}
         {!reduced && (
-          <motion.span
-            className="absolute inset-0 rounded-none border-[1.5px] border-transparent border-t-opt-accent-lime-fill"
-            animate={{ rotate: 360 }}
-            transition={{ repeat: Infinity, duration: 3, ease: 'linear' }}
-          />
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 32 32"
+            className="pointer-events-none absolute inset-0 size-full"
+          >
+            <rect x="-2.4" y="-2.4" width="4.8" height="4.8" className="fill-opt-accent-lime-fill">
+              <animateMotion dur="5.6s" repeatCount="indefinite" rotate="0" path="M4,4 H28 V28 H4 Z" />
+            </rect>
+          </svg>
         )}
         <ArrowUpRight size={14} strokeWidth={2.5} className="text-white" />
       </div>

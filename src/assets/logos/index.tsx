@@ -37,7 +37,7 @@ const ZilliqaMark = (p: MarkProps) => (
     <path d="M8 8h8l-8 8h8" />
   </Mark>
 )
-// Tabulera — a data grid
+// Tabulerasa — a data grid
 const TabuleraMark = (p: MarkProps) => (
   <Mark {...p}>
     <path d="M3 4h18v16H3z" />
@@ -58,6 +58,6 @@ export const CLIENT_LOGOS: ClientLogo[] = [
   { name: 'Lithium', Mark: LithiumMark },
   { name: 'Vizible', Mark: VizibleMark },
   { name: 'Zilliqa', Mark: ZilliqaMark },
-  { name: 'Tabulera', Mark: TabuleraMark },
+  { name: 'Tabulerasa', Mark: TabuleraMark },
   { name: 'RepliHaus', Mark: RepliHausMark },
 ]

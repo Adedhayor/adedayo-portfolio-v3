@@ -29,6 +29,7 @@ import postpaddyCover from './assets/work/postpaddy-cover.jpg'
 // Storybook captures once grabbed). SVGs resolve to URLs in Vite.
 import inkwellCover from './assets/work/inkwell-cover.svg'
 import propertyPanelCover from './assets/work/property-panel-cover.svg'
+import portfolioCover from './assets/work/portfolio-cover.svg'
 import portrait from './assets/portrait.jpg'
 // Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
 import notesContent from './data/notesContent.json'
@@ -80,6 +81,10 @@ export type CaseStudy = {
   cover: string
   /** crop hint for the cover within the card */
   coverPos?: string
+  /** NDA-fenced — the detail page asks for a password before it renders */
+  nda?: boolean
+  /** Being rewritten — the detail page shows a "coming soon" note instead */
+  comingSoon?: boolean
 }
 
 // Deep case studies — lead with the current flagship design-system work
@@ -98,6 +103,7 @@ export const caseStudies: CaseStudy[] = [
     accent: '#111111',
     cover: inkwellCover,
     coverPos: 'center',
+    nda: true,
   },
   {
     slug: 'property-panel',
@@ -113,6 +119,7 @@ export const caseStudies: CaseStudy[] = [
     accent: '#3b6ef5',
     cover: propertyPanelCover,
     coverPos: 'center',
+    nda: true,
   },
   {
     slug: 'lithium-staking',
@@ -160,9 +167,9 @@ export const caseStudies: CaseStudy[] = [
     coverPos: 'center',
   },
   {
-    slug: 'tabulera',
+    slug: 'tabulerasa',
     index: '04',
-    title: 'Tabulera — legal workflow redesign',
+    title: 'Tabulerasa — legal workflow redesign',
     blurb:
       'A modular brief builder and collaboration space for legal teams, scaling from solo lawyers to large firms.',
     tag: 'Legal-tech · B2B',
@@ -187,6 +194,22 @@ export const caseStudies: CaseStudy[] = [
     metric: '+25% completed checkouts',
     accent: '#d98a1f',
     cover: westgateCover,
+    coverPos: 'center',
+    comingSoon: true,
+  },
+  {
+    slug: 'building-this-portfolio',
+    index: '08',
+    title: 'Building this portfolio',
+    blurb:
+      'The site you’re on — an editorial one-pager built on its own design system (Optimus), a WebGL chrome footer, and an AI pair-programmer in the loop.',
+    tag: 'Claude Code · Design Engineering',
+    client: 'Self-initiated',
+    year: '2026',
+    role: 'Designer & Developer',
+    metric: 'Designed × built solo',
+    accent: '#c8ff2d',
+    cover: portfolioCover,
     coverPos: 'center',
   },
 ]
@@ -275,11 +298,41 @@ export const process = [
 ]
 
 export const workHistory = [
-  { period: '2026 — Present', company: 'RepliHaus', role: 'UX Designer' },
-  { period: '2023 — 2025', company: 'Lithium Digital', role: 'Founding Designer' },
-  { period: '2024 — 2025', company: 'Vizible Labs', role: 'Associate Product Designer' },
-  { period: '2022 — 2023', company: 'Tabulerasa Inc.', role: 'Product Designer' },
-  { period: '2021 — 2022', company: 'Digital Figures Solutions', role: 'Junior Product Designer' },
+  {
+    period: '2026 — Present',
+    company: 'RepliHaus',
+    role: 'UX Designer',
+    summary:
+      'Leading design on the RepliKit editor — built Inkwell, its closed-token design system, and shipping the Property Panel redesign as real React components.',
+  },
+  {
+    period: '2023 — 2025',
+    company: 'Lithium Digital',
+    role: 'Founding Designer',
+    summary:
+      'First designer — took multi-protocol staking from idea to a live platform managing $5M+ on-chain, including the Zilliqa 1.0 → 2.0 migration and lit-ZIL launch.',
+  },
+  {
+    period: '2024 — 2025',
+    company: 'Vizible Labs',
+    role: 'Associate Product Designer',
+    summary:
+      'Built Lighthouse, Vizible’s first design system — 50+ accessible components that halved design-to-dev turnaround.',
+  },
+  {
+    period: '2022 — 2023',
+    company: 'Tabulerasa Inc.',
+    role: 'Product Designer',
+    summary:
+      'Redesigned legal workflows around a modular brief builder and client collaboration space, shaped by 30+ lawyer interviews.',
+  },
+  {
+    period: '2021 — 2022',
+    company: 'Digital Figures Solutions',
+    role: 'Junior Product Designer',
+    summary:
+      'Cut my teeth on client web products — fintech dashboards and marketing sites, learning to ship under real constraints.',
+  },
 ]
 
 // "Now" — what I'm into lately (personal). TODO: confirm real picks.
@@ -617,7 +670,7 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
 
-  tabulera: {
+  tabulerasa: {
     tagline:
       'Redesigning legal workflows for speed and clarity — a modular brief builder and collaboration space for legal teams.',
     deliverables: ['Lawyer & client dashboards', 'Brief builder', 'Marketplace'],
@@ -699,6 +752,52 @@ export const caseDetails: Record<string, CaseDetail> = {
       { value: '+25%', label: 'completed checkouts' },
       { value: 'Guest', label: 'checkout, fewer steps' },
       { value: 'Upfront', label: 'pricing & trust cues' },
+    ],
+  },
+
+  // The meta case study — linked from the footer credit. In the works;
+  // grows as the site does.
+  'building-this-portfolio': {
+    tagline:
+      'The site you’re reading this on — designed and built by one person, on its own design system, with an AI pair-programmer in the loop.',
+    deliverables: ['Optimus design system', 'The site itself', 'This write-up'],
+    overview:
+      'A portfolio for a design engineer has one honest test: was it designed AND built by the person it’s about? This one was. v3 replaced a dark Framer build with a light, editorial one-pager written in React — and because the positioning is “designer who ships”, the process had to be the proof: a real token system, real components in Storybook, and every effect hand-built rather than embedded.',
+    sections: [
+      {
+        heading: 'Optimus — a design system for one',
+        body: [
+          'The site doesn’t use a UI kit. It runs on Optimus — a personal design system with the same three-layer token architecture (primitive → semantic → component) I use on client systems, under an --opt-* namespace. Six laws govern everything: sharp edges, light and dark in sync, glass surfaces, motion as the experience, and pages assembled from blocks. Recoleta carries the display voice; Switzer does the work.',
+        ],
+        list: [
+          'Tokens and atoms built first, in Storybook — pages assembled only after.',
+          'Both themes designed together; no dark-mode afterthought.',
+          'Every block reads from data.ts — one source of truth for content.',
+        ],
+      },
+      {
+        heading: 'Feedback as annotations, not meetings',
+        body: [
+          'Each design round happens on the live site: an annotation toolbar (Agentation) pins feedback to real elements, and each pass — the nav island, the scatter-to-bento work grid, the cursor, the hero — is a batch of annotations turned into commits. The site is the design file.',
+        ],
+      },
+      {
+        heading: 'An AI pair in the loop',
+        body: [
+          '“Built with Claude Code” is literal: the build runs as a conversation — briefs and annotated feedback in, reviewed diffs out, verified live on localhost before anything lands. The taste stays human; the throughput doesn’t have to. It’s the same design-engineering loop I run at work, compressed to one person.',
+        ],
+      },
+      {
+        heading: 'The details templates can’t ship',
+        body: [
+          'The footer wordmark is a hand-written WebGL shader — liquid-chrome bands with RGB-split fringes, masked to live text. Essays are pre-fetched from Substack and read in-app. NDA’d client work sits behind a password gate. A scripted chat widget answers the front-door questions. None of it is a plugin; all of it is a decision.',
+        ],
+      },
+    ],
+    outcomes: [
+      { value: '1 system', label: 'Optimus — tokens to blocks' },
+      { value: '100%', label: 'designed & built solo' },
+      { value: 'Living', label: 'this study grows with the site' },
     ],
   },
 }

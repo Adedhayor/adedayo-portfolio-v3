@@ -10,18 +10,14 @@ import { ArrowRight } from 'lucide-react'
 import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import Loader from '@/components/global/Loader'
-import AsciiField from '@/components/global/AsciiField'
-import FloatingContact from '@/components/global/FloatingContact'
 import Hero from '@/blocks/Hero'
 import WorkGrid from '@/blocks/WorkGrid'
 import WritingStrip from '@/blocks/WritingStrip'
 import FooterWordmark from '@/blocks/FooterWordmark'
-import { moreWork, labs } from '@/data'
 import { riseIn, revealOnce } from '@/lib/motion'
 
 /* Play teaser — a taste that links to the full /play page (feedback #6). */
 function PlayTeaser() {
-  const count = moreWork.length + labs.length
   return (
     <section className="container-opt py-opt-5xl">
       <motion.div
@@ -35,7 +31,7 @@ function PlayTeaser() {
           </h2>
           <p className="mt-3 text-[15px] leading-[1.5] text-opt-text-secondary">
             Side projects, live builds, and small experiments — the things I made to figure
-            something out. {count} and counting.
+            something out.
           </p>
         </div>
         <Link
@@ -60,9 +56,6 @@ export default function Home() {
       {/* Opening sequence — plays once per session, skippable */}
       <Loader />
 
-      {/* Cursor-reactive ASCII background — behind everything */}
-      <AsciiField />
-
       <PageFrame />
       <NavIsland />
       <main className="relative z-[1]">
@@ -82,9 +75,6 @@ export default function Home() {
       <div className="relative z-[1]">
         <FooterWordmark />
       </div>
-
-      {/* Floating contact toolbar — rides the bottom until the footer is reached */}
-      <FloatingContact />
     </div>
   )
 }

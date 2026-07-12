@@ -7,9 +7,11 @@ import About from '@/pages/About'
 import Play from '@/pages/Play'
 import Notes from '@/pages/Notes'
 import NoteReader from '@/pages/NoteReader'
-import Stub from '@/pages/Stub'
+import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
+import FloatingContact from '@/components/global/FloatingContact'
+import AsciiField from '@/components/global/AsciiField'
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -35,6 +37,9 @@ export default function App() {
     <>
       <ScrollToHash />
       <CustomCursor />
+
+      {/* Cursor-reactive ASCII background — behind every page (round G) */}
+      <AsciiField />
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />
@@ -49,20 +54,16 @@ export default function App() {
         {/* Renamed: /writing → /notes (feedback #9) */}
         <Route path="/writing" element={<Navigate to="/notes" replace />} />
 
-        {/* Still a structured stub */}
-        <Route
-          path="/work"
-          element={
-            <Stub
-              section="Work"
-              title="All work."
-              blurb="The full bento — case studies and live projects. Side projects and experiments now live on the Play page."
-            />
-          }
-        />
+        {/* Renamed: Tabulera → Tabulerasa (round G) — keep the old live URL working */}
+        <Route path="/case-study/tabulera" element={<Navigate to="/case-study/tabulerasa" replace />} />
+
+        <Route path="/work" element={<Work />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>
+
+      {/* Optimus chat — rides every page (round F #9) */}
+      <FloatingContact />
 
       {/* Visual feedback toolbar — dev only */}
       {import.meta.env.DEV && <Agentation />}

@@ -1,7 +1,7 @@
 // ============================================================
-// FloatingContact → ChatWidget — GLOBAL (feedback #11).
-// A scripted "Dayo-bot" chat box (inspiration: seanhalpin.xyz's
-// Seán Bot). A square glass launcher bottom-right opens a chat
+// FloatingContact → ChatWidget — GLOBAL (feedback #11, renamed
+// Optimus in round E). A scripted chat box (inspiration:
+// seanhalpin.xyz's Seán Bot). A square glass launcher bottom-right opens a chat
 // panel with agent bubbles + quick-reply buttons; replies append
 // the exchange, some with actions (book a call / email / see work).
 // No backend — a friendly, on-brand front door. Optimus rules:
@@ -10,8 +10,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { MessageSquare, X, Calendar, Mail, ArrowRight } from 'lucide-react'
-import { profile } from '@/data'
+import { MessageSquare, X, Calendar, Mail, ArrowRight, Music, Sparkles, Camera, BookOpen, User } from 'lucide-react'
+import { now, profile } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
 import bLogo from '@/assets/b-logo.png'
 
@@ -20,12 +20,53 @@ type Msg = { from: 'agent' | 'user'; text: string; actions?: Action[] }
 
 const INTRO: Msg[] = [
   { from: 'agent', text: 'Hey 👋' },
-  { from: 'agent', text: 'I’m Dayo-bot — here to answer anything about Adedayo’s work.' },
+  { from: 'agent', text: 'I’m Optimus — Adedayo’s alter ego. His design system is named after me.' },
   { from: 'agent', text: 'What brings you here today?' },
 ]
 
+/* Surprise pool — "Surprise me" grabs one of these at random
+   (round F #9): a case study, IG, the playlist, Substack, about,
+   the playground… anything fun. */
+const SURPRISES: Msg[] = [
+  {
+    from: 'agent',
+    text: 'Dealer’s choice: the playground — shaders, sound, generative experiments.',
+    actions: [{ label: 'Enter the playground', to: '/play', icon: Sparkles }],
+  },
+  {
+    from: 'agent',
+    text: 'Random pick: he shoots photos too — streets, people, random beauty.',
+    actions: [{ label: 'optimus.randoms', href: profile.instagramPhotography, icon: Camera }],
+  },
+  {
+    from: 'agent',
+    text: 'Here’s what’s on repeat right now — Wizkid, Cruel Santino, Tems.',
+    actions: [{ label: 'On repeat', href: now.listening.playlistUrl, icon: Music }],
+  },
+  {
+    from: 'agent',
+    text: 'Plot twist: he writes essays. This one’s a birthday letter to his mum.',
+    actions: [{ label: 'Read on Notes', to: '/notes/for-my-27th-i-write-to-my-mum', icon: BookOpen }],
+  },
+  {
+    from: 'agent',
+    text: 'How about the story of this very site? Designed by him, built with Claude Code.',
+    actions: [{ label: 'Building this portfolio', to: '/case-study/building-this-portfolio', icon: ArrowRight }],
+  },
+  {
+    from: 'agent',
+    text: 'Meet the human behind the pixels — engineer turned designer who ships.',
+    actions: [{ label: 'About Adedayo', to: '/about', icon: User }],
+  },
+  {
+    from: 'agent',
+    text: 'Straight to the good stuff: a $5M+ staking platform, designed end to end.',
+    actions: [{ label: 'Lithium staking', to: '/case-study/lithium-staking', icon: ArrowRight }],
+  },
+]
+
 /* Quick replies → the scripted agent response for each. */
-const REPLIES: { label: string; reply: Msg }[] = [
+const REPLIES: { label: string; reply: Msg | (() => Msg) }[] = [
   {
     label: 'We’d like to hire you',
     reply: {
@@ -49,18 +90,30 @@ const REPLIES: { label: string; reply: Msg }[] = [
     },
   },
   {
-    label: 'Interested in mentorship',
-    reply: {
-      from: 'agent',
-      text: 'I’m always up for it — send me a line about what you’re working on.',
-      actions: [{ label: 'Email', href: `mailto:${profile.email}`, icon: Mail }],
-    },
-  },
-  {
     label: 'Just saying hello!',
     reply: {
       from: 'agent',
       text: 'Hello! Thanks for stopping by 😄 Hope you enjoy the work.',
+    },
+  },
+  {
+    label: 'Surprise me ✨',
+    reply: () => SURPRISES[Math.floor(Math.random() * SURPRISES.length)],
+  },
+  {
+    label: 'What’s he listening to?',
+    reply: {
+      from: 'agent',
+      text: 'Heavy rotation right now: Wizkid, Cruel Santino, Tems. The whole playlist is public —',
+      actions: [{ label: 'On repeat', href: now.listening.playlistUrl, icon: Music }],
+    },
+  },
+  {
+    label: 'Got photos?',
+    reply: {
+      from: 'agent',
+      text: 'He shoots too — streets, people, random beauty. That side lives on Instagram.',
+      actions: [{ label: 'optimus.randoms', href: profile.instagramPhotography, icon: Camera }],
     },
   },
 ]
@@ -118,8 +171,17 @@ export default function FloatingContact() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' })
   }, [msgs, open])
 
+  // Escape closes the panel (keyboard parity with the close button).
+  useEffect(() => {
+    if (!open) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false)
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
   const send = (r: (typeof REPLIES)[number]) => {
-    setMsgs((m) => [...m, { from: 'user', text: r.label }, r.reply])
+    const reply = typeof r.reply === 'function' ? r.reply() : r.reply
+    setMsgs((m) => [...m, { from: 'user', text: r.label }, reply])
   }
 
   return (
@@ -134,13 +196,13 @@ export default function FloatingContact() {
             transition={{ duration: dur.base, ease: easeExpo }}
             className="glass pointer-events-auto flex h-[26rem] w-[min(88vw,22rem)] flex-col overflow-hidden rounded-none"
             role="dialog"
-            aria-label="Chat with Dayo-bot"
+            aria-label="Chat with Optimus"
           >
             {/* Header */}
             <div className="flex items-center gap-2.5 border-b border-opt-border-subtle px-4 py-3">
               <img src={bLogo} alt="" className="size-7 rounded-none" />
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] font-semibold text-opt-text-heading">Dayo-bot</p>
+                <p className="text-[13px] font-semibold text-opt-text-heading">Optimus</p>
                 <p className="flex items-center gap-1.5 text-[11px] text-opt-text-secondary">
                   <span className="size-1.5 bg-opt-accent-lime-fill" aria-hidden="true" /> Usually replies instantly
                 </p>

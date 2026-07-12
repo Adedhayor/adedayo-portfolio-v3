@@ -1,32 +1,41 @@
 // ============================================================
 // WorkGrid block — the bento work section (BRIEF §4.2).
-// Tabs: All · Case studies · Live projects · Playground.
-// One unified card style for every project (cover on a padded
-// frame — no cropping — + title, meta, colored tags). Bento
-// widths tile to full 6-col rows so nothing misaligns.
+// Case studies only — live projects & experiments moved to the
+// /work page (feedback 2026-07-12 #9). One unified card style —
+// Recoleta titles, a mini summary on every card, content-hugging
+// height. Spans vary (2/4 · 4/2 · 3/3) so it reads as a true
+// bento. NDA-fenced studies navigate to the detail page, which
+// asks for the password inline (round F #1 — no modal). Home
+// shows a curated FIVE (round F #3); the rest live on /work.
 // ============================================================
-import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Segmented, SegmentedItem } from '@/components/ui/segmented'
 import { Tag } from '@/components/ui/tag'
 import { buttonVariants } from '@/components/ui/button'
-import { caseStudies, moreWork, type CaseStudy } from '@/data'
+import { isNdaUnlocked } from '@/lib/nda'
+import { caseStudies, type CaseStudy } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
 
-type TabKey = 'all' | 'case-studies' | 'live'
-
-const TABS: { key: TabKey; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'case-studies', label: 'Case studies' },
-  { key: 'live', label: 'Live projects' },
-]
-
 /* The flagship case study — rendered large + horizontal to emphasise
-   design-systems work (feedback #5). Everything else is a uniform
-   col-span-2 vertical card. */
+   design-systems work (feedback #5). It's the one passworded study
+   shown on the home page. */
 const FEATURED_SLUG = 'inkwell'
+
+/* The home selection — five studies, one of them passworded (round
+   F #3). Everything else lives on /work. */
+const HOME_SLUGS = [FEATURED_SLUG, 'lithium-staking', 'lighthouse-ds', 'zilliqa-migration', 'tabulerasa']
+
+/* Bento rhythm for the non-featured cards — 6-col grid, rows of
+   2+4 / 4+2 (round E #5/#6: small card left, large right on the
+   first row). Anything past the pattern goes full-width. */
+const BENTO_SPANS = [
+  'md:col-span-2',
+  'md:col-span-4',
+  'md:col-span-4',
+  'md:col-span-2',
+]
+const bentoSpan = (i: number) => BENTO_SPANS[i] ?? 'md:col-span-6'
 
 /* Decorative colored tags — random-but-stable per label (feedback B#3) */
 const TAG_COLORS = ['accent', 'success', 'warning', 'danger'] as const
@@ -37,7 +46,7 @@ function tagColor(s: string): (typeof TAG_COLORS)[number] {
 }
 function TagRow({ tags }: { tags: string[] }) {
   return (
-    <div className="mt-3 flex flex-wrap gap-1.5">
+    <div className="mt-4 flex flex-wrap gap-1.5">
       {tags.map((t) => (
         <Tag key={t} variant={tagColor(t)} size="sm">
           {t}
@@ -55,19 +64,26 @@ const cardMotion = {
   transition: { duration: dur.slow, ease: easeExpo },
 }
 
-/* ---------- Unified project card — cohesive: cover flush on top,
-   text in the same bordered shell; hover reveals a CTA over the image. */
+/* ---------- Unified project card — cover flush on top, text in the
+   same bordered shell; hover reveals a CTA over the image. Height
+   hugs its content (round E #4). */
 type CardProps = {
   cover: string
   coverPos?: string
   title: string
   meta: string
+  blurb?: string
   tags: string[]
   cta: string
   to?: string
   href?: string
+  locked?: boolean
+  /** Stretch to the grid row so every card in a uniform grid is the
+      same height, tags pinned to the bottom (round G — /work). */
+  fill?: boolean
+  onClick?: (e: React.MouseEvent) => void
 }
-function ProjectCard({ cover, coverPos, title, meta, tags, cta, to, href }: CardProps) {
+export function ProjectCard({ cover, coverPos, title, meta, blurb, tags, cta, to, href, locked, fill, onClick }: CardProps) {
   const hasDest = Boolean(to || href)
   const body = (
     <>
@@ -82,29 +98,44 @@ function ProjectCard({ cover, coverPos, title, meta, tags, cta, to, href }: Card
         {hasDest && (
           <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
             <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
+              {locked && <Lock size={12} strokeWidth={2.5} />}
               {cta}
               <ArrowUpRight size={14} strokeWidth={2.5} />
             </span>
           </div>
         )}
       </div>
-      <div className="flex flex-1 flex-col justify-between gap-4 p-5">
-        <div>
-          <h3 className="text-[17px] font-medium leading-snug text-opt-text-heading">{title}</h3>
-          <p className="mt-1 text-[13px] text-opt-text-secondary">{meta}</p>
+      <div className={fill ? 'flex flex-1 flex-col p-5' : 'p-5'}>
+        <h3 className="font-display text-[19px] font-medium leading-snug text-opt-text-heading">{title}</h3>
+        <p className="mt-1 text-[13px] text-opt-text-secondary">{meta}</p>
+        {blurb && <p className="mt-2.5 text-[13px] leading-[1.5] text-opt-text-secondary">{blurb}</p>}
+        <div className={fill ? 'mt-auto' : undefined}>
+          <TagRow tags={tags} />
         </div>
-        <TagRow tags={tags} />
       </div>
     </>
   )
-  const shell =
-    'group flex h-full flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default'
-  if (to) return <Link to={to} className={shell}>{body}</Link>
-  if (href) return <a href={href} target="_blank" rel="noreferrer" className={shell}>{body}</a>
+  const shell = [
+    'group flex flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default',
+    fill ? 'h-full' : '',
+  ].join(' ')
+  if (to)
+    return (
+      <Link to={to} onClick={onClick} className={shell}>
+        {body}
+      </Link>
+    )
+  if (href)
+    return (
+      <a href={href} target="_blank" rel="noreferrer" className={shell}>
+        {body}
+      </a>
+    )
   return <div className={shell}>{body}</div>
 }
 
 function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
+  const locked = Boolean(cs.nda) && !isNdaUnlocked()
   return (
     <motion.div {...cardMotion} className={span}>
       <ProjectCard
@@ -112,22 +143,24 @@ function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
         coverPos={cs.coverPos}
         title={cs.title}
         meta={`${cs.client} · ${cs.year}`}
+        blurb={cs.blurb}
         tags={cs.tag.split('·').map((t) => t.trim())}
         cta="Read case study"
         to={`/case-study/${cs.slug}`}
+        locked={locked}
       />
     </motion.div>
   )
 }
 
-/* Flagship — full-width, image + copy side by side. Controlled height
-   (no towering aspect ratio), so it reads as the anchor of the section. */
+/* Flagship — full-width, image + copy side by side. */
 function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
+  const locked = Boolean(cs.nda) && !isNdaUnlocked()
   return (
     <motion.div {...cardMotion} className="md:col-span-6">
       <Link
         to={`/case-study/${cs.slug}`}
-        className="group flex h-full flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default md:min-h-[360px] md:flex-row"
+        className="group flex flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default md:min-h-[360px] md:flex-row"
       >
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-opt-surface-low md:aspect-auto md:w-[56%]">
           <img
@@ -139,6 +172,7 @@ function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
           />
           <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
             <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
+              {locked && <Lock size={12} strokeWidth={2.5} />}
               Read case study
               <ArrowUpRight size={14} strokeWidth={2.5} />
             </span>
@@ -146,10 +180,7 @@ function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
         </div>
         <div className="flex flex-1 flex-col justify-between gap-5 p-6 md:p-8">
           <div>
-            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-opt-text-secondary">
-              Featured · Design system
-            </span>
-            <h3 className="mt-3 font-display text-[clamp(1.4rem,2.4vw,1.75rem)] font-medium leading-[1.1] text-opt-text-heading">
+            <h3 className="font-display text-[clamp(1.4rem,2.4vw,1.75rem)] font-medium leading-[1.1] text-opt-text-heading">
               {cs.title}
             </h3>
             <p className="mt-1 text-[13px] text-opt-text-secondary">{`${cs.client} · ${cs.year}`}</p>
@@ -162,29 +193,11 @@ function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
   )
 }
 
-function MoreCell({ item }: { item: (typeof moreWork)[number] }) {
-  return (
-    <motion.div {...cardMotion} className="md:col-span-2">
-      <ProjectCard
-        cover={item.cover}
-        title={item.title}
-        meta={`${item.note} · ${item.year}`}
-        tags={[item.tag]}
-        cta="View project"
-        href={item.url}
-      />
-    </motion.div>
-  )
-}
-
 export default function WorkGrid({ className = '' }: { className?: string }) {
-  const [tab, setTab] = useState<TabKey>('all')
-
   const featured = caseStudies.find((cs) => cs.slug === FEATURED_SLUG)
-  const rest = caseStudies.filter((cs) => cs.slug !== FEATURED_SLUG)
-
-  const showCases = tab === 'all' || tab === 'case-studies'
-  const showMore = tab === 'all' || tab === 'live'
+  const rest = HOME_SLUGS.slice(1)
+    .map((slug) => caseStudies.find((cs) => cs.slug === slug))
+    .filter((cs): cs is CaseStudy => Boolean(cs))
 
   return (
     <section className={['container-opt py-opt-5xl', className].join(' ')}>
@@ -193,21 +206,15 @@ export default function WorkGrid({ className = '' }: { className?: string }) {
         <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
           Selected work
         </h2>
-        <Segmented size="lg" value={tab} onValueChange={(v) => v && setTab(v as TabKey)} aria-label="Filter work">
-          {TABS.map((t) => (
-            <SegmentedItem key={t.key} value={t.key}>
-              {t.label}
-            </SegmentedItem>
-          ))}
-        </Segmented>
       </div>
 
-      {/* Bento — flagship spans the full row, the rest tile as col-span-2 */}
-      <motion.div layout className="grid grid-cols-1 gap-4 md:grid-cols-6">
+      {/* Bento — flagship spans the full row, the rest alternate widths */}
+      <motion.div layout className="grid grid-cols-1 items-start gap-4 md:grid-cols-6">
         <AnimatePresence mode="popLayout">
-          {showCases && featured && <FeaturedCaseCell key={featured.slug} cs={featured} />}
-          {showCases && rest.map((cs) => <CaseCell key={cs.slug} cs={cs} span="md:col-span-2" />)}
-          {showMore && moreWork.map((m) => <MoreCell key={m.title} item={m} />)}
+          {featured && <FeaturedCaseCell key={featured.slug} cs={featured} />}
+          {rest.map((cs, i) => (
+            <CaseCell key={cs.slug} cs={cs} span={bentoSpan(i)} />
+          ))}
         </AnimatePresence>
       </motion.div>
 

@@ -1,14 +1,17 @@
 // ============================================================
-// MiniAbout block — landing about band (BRIEF §4.3).
+// MiniAbout block — the about band (BRIEF §4.3).
 // Left column: portrait + identity + a STACKED DECK of the work
-// history (most-recent role on top; older roles peek underneath
-// in decreasing widths; "See all roles" fans the full list).
+// history (most-recent role on top; older roles peek underneath;
+// "See all roles" fans the full list, plus a Read CV button).
 // Right column: essay cut + stack/process.
+// WorkHistoryStack and StackChips are exported for the /about
+// page's sticky-portrait composition (round E).
 // ============================================================
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowUpRight, ChevronDown, ChevronUp, FileText } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { ButtonLink } from '@/components/ui/button'
 import { about, profile, workHistory } from '@/data'
 import { TOOL_LOGOS, type ToolLogo } from '@/lib/toolLogos'
 import { dur, easeExpo, riseIn, stagger, revealOnce } from '@/lib/motion'
@@ -38,6 +41,24 @@ function ToolChip({ tool }: { tool: ToolLogo }) {
   )
 }
 
+/* The tool/stack chip row — reused on /about */
+export function StackChips({ variant = 'logos' }: { variant?: 'logos' | 'text' }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {variant === 'text'
+        ? about.stack.map((tool) => (
+            <span
+              key={tool}
+              className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
+            >
+              {tool}
+            </span>
+          ))
+        : TOOL_LOGOS.map((tool) => <ToolChip key={tool.name} tool={tool} />)}
+    </div>
+  )
+}
+
 function RoleCard({ w, className = '' }: { w: Role; className?: string }) {
   return (
     <div className={['border border-opt-border-subtle bg-opt-surface-raised p-4', className].join(' ')}>
@@ -46,13 +67,16 @@ function RoleCard({ w, className = '' }: { w: Role; className?: string }) {
         <span className="shrink-0 text-[12px] text-opt-text-secondary">{w.period}</span>
       </div>
       <p className="mt-1 text-[13px] leading-[1.45] text-opt-text-secondary">{w.role}</p>
+      {w.summary && (
+        <p className="mt-2 text-[13px] leading-[1.5] text-opt-text-secondary">{w.summary}</p>
+      )}
     </div>
   )
 }
 
 /* Stacked deck — collapsed shows the top role with two narrower cards
-   peeking beneath; expanded fans out every role. */
-function WorkHistoryStack() {
+   peeking beneath; expanded fans out every role. Exported for /about. */
+export function WorkHistoryStack() {
   const [open, setOpen] = useState(false)
   const top = workHistory[0]
   return (
@@ -80,12 +104,25 @@ function WorkHistoryStack() {
               />
               <RoleCard w={top} className="relative z-10" />
             </div>
-            <button
-              onClick={() => setOpen(true)}
-              className="mt-6 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
-            >
-              See all roles ({workHistory.length}) <ChevronDown size={13} />
-            </button>
+            {/* Prominent action first, quiet toggle second (Fitts +
+                visual-hierarchy heuristics — round G). */}
+            <div className="mt-6 flex items-center gap-4">
+              <ButtonLink
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="secondary"
+                trailingIcon={<FileText size={13} strokeWidth={2.5} />}
+              >
+                Read CV
+              </ButtonLink>
+              <button
+                onClick={() => setOpen(true)}
+                className="inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
+              >
+                See all roles <ChevronDown size={13} />
+              </button>
+            </div>
           </motion.div>
         ) : (
           <motion.div
@@ -100,12 +137,23 @@ function WorkHistoryStack() {
                 <RoleCard key={w.company} w={w} />
               ))}
             </div>
-            <button
-              onClick={() => setOpen(false)}
-              className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
-            >
-              Show less <ChevronUp size={13} />
-            </button>
+            <div className="mt-4 flex items-center gap-4">
+              <ButtonLink
+                href={profile.resumeUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="secondary"
+                trailingIcon={<FileText size={13} strokeWidth={2.5} />}
+              >
+                Read CV
+              </ButtonLink>
+              <button
+                onClick={() => setOpen(false)}
+                className="inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
+              >
+                Show less <ChevronUp size={13} />
+              </button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -139,7 +187,7 @@ export default function MiniAbout({
         {/* Portrait + identity + work-history stack */}
         <motion.div variants={riseIn} {...revealOnce}>
           <div className="overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised">
-            <img src={about.portrait} alt={`${profile.shortName} Babalola`} loading="lazy" className="aspect-square w-full object-cover" />
+            <img src={about.portrait} alt={`${profile.shortName} Babalola`} loading="lazy" className="h-auto w-full" />
           </div>
           <p className="mt-4 text-[16px] font-medium text-opt-text-heading">Adedayo Babalola</p>
           <p className="mt-0.5 text-[13px] text-opt-text-secondary">
@@ -151,9 +199,6 @@ export default function MiniAbout({
 
         {/* Essay cut + stack */}
         <motion.div variants={stagger(0.08)} {...revealOnce}>
-          <motion.p variants={riseIn} className="mb-6 text-[15px] leading-[1.5] text-opt-text-secondary">
-            <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
-          </motion.p>
           {about.bio.map((p) => (
             <motion.p
               key={p.slice(0, 24)}
@@ -163,6 +208,9 @@ export default function MiniAbout({
               {p}
             </motion.p>
           ))}
+          <motion.p variants={riseIn} className="mb-6 text-[15px] leading-[1.5] text-opt-text-secondary">
+            <span className="font-medium text-opt-text-heading">Currently</span> — {profile.currently}
+          </motion.p>
 
           {!hideFullStory && (
             <motion.div variants={riseIn}>
@@ -178,18 +226,7 @@ export default function MiniAbout({
           {/* Stack & process */}
           <motion.div variants={riseIn} className="mt-opt-3xl">
             <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Stack &amp; process</p>
-            <div className="flex flex-wrap gap-2">
-              {stackVariant === 'text'
-                ? about.stack.map((tool) => (
-                    <span
-                      key={tool}
-                      className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
-                    >
-                      {tool}
-                    </span>
-                  ))
-                : TOOL_LOGOS.map((tool) => <ToolChip key={tool.name} tool={tool} />)}
-            </div>
+            <StackChips variant={stackVariant} />
           </motion.div>
         </motion.div>
       </div>

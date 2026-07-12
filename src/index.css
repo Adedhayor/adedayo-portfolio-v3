@@ -195,6 +195,33 @@
     will-change: transform;
   }
 
+  /* ---- Client logos carousel — continuous horizontal scroll with
+     soft fades at both edges (About feedback 2026-07-12 #3). The
+     track holds the logo list twice; -50% loops seamlessly. ---- */
+  .logo-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  }
+  .logo-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: opt-logo-marquee 38s linear infinite;
+    will-change: transform;
+  }
+  .logo-marquee:hover .logo-marquee-track { animation-play-state: paused; }
+  @keyframes opt-logo-marquee {
+    to { transform: translateX(-50%); }
+  }
+
+  /* Reduced motion — Law 5: simplify, never strip to static. The
+     ambient loops slow right down instead of stopping. */
+  @media (prefers-reduced-motion: reduce) {
+    .logo-marquee-track { animation-duration: 120s; }
+    .nav-osc { animation-duration: 5s; }
+    .wordmark-metal { animation-duration: 20s; }
+  }
+
   /* GLASS — first-class frosted surface (both themes via tokens) */
   .glass {
     background: var(--opt-glass-bg);

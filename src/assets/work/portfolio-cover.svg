@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Building this portfolio">
+  <rect width="1600" height="1000" fill="#FBFBF9"/>
+  <!-- hairline grid -->
+  <g stroke="#111111" stroke-opacity="0.08" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="800" y1="0" x2="800" y2="1000"/>
+    <line x1="1200" y1="0" x2="1200" y2="1000"/>
+  </g>
+  <text x="120" y="150" fill="#111111" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">META · DESIGN ENGINEERING</text>
+  <text x="116" y="560" fill="#111111" font-family="Georgia, 'Times New Roman', serif" font-size="180" font-weight="600" letter-spacing="-5">This site.</text>
+  <text x="120" y="670" fill="#111111" fill-opacity="0.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="34" letter-spacing="0">Designed by Adedayo, built with Claude Code — the whole story.</text>
+  <!-- ink / paper / lime swatches, sharp -->
+  <g>
+    <rect x="120" y="770" width="120" height="120" fill="#111111"/>
+    <rect x="256" y="770" width="120" height="120" fill="#FBFBF9" stroke="#111111" stroke-opacity="0.2"/>
+    <rect x="392" y="770" width="120" height="120" fill="#c8ff2d"/>
+  </g>
+  <rect x="1420" y="120" width="60" height="60" fill="#111111"/>
+</svg>

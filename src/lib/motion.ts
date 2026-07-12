@@ -28,9 +28,13 @@ export const stagger = (gap = 0.06): Variants => ({
   show: { transition: { staggerChildren: gap } },
 })
 
-/** Standard viewport reveal props for whileInView. */
+/** Standard viewport reveal props for whileInView.
+    NOTE: no negative margin — with one, blocks near the bottom of a
+    page can never clear the threshold and stay at opacity 0 forever
+    (the "empty section" bug on case-study outcomes, round G). Any
+    visible pixel now triggers the reveal. */
 export const revealOnce = {
   initial: 'hidden' as const,
   whileInView: 'show' as const,
-  viewport: { once: true, margin: '-80px' },
+  viewport: { once: true, amount: 0.01 },
 }
