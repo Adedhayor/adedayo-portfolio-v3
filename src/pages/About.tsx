@@ -9,7 +9,7 @@
 // ============================================================
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
@@ -114,7 +114,38 @@ export default function About() {
                 <StackChips />
               </motion.div>
 
+              {/* The deeper interests — same chip language as the stack */}
+              <motion.div variants={riseIn} {...revealOnce} className="mt-opt-2xl">
+                <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Curious about</p>
+                <div className="flex flex-wrap gap-2">
+                  {about.interests.map((it) => (
+                    <span
+                      key={it}
+                      className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
+                    >
+                      {it}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+
               <ProcessGrid />
+
+              {/* The human side — closes the story column */}
+              <motion.div variants={riseIn} {...revealOnce} className="mt-opt-4xl">
+                <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Beyond the work</p>
+                {about.beyond.map((p) => (
+                  <p key={p.slice(0, 24)} className="mb-5 max-w-[58ch] text-[15px] leading-[1.55] text-opt-text-secondary">
+                    {p}
+                  </p>
+                ))}
+                <Link
+                  to="/notes"
+                  className="link-underline inline-flex items-center gap-1 text-[14px] font-medium text-opt-text-heading"
+                >
+                  Read the notes <ArrowUpRight size={14} strokeWidth={2.5} />
+                </Link>
+              </motion.div>
             </div>
           </div>
         </section>

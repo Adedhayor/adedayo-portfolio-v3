@@ -269,11 +269,27 @@ export const testimonials: Testimonial[] = [
 // and ships on /about.
 // ============================================================
 export const about = {
-  heading: 'Designing experiences that solve real problems.',
+  heading: 'I build software that earns trust.',
   portrait,
+  // The essay — first-person, text-forward (vault 01 — About, 2026-07-15)
   bio: [
-    'I didn’t start in design — I started in mechanical engineering. What I loved was the systems part: understand how the thing works, find where it strains, change it, then measure whether the change held. That’s still exactly how I design.',
-    'Nearly five years across blockchain, fintech, legal tech, and infrastructure — interfaces managing $5M+ in on-chain value at Lithium Digital, Vizible’s first design system, and now RepliKit at RepliHaus. Then I did the same with code: I build and ship my designs to production, so the handoff gap I used to design around, I just close.',
+    'I didn’t start in design — I started in mechanical engineering. Five years ago I was in a lab at the University of Ibadan, measuring how biogas flow rate changed an engine’s performance: field tests, combustion data, procedures written so the next person could reproduce them. What I loved was the systems part — understand how the thing works, find where it strains, change it, then measure whether the change held.',
+    'That’s still exactly how I design.',
+    'Somewhere between the engine rig and now, I worked out that you can just decide to do things — so I did. I taught myself design, took a junior role, and spent the next five years designing products across blockchain, fintech, legal tech, and infrastructure: interfaces managing $5M+ in on-chain value, Vizible’s first design system, and now RepliKit at RepliHaus, where I shape the UX of an AI-powered editor and the design system underneath it.',
+    'Then I did the same thing with code. I started building my designs instead of handing them off — a league-management platform, a health app, a comments layer for Spotify, this site. The handoff gap I used to design around, I just close.',
+    'So I work where design meets engineering. What I care about most is clarity — especially in high-stakes, technical systems where a confusing screen costs real money or real trust. My instinct is progressive disclosure: show the least you can while keeping someone certain. And I keep coming back to the first ten seconds — what does software feel like when it earns your trust right away?',
+  ],
+  // The deeper interests — rendered as chips beside the stack
+  interests: [
+    'Human–computer interaction',
+    'Accessibility & inclusive design',
+    'Cognitive ergonomics',
+    'Trust & ethics in AI systems',
+  ],
+  // The human side — closes the story column (links to /notes in-app)
+  beyond: [
+    'Outside the work, the same pattern shows up. Last year I ran 174 km, learned to swim, learned to drive, and quit my job — and learned that movement creates clarity, not the other way around. I write about that side of life: chasing childhood dreams, a letter to my mum, doing fewer things but meaning them more.',
+    'I mentor designers across Africa on the same things — clarity, storytelling, and the nerve to just begin. Based in Lagos, working remotely with teams everywhere.',
   ],
   // Stack & process — text chips for now; swap in official SVG marks
   // when collected (BRIEF §4.3 TODO — never redraw a brand from memory).
