@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "stage": "git push origin staging",
+    "release": "bash scripts/release.sh",
     "lint": "oxlint",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6008",
