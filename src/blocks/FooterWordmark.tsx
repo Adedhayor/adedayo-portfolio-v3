@@ -36,6 +36,7 @@ const WORDMARK_TYPE =
 const FOOTER_LINKS = [
   { label: 'LinkedIn', href: profile.linkedin },
   { label: 'GitHub', href: 'https://github.com/Adedhayor' },
+  { label: 'Dribbble', href: profile.dribbble },
   { label: 'X', href: profile.twitter },
   { label: 'Photography', href: profile.instagramPhotography },
   { label: 'Notes', href: '/notes' },
