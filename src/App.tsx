@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { Agentation } from 'agentation'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import About from '@/pages/About'
@@ -10,9 +9,13 @@ import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
-import { showPlayground } from '@/lib/release'
+import { isProduction, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
+
+// Lazy so the toolbar ships as its own chunk that production never
+// fetches — the package isn't tree-shakeable from the main bundle.
+const Agentation = lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -67,8 +70,13 @@ export default function App() {
       {/* Optimus chat — rides every page (round F #9) */}
       <FloatingContact />
 
-      {/* Visual feedback toolbar — dev only */}
-      {import.meta.env.DEV && <Agentation />}
+      {/* Visual feedback toolbar — staging channel only (dev, local
+          preview, and the staging.pages.dev deploy); never production */}
+      {!isProduction && (
+        <Suspense fallback={null}>
+          <Agentation />
+        </Suspense>
+      )}
     </>
   )
 }
