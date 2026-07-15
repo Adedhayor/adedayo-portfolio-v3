@@ -1,8 +1,7 @@
 // ============================================================
-// Work — /work. The full index: every case study plus the live
-// projects & smaller builds that used to sit on the landing bento
-// (moved here — feedback 2026-07-12 #9, same treatment as
-// PostPaddy). Uniform cards, no featured cell.
+// Work — /work. Case studies only (feedback 2026-07-15) —
+// the live projects & smaller builds move to the play section
+// when it ships. Uniform cards, no featured cell.
 // ============================================================
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -12,7 +11,7 @@ import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { ProjectCard } from '@/blocks/WorkGrid'
 import { isNdaUnlocked } from '@/lib/nda'
-import { caseStudies, moreWork } from '@/data'
+import { caseStudies } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 export default function Work() {
@@ -39,13 +38,14 @@ export default function Work() {
               All work.
             </motion.h1>
             <motion.p variants={riseIn} className="mt-5 max-w-[52ch] text-[var(--opt-font-size-lead)] leading-[1.5] text-opt-text-secondary">
-              Case studies, live projects, and client builds — the full shelf.
+              Deep dives into the work — systems, research, and the decisions behind them.
             </motion.p>
           </motion.div>
         </section>
 
-        {/* Case studies */}
-        <section className="container-opt pb-opt-4xl">
+        {/* Case studies — live projects & smaller builds ship with the
+            play section later (feedback 2026-07-15) */}
+        <section className="container-opt pb-opt-5xl">
           <motion.div
             variants={stagger(0.06)}
             {...revealOnce}
@@ -73,35 +73,6 @@ export default function Work() {
           </motion.div>
         </section>
 
-        {/* Live projects & more */}
-        <section className="container-opt pb-opt-5xl">
-          <motion.h2
-            variants={riseIn}
-            {...revealOnce}
-            className="mb-opt-xl font-display text-[clamp(1.6rem,3vw,var(--opt-font-size-h3))] leading-[1.12] text-opt-text-heading"
-          >
-            Live projects &amp; more.
-          </motion.h2>
-          <motion.div
-            variants={stagger(0.06)}
-            {...revealOnce}
-            className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            {moreWork.map((m) => (
-              <motion.div key={m.title} variants={riseIn} className="h-full">
-                <ProjectCard
-                  cover={m.cover}
-                  title={m.title}
-                  meta={`${m.note} · ${m.year}`}
-                  tags={[m.tag]}
-                  cta="View project"
-                  href={m.url}
-                  fill
-                />
-              </motion.div>
-            ))}
-          </motion.div>
-        </section>
       </main>
       <div className="relative z-[1]">
         <FooterWordmark />

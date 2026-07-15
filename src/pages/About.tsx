@@ -3,23 +3,20 @@
 // The split layout returns: portrait + identity ride the LHS and
 // stay STICKY while the right column scrolls — bio → currently →
 // work history (with role summaries + Read CV) → stack → the
-// numbered process as a 2×2. Then clients carousel, testimonials,
-// and a closing image pair (landscape + car-selfie to match the
-// top portrait's setting).
+// numbered process as a 2×2. Then the clients carousel.
+// (Testimonials + closing images pulled 2026-07-15 pending real
+// references and worthier shots.)
 // ============================================================
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { WorkHistoryStack, StackChips } from '@/blocks/MiniAbout'
 import ClientLogos from '@/blocks/ClientLogos'
-import TestimonialBand from '@/blocks/TestimonialBand'
 import { about, process, profile } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
-import landscape from '@/assets/about/landscape.jpg'
-import onTheMove from '@/assets/about/on-the-move.jpg'
 
 /* Above-the-fold on a fresh route — animate on mount (see CaseStudy). */
 const revealOnMount = { initial: 'hidden' as const, animate: 'show' as const }
@@ -53,35 +50,6 @@ function ProcessGrid() {
         ))}
       </motion.div>
     </div>
-  )
-}
-
-/* Closing images — a landscape (placeholder until the real landscape
-   shot lands) + a car selfie matching the top portrait's setting. */
-function ClosingImages() {
-  return (
-    <section className="container-opt pt-opt-2xl pb-opt-6xl">
-      <motion.div
-        variants={stagger(0.08)}
-        {...revealOnce}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-      >
-        <motion.img
-          variants={riseIn}
-          src={landscape}
-          alt="Adedayo at the gym — mirror shot"
-          loading="lazy"
-          className="aspect-[3/2] w-full border border-opt-border-subtle object-cover sm:col-span-2"
-        />
-        <motion.img
-          variants={riseIn}
-          src={onTheMove}
-          alt="Adedayo on the move — car selfie"
-          loading="lazy"
-          className="aspect-[3/4] w-full border border-opt-border-subtle object-cover"
-        />
-      </motion.div>
-    </section>
   )
 }
 
@@ -146,14 +114,46 @@ export default function About() {
                 <StackChips />
               </motion.div>
 
+              {/* The deeper interests — same chip language as the stack */}
+              <motion.div variants={riseIn} {...revealOnce} className="mt-opt-2xl">
+                <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Curious about</p>
+                <div className="flex flex-wrap gap-2">
+                  {about.interests.map((it) => (
+                    <span
+                      key={it}
+                      className="border border-opt-border-subtle bg-opt-surface-raised px-3 py-1.5 text-[13px] text-opt-text-secondary transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default hover:text-opt-text-heading"
+                    >
+                      {it}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+
               <ProcessGrid />
+
+              {/* The human side — closes the story column */}
+              <motion.div variants={riseIn} {...revealOnce} className="mt-opt-4xl">
+                <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Beyond the work</p>
+                {about.beyond.map((p) => (
+                  <p key={p.slice(0, 24)} className="mb-5 max-w-[58ch] text-[15px] leading-[1.55] text-opt-text-secondary">
+                    {p}
+                  </p>
+                ))}
+                <Link
+                  to="/notes"
+                  className="link-underline inline-flex items-center gap-1 text-[14px] font-medium text-opt-text-heading"
+                >
+                  Read the notes <ArrowUpRight size={14} strokeWidth={2.5} />
+                </Link>
+              </motion.div>
             </div>
           </div>
         </section>
 
         <ClientLogos label="Clients & companies" />
-        <TestimonialBand />
-        <ClosingImages />
+        {/* TestimonialBand pulled 2026-07-15 until real references land;
+            ClosingImages pulled until worthier shots replace the low-res
+            crops. Both blocks still exist — re-add here when ready. */}
       </main>
       <div className="relative z-[1]">
         <FooterWordmark />
