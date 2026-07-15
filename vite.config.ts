@@ -10,9 +10,17 @@ import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
 import { playwright } from '@vitest/browser-playwright';
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
+// Release channel: Cloudflare Pages sets CF_PAGES_BRANCH at build time.
+// Builds of `main` are production (staged pages hidden); staging previews
+// and local dev show everything. See src/lib/release.ts.
+const releaseChannel = process.env.CF_PAGES_BRANCH === 'main' ? 'production' : 'staging';
+
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   base: '/',
+  define: {
+    'import.meta.env.VITE_RELEASE_CHANNEL': JSON.stringify(releaseChannel)
+  },
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

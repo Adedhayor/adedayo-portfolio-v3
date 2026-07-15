@@ -15,6 +15,7 @@ import WorkGrid from '@/blocks/WorkGrid'
 import WritingStrip from '@/blocks/WritingStrip'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { riseIn, revealOnce } from '@/lib/motion'
+import { showPlayground } from '@/lib/release'
 
 /* Play teaser — a taste that links to the full /play page (feedback #6). */
 function PlayTeaser() {
@@ -65,9 +66,12 @@ export default function Home() {
         <section id="work" data-section="Work">
           <WorkGrid />
         </section>
-        <section id="play" data-section="Play">
-          <PlayTeaser />
-        </section>
+        {/* Staging-only until /play releases (src/lib/release.ts) */}
+        {showPlayground && (
+          <section id="play" data-section="Play">
+            <PlayTeaser />
+          </section>
+        )}
         <section id="notes" data-section="Notes">
           <WritingStrip />
         </section>

@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 import { MessageSquare, X, Calendar, Mail, ArrowRight, Music, Sparkles, Camera, BookOpen, User } from 'lucide-react'
 import { now, profile } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
+import { showPlayground } from '@/lib/release'
 import bLogo from '@/assets/b-logo.png'
 
 type Action = { label: string; href?: string; to?: string; icon: typeof Mail }
@@ -28,11 +29,16 @@ const INTRO: Msg[] = [
    (round F #9): a case study, IG, the playlist, Substack, about,
    the playground… anything fun. */
 const SURPRISES: Msg[] = [
-  {
-    from: 'agent',
-    text: 'Dealer’s choice: the playground — shaders, sound, generative experiments.',
-    actions: [{ label: 'Enter the playground', to: '/play', icon: Sparkles }],
-  },
+  // Staging-only until /play releases (src/lib/release.ts)
+  ...(showPlayground
+    ? [
+        {
+          from: 'agent',
+          text: 'Dealer’s choice: the playground — shaders, sound, generative experiments.',
+          actions: [{ label: 'Enter the playground', to: '/play', icon: Sparkles }],
+        } satisfies Msg,
+      ]
+    : []),
   {
     from: 'agent',
     text: 'Random pick: he shoots photos too — streets, people, random beauty.',

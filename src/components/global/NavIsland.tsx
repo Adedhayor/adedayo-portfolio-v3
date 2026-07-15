@@ -15,6 +15,7 @@ import { useTheme } from 'next-themes'
 import { Moon, Sun, ArrowUpRight } from 'lucide-react'
 import { dur, easeExpo } from '@/lib/motion'
 import { profile } from '@/data'
+import { showPlayground } from '@/lib/release'
 import bLogo from '@/assets/b-logo.png'
 
 type NavLink = { label: string; href: string; external?: boolean }
@@ -29,8 +30,11 @@ const LINKS: NavLink[] = [
   { label: 'About', href: '/about' },
   { label: 'Résumé', href: profile.resumeUrl, external: true },
 ]
-// Drop dead external links (e.g. résumé before the PDF is hosted).
-const NAV_LINKS = LINKS.filter((l) => !(l.external && (!l.href || l.href === '#')))
+// Drop dead external links (e.g. résumé before the PDF is hosted)
+// and staging-only pages (src/lib/release.ts).
+const NAV_LINKS = LINKS.filter(
+  (l) => !(l.external && (!l.href || l.href === '#')) && !(l.href === '/play' && !showPlayground)
+)
 
 /* ---------- The B mark — square ink tile ---------- */
 function BMark() {

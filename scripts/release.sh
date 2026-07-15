@@ -15,8 +15,8 @@ if [ -n "$(git status --porcelain)" ]; then
   exit 1
 fi
 
-echo "Building to verify the release…"
-npm run build
+echo "Building to verify the release (production channel — staged pages hidden)…"
+CF_PAGES_BRANCH=main npm run build
 
 git fetch origin
 git checkout main

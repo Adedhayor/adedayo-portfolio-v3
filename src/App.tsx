@@ -10,6 +10,7 @@ import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
+import { showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
 
@@ -47,7 +48,8 @@ export default function App() {
 
         {/* Full pages */}
         <Route path="/about" element={<About />} />
-        <Route path="/play" element={<Play />} />
+        {/* Staging-only until release (src/lib/release.ts) — falls to 404 in production */}
+        {showPlayground && <Route path="/play" element={<Play />} />}
         <Route path="/notes" element={<Notes />} />
         <Route path="/notes/:slug" element={<NoteReader />} />
 

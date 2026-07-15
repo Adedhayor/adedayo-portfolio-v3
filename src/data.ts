@@ -33,6 +33,7 @@ import portfolioCover from './assets/work/portfolio-cover.svg'
 import portrait from './assets/portrait.jpg'
 // Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
 import notesContent from './data/notesContent.json'
+import { isHeldBack } from './lib/release'
 
 export const profile = {
   name: 'Babalola Adedayo',
@@ -87,8 +88,10 @@ export type CaseStudy = {
   comingSoon?: boolean
 }
 
-// Deep case studies — lead with the current flagship design-system work
-export const caseStudies: CaseStudy[] = [
+// Deep case studies — lead with the current flagship design-system work.
+// Staged-only studies (src/lib/release.ts) are filtered out below, so
+// production builds never list, route, or link to them.
+const allCaseStudies: CaseStudy[] = [
   {
     slug: 'inkwell',
     index: '01',
@@ -213,6 +216,8 @@ export const caseStudies: CaseStudy[] = [
     coverPos: 'center',
   },
 ]
+
+export const caseStudies: CaseStudy[] = allCaseStudies.filter((cs) => !isHeldBack(cs.slug))
 
 // Lighter "more work" row — real covers from the vault gallery
 export type MoreWorkItem = {
