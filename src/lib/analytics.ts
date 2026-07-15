@@ -4,12 +4,14 @@
    needed. The library is dynamically imported on first pageview so
    it never touches the main bundle.
 
-   Setup: set VITE_POSTHOG_KEY (and VITE_POSTHOG_HOST for the EU
-   cloud) in the Cloudflare Pages project's production environment
-   variables. No key -> everything here is a no-op. */
+   The default key is the project's publishable client key (it ships
+   in the bundle by design); VITE_POSTHOG_KEY overrides it, and
+   VITE_POSTHOG_HOST overrides the US cloud host. */
 import { isProduction } from './release'
 
-const KEY = import.meta.env.VITE_POSTHOG_KEY as string | undefined
+const KEY =
+  (import.meta.env.VITE_POSTHOG_KEY as string | undefined) ??
+  'phc_wCNLrFmsSfdRGp2hFwwgGSX5m6hvAsL5Ldnq5V7cb6tV'
 const HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) ?? 'https://us.i.posthog.com'
 
 export const analyticsEnabled = Boolean(KEY) && isProduction
