@@ -8,8 +8,10 @@
 // click closes; body scroll locks while open.
 // ============================================================
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, Download, FileText, X } from 'lucide-react'
+import { Tooltip } from '@/components/ui/tooltip'
 import { profile } from '@/data'
 import { dur, easeExpo } from '@/lib/motion'
 
@@ -77,7 +79,10 @@ export default function CvViewer({ open, onClose }: Props) {
     }
   }, [open])
 
-  return (
+  /* Portal to <body>: the About column's framer transforms create a
+     stacking context that would trap this fixed overlay beneath the
+     nav island (which then swallows the header-action clicks). */
+  return createPortal(
     <AnimatePresence>
       {open && (
         <motion.div
@@ -90,8 +95,10 @@ export default function CvViewer({ open, onClose }: Props) {
           aria-label="Adedayo Babalola — curriculum vitae"
           className="fixed inset-0 z-[80] flex items-center justify-center p-3 sm:p-8"
         >
-          {/* Scrim — clicking it closes */}
-          <button aria-label="Close CV" onClick={onClose} className="absolute inset-0 cursor-pointer bg-opt-ink/70 backdrop-blur-sm" />
+          {/* Scrim — a mouse-only dismiss affordance; keyboard users
+              have ESC and the header close, so keep it out of the
+              tab order to avoid a duplicate "close" stop. */}
+          <div aria-hidden="true" onClick={onClose} className="absolute inset-0 cursor-pointer bg-opt-ink/70 backdrop-blur-sm" />
 
           <motion.div
             initial={{ y: 14, opacity: 0 }}
@@ -107,15 +114,21 @@ export default function CvViewer({ open, onClose }: Props) {
                 <span className="truncate">Adedayo Babalola — CV</span>
               </p>
               <div className="flex shrink-0 items-center gap-0.5">
-                <a href={profile.resumeUrl} target="_blank" rel="noreferrer" aria-label="Open CV in a new tab" className={HEADER_ACTION}>
-                  <ArrowUpRight size={15} strokeWidth={2} />
-                </a>
-                <a href={profile.resumeUrl} download="Adedayo-Babalola-CV.pdf" aria-label="Download CV" className={HEADER_ACTION}>
-                  <Download size={15} strokeWidth={2} />
-                </a>
-                <button onClick={onClose} aria-label="Close CV" className={HEADER_ACTION}>
-                  <X size={15} strokeWidth={2} />
-                </button>
+                <Tooltip label="Open in a new tab">
+                  <a href={profile.resumeUrl} target="_blank" rel="noreferrer" aria-label="Open CV in a new tab" className={HEADER_ACTION}>
+                    <ArrowUpRight size={15} strokeWidth={2} />
+                  </a>
+                </Tooltip>
+                <Tooltip label="Download CV">
+                  <a href={profile.resumeUrl} download="Adedayo-Babalola-CV.pdf" aria-label="Download CV" className={HEADER_ACTION}>
+                    <Download size={15} strokeWidth={2} />
+                  </a>
+                </Tooltip>
+                <Tooltip label="Close" shortcut="Esc">
+                  <button onClick={onClose} aria-label="Close CV" className={HEADER_ACTION}>
+                    <X size={15} strokeWidth={2} />
+                  </button>
+                </Tooltip>
               </div>
             </div>
 
@@ -144,6 +157,7 @@ export default function CvViewer({ open, onClose }: Props) {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   )
 }
