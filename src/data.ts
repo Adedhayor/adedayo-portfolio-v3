@@ -39,7 +39,7 @@ export const profile = {
   name: 'Babalola Adedayo',
   fullName: 'Emmanuel Adedayo Babalola',
   shortName: 'Adedayo',
-  role: 'Product & UX Designer',
+  role: 'Design Engineer',
   secondaryRole: 'Product Designer',
   location: 'Lagos, Nigeria',
   timezone: 'WAT',
