@@ -11,7 +11,8 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowUpRight, ChevronDown, ChevronUp, FileText } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { ButtonLink } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
+import CvViewer from '@/components/global/CvViewer'
 import { about, profile, workHistory } from '@/data'
 import { TOOL_LOGOS, type ToolLogo } from '@/lib/toolLogos'
 import { dur, easeExpo, riseIn, stagger, revealOnce } from '@/lib/motion'
@@ -78,10 +79,14 @@ function RoleCard({ w, className = '' }: { w: Role; className?: string }) {
    peeking beneath; expanded fans out every role. Exported for /about. */
 export function WorkHistoryStack() {
   const [open, setOpen] = useState(false)
+  const [cvOpen, setCvOpen] = useState(false)
   const top = workHistory[0]
   return (
     <div className="mt-opt-2xl">
       <p className="mb-3 text-[13px] font-semibold text-opt-text-secondary">Work history</p>
+
+      {/* In-app résumé reader — opened by the Read CV buttons below */}
+      <CvViewer open={cvOpen} onClose={() => setCvOpen(false)} />
 
       <AnimatePresence initial={false} mode="wait">
         {!open ? (
@@ -107,15 +112,13 @@ export function WorkHistoryStack() {
             {/* Prominent action first, quiet toggle second (Fitts +
                 visual-hierarchy heuristics — round G). */}
             <div className="mt-6 flex items-center gap-4">
-              <ButtonLink
-                href={profile.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
+              <Button
+                onClick={() => setCvOpen(true)}
                 variant="secondary"
                 trailingIcon={<FileText size={13} strokeWidth={2.5} />}
               >
                 Read CV
-              </ButtonLink>
+              </Button>
               <button
                 onClick={() => setOpen(true)}
                 className="inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
@@ -138,15 +141,13 @@ export function WorkHistoryStack() {
               ))}
             </div>
             <div className="mt-4 flex items-center gap-4">
-              <ButtonLink
-                href={profile.resumeUrl}
-                target="_blank"
-                rel="noreferrer"
+              <Button
+                onClick={() => setCvOpen(true)}
                 variant="secondary"
                 trailingIcon={<FileText size={13} strokeWidth={2.5} />}
               >
                 Read CV
-              </ButtonLink>
+              </Button>
               <button
                 onClick={() => setOpen(false)}
                 className="inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-semibold text-opt-text-secondary transition-colors hover:text-opt-text-heading focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-opt-border-focus"
