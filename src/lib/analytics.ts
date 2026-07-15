@@ -14,7 +14,22 @@ const KEY =
   'phc_wCNLrFmsSfdRGp2hFwwgGSX5m6hvAsL5Ldnq5V7cb6tV'
 const HOST = (import.meta.env.VITE_POSTHOG_HOST as string | undefined) ?? 'https://us.i.posthog.com'
 
-export const analyticsEnabled = Boolean(KEY) && isProduction
+/* Owner opt-out — visit once with ?ph_optout=1 to permanently exclude
+   this browser from analytics (?ph_optout=0 re-includes it). Survives
+   IP changes, which an IP filter can't (Private Relay/WARP rotate). */
+const OPTOUT_KEY = 'ph_optout'
+function ownerOptedOut(): boolean {
+  try {
+    const param = new URLSearchParams(window.location.search).get(OPTOUT_KEY)
+    if (param === '1') localStorage.setItem(OPTOUT_KEY, '1')
+    if (param === '0') localStorage.removeItem(OPTOUT_KEY)
+    return localStorage.getItem(OPTOUT_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
+export const analyticsEnabled = Boolean(KEY) && isProduction && !ownerOptedOut()
 
 type PostHog = typeof import('posthog-js').default
 let phPromise: Promise<PostHog> | null = null
