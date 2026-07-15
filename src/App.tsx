@@ -9,6 +9,7 @@ import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
+import RouteMeta from '@/components/global/RouteMeta'
 import { isProduction, showChat, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
@@ -40,6 +41,8 @@ export default function App() {
   return (
     <>
       <ScrollToHash />
+      {/* Per-route titles/canonical + analytics pageviews */}
+      <RouteMeta />
       <CustomCursor />
 
       {/* Cursor-reactive ASCII background — behind every page (round G) */}
