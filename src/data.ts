@@ -52,7 +52,7 @@ export const profile = {
   instagramPhotography: 'https://www.instagram.com/optimus.randoms/',
   twitter: 'https://x.com/__dedayo',
   substack: 'https://dedayo.substack.com/',
-  resumeUrl: '#', // TODO: host résumé PDF
+  resumeUrl: '/Adedayo-Babalola-CV.pdf', // served from public/; CvViewer reads it in-app
 
   // Hero — calm, values-first (no metric-shouting)
   intro:
