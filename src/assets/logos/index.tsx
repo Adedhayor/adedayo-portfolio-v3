@@ -1,63 +1,42 @@
 // ============================================================
-// Client logos — ORIGINAL monochrome wordmark treatments.
-// These are placeholder marks (currentColor, theme-aware) — swap
-// for official brand assets when available. Not reproductions of
-// any trademarked logo; each mark is an original geometric glyph.
+// Client logos — OFFICIAL brand assets (2026-07-15), never
+// redrawn. Each SVG renders as a CSS mask filled with
+// currentColor, so the strip stays monochrome and theme-aware
+// regardless of the file's native fills. Entries without a src
+// render as text only (no official vector collected yet).
+// Sources: replikit.ai/brand · Lithium brand kit · digifigs.com
+// · FOLIO _V2 exports (Vizible, Tabulerasa, Foundation HR).
+// Vault copies: 08 — Portfolio/_assets/logos/.
 // ============================================================
-import type { SVGProps, ReactElement } from 'react'
+import lithium from './lithium.svg'
+import vizible from './vizible.svg'
+import tabulerasa from './tabulerasa.svg'
+import foundationHr from './foundation-hr.svg'
+import replikit from './replikit.svg'
+// ?no-inline: under Vite's inline threshold, the raw data-URI breaks
+// inside the CSS mask url() — force it to ship as a file instead.
+import digifigs from './digifigs.svg?no-inline'
 
-type MarkProps = SVGProps<SVGSVGElement>
-
-function Mark({ children, ...p }: MarkProps & { children: React.ReactNode }) {
-  return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} aria-hidden="true" {...p}>
-      {children}
-    </svg>
-  )
+export type ClientLogo = {
+  name: string
+  /** official asset, used as a CSS-mask source; text-only when absent */
+  src?: string
+  /** rendered size in px, preserving the file's aspect ratio */
+  w?: number
+  h?: number
+  /** show the name beside the mark (for mark-only assets) */
+  showName?: boolean
 }
 
-// Lithium — stacked energy bars in a hex
-const LithiumMark = (p: MarkProps) => (
-  <Mark {...p}>
-    <path d="M12 2 21 7v10l-9 5-9-5V7z" />
-    <path d="M9 10h6M9 13h6" />
-  </Mark>
-)
-// Vizible — an aperture/eye
-const VizibleMark = (p: MarkProps) => (
-  <Mark {...p}>
-    <path d="M2 12 12 4l10 8-10 8z" />
-    <path d="M9 12h6" />
-  </Mark>
-)
-// Zilliqa — angular Z in a frame
-const ZilliqaMark = (p: MarkProps) => (
-  <Mark {...p}>
-    <path d="M4 4h16v16H4z" />
-    <path d="M8 8h8l-8 8h8" />
-  </Mark>
-)
-// Tabulerasa — a data grid
-const TabuleraMark = (p: MarkProps) => (
-  <Mark {...p}>
-    <path d="M3 4h18v16H3z" />
-    <path d="M3 10h18M3 15h18M9 4v16" />
-  </Mark>
-)
-// RepliHaus — a gabled frame (house)
-const RepliHausMark = (p: MarkProps) => (
-  <Mark {...p}>
-    <path d="M4 10 12 3l8 7v11H4z" />
-    <path d="M10 21v-6h4v6" />
-  </Mark>
-)
-
-export type ClientLogo = { name: string; Mark: (p: MarkProps) => ReactElement }
-
 export const CLIENT_LOGOS: ClientLogo[] = [
-  { name: 'Lithium', Mark: LithiumMark },
-  { name: 'Vizible', Mark: VizibleMark },
-  { name: 'Zilliqa', Mark: ZilliqaMark },
-  { name: 'Tabulerasa', Mark: TabuleraMark },
-  { name: 'RepliHaus', Mark: RepliHausMark },
+  { name: 'RepliKit', src: replikit, w: 105, h: 24 }, // 384×88 wordmark
+  { name: 'RepliHaus' }, // text by request
+  { name: 'Lithium Digital', src: lithium, w: 178, h: 24 }, // 416×56 wordmark
+  { name: 'Vizible', src: vizible, w: 89, h: 24 }, // 149×40 lockup
+  { name: 'Zilliqa' }, // no official vector collected yet
+  { name: 'Tabulerasa', src: tabulerasa, w: 84, h: 26 }, // 103×32 lockup — bumped for optical parity
+  { name: 'DigiFigs', src: digifigs, w: 19, h: 22, showName: true }, // 21×25 mark
+  { name: 'Foundation HR', src: foundationHr, w: 167, h: 24 }, // 473×68 lockup
+  { name: 'Westgate' }, // only a raster mark exists — text until vector lands
+  { name: 'DirectTokunbo' }, // only a raster lockup exists — text until vector lands
 ]
