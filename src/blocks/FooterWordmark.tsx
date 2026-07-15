@@ -16,6 +16,7 @@ import { ContactWidget } from '@/blocks/_parts'
 import LocalTime from '@/components/global/LocalTime'
 import ChromaticMetal, { type MetalPalette } from '@/components/global/ChromaticMetal'
 import { profile } from '@/data'
+import { showWordmarkShuffle } from '@/lib/release'
 import { riseIn, revealOnce } from '@/lib/motion'
 import { useWordmarkDrift } from '@/lib/gsap'
 
@@ -77,7 +78,10 @@ export default function FooterWordmark({
           <ChromaticMetal text={wordmark} palette={EFFECTS[effect].palette} className={WORDMARK_TYPE} />
         </div>
 
-        {/* Reset/shuffle — revealed on hover (always visible on touch) */}
+        {/* Reset/shuffle — revealed on hover (always visible on touch).
+            Staging-only until the effects studio ships (release.ts);
+            production stays on the default Chromatic chrome. */}
+        {showWordmarkShuffle && (
         <button
           aria-label={`Change wordmark effect (current: ${EFFECTS[effect].label})`}
           onClick={() => setEffect((e) => (e + 1) % EFFECTS.length)}
@@ -91,6 +95,7 @@ export default function FooterWordmark({
         >
           <RotateCcw size={15} />
         </button>
+        )}
       </div>
 
       {/* Links · © · credit — BELOW the wordmark (round E #8), lifted

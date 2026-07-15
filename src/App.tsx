@@ -10,7 +10,7 @@ import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
-import { showPlayground } from '@/lib/release'
+import { showChat, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
 
@@ -64,8 +64,9 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Optimus chat — rides every page (round F #9) */}
-      <FloatingContact />
+      {/* Optimus chat — rides every page (round F #9). Staging-only
+          teaser until its release (release.ts). */}
+      {showChat && <FloatingContact />}
 
       {/* Visual feedback toolbar — dev only */}
       {import.meta.env.DEV && <Agentation />}

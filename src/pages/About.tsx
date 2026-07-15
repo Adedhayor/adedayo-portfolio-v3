@@ -3,9 +3,9 @@
 // The split layout returns: portrait + identity ride the LHS and
 // stay STICKY while the right column scrolls — bio → currently →
 // work history (with role summaries + Read CV) → stack → the
-// numbered process as a 2×2. Then clients carousel, testimonials,
-// and a closing image pair (landscape + car-selfie to match the
-// top portrait's setting).
+// numbered process as a 2×2. Then the clients carousel.
+// (Testimonials + closing images pulled 2026-07-15 pending real
+// references and worthier shots.)
 // ============================================================
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -15,11 +15,8 @@ import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { WorkHistoryStack, StackChips } from '@/blocks/MiniAbout'
 import ClientLogos from '@/blocks/ClientLogos'
-import TestimonialBand from '@/blocks/TestimonialBand'
 import { about, process, profile } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
-import landscape from '@/assets/about/landscape.jpg'
-import onTheMove from '@/assets/about/on-the-move.jpg'
 
 /* Above-the-fold on a fresh route — animate on mount (see CaseStudy). */
 const revealOnMount = { initial: 'hidden' as const, animate: 'show' as const }
@@ -53,35 +50,6 @@ function ProcessGrid() {
         ))}
       </motion.div>
     </div>
-  )
-}
-
-/* Closing images — a landscape (placeholder until the real landscape
-   shot lands) + a car selfie matching the top portrait's setting. */
-function ClosingImages() {
-  return (
-    <section className="container-opt pt-opt-2xl pb-opt-6xl">
-      <motion.div
-        variants={stagger(0.08)}
-        {...revealOnce}
-        className="grid grid-cols-1 gap-4 sm:grid-cols-3"
-      >
-        <motion.img
-          variants={riseIn}
-          src={landscape}
-          alt="Adedayo at the gym — mirror shot"
-          loading="lazy"
-          className="aspect-[3/2] w-full border border-opt-border-subtle object-cover sm:col-span-2"
-        />
-        <motion.img
-          variants={riseIn}
-          src={onTheMove}
-          alt="Adedayo on the move — car selfie"
-          loading="lazy"
-          className="aspect-[3/4] w-full border border-opt-border-subtle object-cover"
-        />
-      </motion.div>
-    </section>
   )
 }
 
@@ -152,8 +120,9 @@ export default function About() {
         </section>
 
         <ClientLogos label="Clients & companies" />
-        <TestimonialBand />
-        <ClosingImages />
+        {/* TestimonialBand pulled 2026-07-15 until real references land;
+            ClosingImages pulled until worthier shots replace the low-res
+            crops. Both blocks still exist — re-add here when ready. */}
       </main>
       <div className="relative z-[1]">
         <FooterWordmark />

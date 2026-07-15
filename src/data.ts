@@ -214,6 +214,8 @@ const allCaseStudies: CaseStudy[] = [
     accent: '#c8ff2d',
     cover: portfolioCover,
     coverPos: 'center',
+    // Still in the works — gathering details as the build continues
+    comingSoon: true,
   },
 ]
 
@@ -811,4 +813,10 @@ export const caseDetails: Record<string, CaseDetail> = {
 export function nextCaseStudy(slug: string): CaseStudy {
   const i = caseStudies.findIndex((c) => c.slug === slug)
   return caseStudies[(i + 1) % caseStudies.length]
+}
+
+/** Returns the previous case study in the list (wraps around). */
+export function prevCaseStudy(slug: string): CaseStudy {
+  const i = caseStudies.findIndex((c) => c.slug === slug)
+  return caseStudies[(i - 1 + caseStudies.length) % caseStudies.length]
 }

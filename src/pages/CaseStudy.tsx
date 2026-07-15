@@ -17,7 +17,7 @@ import FooterWordmark from '@/blocks/FooterWordmark'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { checkNdaPassword, isNdaUnlocked, unlockNda, NDA_HINT, NDA_ERROR } from '@/lib/nda'
-import { caseStudies, caseDetails, nextCaseStudy, profile } from '@/data'
+import { caseStudies, caseDetails, nextCaseStudy, prevCaseStudy, profile } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 /* Above-the-fold blocks animate on mount, not whileInView — the
@@ -156,6 +156,7 @@ export default function CaseStudy() {
   const [unlocking, setUnlocking] = useState(false)
   if (!cs || !detail) return <Navigate to="/" replace />
   const next = nextCaseStudy(cs.slug)
+  const prev = prevCaseStudy(cs.slug)
   const locked = Boolean(cs.nda) && !unlocked
   const comingSoon = Boolean(cs.comingSoon)
 
@@ -323,19 +324,34 @@ export default function CaseStudy() {
           </>
         )}
 
-        {/* Next case study */}
+        {/* Previous / next case study — both directions (2026-07-15) */}
         <section className="container-opt pb-opt-5xl">
-          <div className="mx-auto max-w-[68ch]">
-            <Link to={`/case-study/${next.slug}`} className="group block border border-opt-border-subtle p-8">
-              <p className="label">Next case study</p>
-              <div className="mt-2 flex items-center justify-between gap-4">
-                <h2 className="font-display text-[clamp(1.5rem,3vw,2.25rem)] leading-[1.1] text-opt-text-heading">
-                  {next.title}
+          <div className="mx-auto grid max-w-[68ch] grid-cols-1 gap-4 sm:grid-cols-2">
+            <Link to={`/case-study/${prev.slug}`} className="group block border border-opt-border-subtle p-8">
+              <p className="label">Previous case study</p>
+              <div className="mt-2 flex items-center gap-3">
+                <ArrowLeft
+                  size={18}
+                  className="shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:-translate-x-1"
+                />
+                <h2 className="font-display text-[clamp(1.25rem,2.2vw,1.5rem)] leading-[1.15] text-opt-text-heading">
+                  {prev.title}
                 </h2>
+              </div>
+            </Link>
+            <Link
+              to={`/case-study/${next.slug}`}
+              className="group block border border-opt-border-subtle p-8 sm:text-right"
+            >
+              <p className="label">Next case study</p>
+              <div className="mt-2 flex items-center gap-3 sm:flex-row-reverse">
                 <ArrowRight
-                  size={22}
+                  size={18}
                   className="shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1"
                 />
+                <h2 className="font-display text-[clamp(1.25rem,2.2vw,1.5rem)] leading-[1.15] text-opt-text-heading">
+                  {next.title}
+                </h2>
               </div>
             </Link>
           </div>
