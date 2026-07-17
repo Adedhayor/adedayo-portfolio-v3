@@ -14,9 +14,9 @@ import { trackPageview } from '@/lib/analytics'
 
 const ORIGIN = 'https://adedayobabalola.com'
 const SITE = 'Adedayo Babalola'
-const DEFAULT_TITLE = `${SITE} — Design Engineer`
+const DEFAULT_TITLE = `${SITE} — Product Designer`
 const DEFAULT_DESC =
-  'Design engineer turning complex, technical systems into experiences that feel simple, human, and trustworthy. Currently shaping RepliKit at RepliHaus.'
+  'Product designer turning complex, technical systems into experiences that feel simple, human, and trustworthy. Currently shaping RepliKit at RepliHaus.'
 
 const STATIC_META: Record<string, { title: string; desc?: string }> = {
   '/': { title: DEFAULT_TITLE },

@@ -10,7 +10,7 @@ import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
 import RouteMeta from '@/components/global/RouteMeta'
-import { isProduction, showChat, showPlayground } from '@/lib/release'
+import { isProduction, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
 
@@ -70,9 +70,8 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Optimus chat — rides every page (round F #9). Staging-only
-          teaser until its release (release.ts). */}
-      {showChat && <FloatingContact />}
+      {/* Optimus chat — rides every page (round F #9; released 2026-07-17) */}
+      <FloatingContact />
 
       {/* Visual feedback toolbar — staging channel only (dev, local
           preview, and the staging.pages.dev deploy); never production */}

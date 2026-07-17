@@ -20,6 +20,3 @@ export const showPlayground = !isProduction
 /** Wordmark effect shuffle — releases with the effects studio;
     production stays on the default Chromatic chrome. */
 export const showWordmarkShuffle = !isProduction
-
-/** Optimus chat widget — teased later; staging-only for now. */
-export const showChat = !isProduction
