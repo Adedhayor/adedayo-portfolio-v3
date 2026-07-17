@@ -39,7 +39,7 @@ export const profile = {
   name: 'Babalola Adedayo',
   fullName: 'Emmanuel Adedayo Babalola',
   shortName: 'Adedayo',
-  role: 'Design Engineer',
+  role: 'Product Designer',
   secondaryRole: 'Product Designer',
   location: 'Lagos, Nigeria',
   timezone: 'WAT',
@@ -220,7 +220,10 @@ const allCaseStudies: CaseStudy[] = [
   },
 ]
 
-export const caseStudies: CaseStudy[] = allCaseStudies.filter((cs) => !isHeldBack(cs.slug))
+// Newest work first (2026-07-17): descending year, stable within a year
+export const caseStudies: CaseStudy[] = allCaseStudies
+  .filter((cs) => !isHeldBack(cs.slug))
+  .sort((a, b) => Number(b.year) - Number(a.year))
 
 // Lighter "more work" row — real covers from the vault gallery
 export type MoreWorkItem = {
