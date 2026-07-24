@@ -30,6 +30,7 @@ import postpaddyCover from './assets/work/postpaddy-cover.jpg'
 import inkwellCover from './assets/work/inkwell-cover.svg'
 import propertyPanelCover from './assets/work/property-panel-cover.svg'
 import portfolioCover from './assets/work/portfolio-cover.svg'
+import effectsStudioCover from './assets/work/effects-studio-cover.svg'
 import portrait from './assets/portrait.jpg'
 // Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
 import notesContent from './data/notesContent.json'
@@ -235,6 +236,14 @@ export type MoreWorkItem = {
   url?: string // TODO: live project URL — activates the "View project" hover CTA
 }
 export const moreWork: MoreWorkItem[] = [
+  {
+    title: 'Effects Studio',
+    tag: 'Playground',
+    year: '2026',
+    note: 'Shaders, generative patterns & UI sound',
+    cover: effectsStudioCover,
+    url: 'https://effects-studio.adedayobabalola.com',
+  },
   { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase', cover: emonieCover },
   { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system', cover: ebankCover },
   { title: 'Nukodes', tag: 'Bookkeeping', year: '2026', note: 'Coming soon', cover: nukodesCover },
