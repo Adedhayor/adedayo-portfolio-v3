@@ -73,6 +73,17 @@ export type Zone = {
     bucket by changing this one constant. */
 export const PLAY_MEDIA_BASE = '/play-media'
 
+/** Transcoded demo loops by screen id — OWNED BY THE MEDIA WORKSTREAM (C).
+    A screen id listed here gets a live video texture; everything else
+    stays on its poster. `lighthouse-ds-mobile.mp4` also exists in
+    public/play-media (portrait Vizible notifications clip) — unwired
+    until the world set grows a phone prop to play it on. */
+const VIDEO_BY_ID: Record<string, string> = {
+  emonie: `${PLAY_MEDIA_BASE}/emonie.mp4`,
+  'ebank-group': `${PLAY_MEDIA_BASE}/ebank-group.mp4`,
+  'lighthouse-ds': `${PLAY_MEDIA_BASE}/lighthouse-ds.mp4`,
+}
+
 const slugify = (s: string) =>
   s
     .toLowerCase()
@@ -115,6 +126,7 @@ const lab: Zone = {
     {
       id: 'effects-studio',
       title: 'Effects Studio',
+      video: VIDEO_BY_ID['effects-studio'],
       aspect: [16, 10],
       action: { kind: 'external', href: 'https://effects-studio-zeta.vercel.app' },
     },
@@ -134,13 +146,25 @@ const tvWall: Zone = {
   id: 'tv-wall',
   title: 'The TV Wall',
   camera: { position: [-5.5, 2, 4], target: [-8, 1.6, -1] },
-  screens: moreWork.map((item) => ({
-    id: slugify(item.title),
-    title: item.title,
-    poster: item.cover,
-    aspect: [16, 10] as [number, number],
-    ...(item.url ? { action: { kind: 'external', href: item.url } as HotspotAction } : {}),
-  })),
+  screens: [
+    ...moreWork.map((item) => ({
+      id: slugify(item.title),
+      title: item.title,
+      video: VIDEO_BY_ID[slugify(item.title)],
+      poster: item.cover,
+      aspect: [16, 10] as [number, number],
+      ...(item.url ? { action: { kind: 'external', href: item.url } as HotspotAction } : {}),
+    })),
+    // Side projects from GitHub — not deployed yet (owner, 2026-07-24);
+    // covers/videos land later. spotifeed stays unlinked while private.
+    { id: 'spotifeed', title: 'Spotifeed', aspect: [16, 10] as [number, number] },
+    {
+      id: 'family-tree',
+      title: 'Family Tree',
+      aspect: [16, 10] as [number, number],
+      action: { kind: 'external', href: 'https://github.com/Adedhayor/family-tree' } as HotspotAction,
+    },
+  ],
   hotspots: [],
 }
 
@@ -152,6 +176,7 @@ const desk: Zone = {
   screens: caseStudies.map((cs) => ({
     id: slugify(cs.slug),
     title: cs.title,
+    video: VIDEO_BY_ID[slugify(cs.slug)],
     poster: cs.cover,
     aspect: [16, 10] as [number, number],
     action: { kind: 'route', to: `/case-study/${cs.slug}` } as HotspotAction,

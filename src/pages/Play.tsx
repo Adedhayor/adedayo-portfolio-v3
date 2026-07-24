@@ -26,7 +26,12 @@ const PlayWorld = lazy(() => import('@/play/PlayWorld'))
 function webglSupported(): boolean {
   try {
     const canvas = document.createElement('canvas')
-    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'))
+    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl')
+    if (!gl) return false
+    // Release the probe context immediately — browsers cap live WebGL
+    // contexts (~16) and kill the oldest, which blacks out the world.
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    return true
   } catch {
     return false
   }

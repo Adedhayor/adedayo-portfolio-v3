@@ -44,10 +44,13 @@ export default function CameraRig({
 
   // Intro: one smooth pull-back from the gate pose to the overview.
   // (B replaces this with the staged crane + prop-bloom timeline.)
+  // NOTE: controls stay `enabled` — a disabled camera-controls instance
+  // skips update(), which freezes transitions AND leaves setLookAt's
+  // completion promise pending forever. The gate overlay is what blocks
+  // user input before entry.
   useEffect(() => {
     const controls = controlsRef.current
     if (!controls || phase !== 'intro') return
-    controls.enabled = false
     const restoreSmooth = controls.smoothTime
     controls.smoothTime = 1.1
     let cancelled = false
@@ -58,7 +61,6 @@ export default function CameraRig({
       })
     return () => {
       cancelled = true
-      controls.enabled = true
       controls.smoothTime = restoreSmooth
     }
   }, [phase, onIntroDone])
@@ -68,7 +70,6 @@ export default function CameraRig({
     const controls = controlsRef.current
     if (!controls || phase === 'gate' || phase === 'intro') return
     const pose = focusedZoneId ? getZone(focusedZoneId).camera : overviewCamera
-    controls.enabled = true
     void controls.setLookAt(...pose.position, ...pose.target, !reducedMotion)
     lastInteraction.current = performance.now()
   }, [phase, focusedZoneId, reducedMotion])
@@ -96,7 +97,6 @@ export default function CameraRig({
     <CameraControls
       ref={controlsRef}
       makeDefault
-      enabled={phase === 'overview' || phase === 'focused'}
       minDistance={3}
       maxDistance={24}
       minPolarAngle={0.3}

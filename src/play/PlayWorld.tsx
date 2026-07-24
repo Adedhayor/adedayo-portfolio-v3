@@ -19,6 +19,7 @@ import { getZone, overviewHotspots, zones } from './data/playground'
 import CameraRig, { GATE_POSE } from './scene/CameraRig'
 import Hotspots from './scene/Hotspots'
 import ZonePlaceholder from './scene/ZonePlaceholder'
+import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
 
 export default function PlayWorld() {
@@ -97,6 +98,7 @@ export default function PlayWorld() {
         ))}
       </div>
 
+      <VideoPoolController />
       <AmbientBed active={phase !== 'gate'} muted={muted} />
     </>
   )
