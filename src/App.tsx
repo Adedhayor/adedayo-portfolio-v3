@@ -38,6 +38,9 @@ function ScrollToHash() {
 }
 
 export default function App() {
+  // The /play world is immersive full-viewport WebGL — the ambient
+  // ASCII field and the chat FAB would fight it for pointer + GPU.
+  const inPlayWorld = useLocation().pathname === '/play'
   return (
     <>
       <ScrollToHash />
@@ -46,7 +49,7 @@ export default function App() {
       <CustomCursor />
 
       {/* Cursor-reactive ASCII background — behind every page (round G) */}
-      <AsciiField />
+      {!inPlayWorld && <AsciiField />}
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />
@@ -70,8 +73,8 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Optimus chat — rides every page (round F #9; released 2026-07-17) */}
-      <FloatingContact />
+      {/* Optimus chat — rides every page except the /play world (round F #9; released 2026-07-17) */}
+      {!inPlayWorld && <FloatingContact />}
 
       {/* Visual feedback toolbar — staging channel only (dev, local
           preview, and the staging.pages.dev deploy); never production */}
