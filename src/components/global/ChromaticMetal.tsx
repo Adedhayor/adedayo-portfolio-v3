@@ -81,9 +81,11 @@ void main() {
    too fast; keep it molten, not busy). */
 const TIME_SCALE = 0.4
 
-/* Palettes — 8 stops each, alternating dark/light so the bands stay
-   sharp. Cycled by the footer easter egg; port these to the effects
-   studio when the shader moves there. */
+/* Palettes — 8 stops each, alternating dark valleys / bright crests so
+   the liquid bands stay sharp. Cycled by the footer easter egg. The
+   colour DNA for molten/aqua/oil-slick is lifted from the Effects
+   Studio shader gallery (Fold Gradient, Water/Mesh, Mesh Gradient) and
+   re-voiced as metal ramps here. */
 // prettier-ignore
 const PALETTES = {
   chrome: {
@@ -107,6 +109,31 @@ const PALETTES = {
     ],
     fallbackCls: 'wordmark-metal wordmark-metal--holo',
   },
+  // Fold Gradient's ember reds → molten metal.
+  molten: {
+    stops: [
+      0.07, 0.02, 0.02,   1.00, 0.44, 0.14,   0.24, 0.04, 0.02,   1.00, 0.82, 0.50,
+      0.60, 0.14, 0.04,   0.05, 0.02, 0.02,   0.94, 0.28, 0.09,   0.07, 0.02, 0.02,
+    ],
+    fallbackCls: 'wordmark-metal wordmark-metal--molten',
+  },
+  // Water caustics + Mesh cyan → icy chrome. Crests keep red low so the
+  // rgb-split fringes cool instead of washing to white.
+  aqua: {
+    stops: [
+      0.01, 0.05, 0.08,   0.52, 0.92, 1.00,   0.02, 0.11, 0.17,   0.30, 0.82, 1.00,
+      0.10, 0.40, 0.52,   0.01, 0.05, 0.08,   0.62, 0.95, 1.00,   0.01, 0.05, 0.08,
+    ],
+    fallbackCls: 'wordmark-metal wordmark-metal--aqua',
+  },
+  // Mesh Gradient's electric blue/cyan/pink → oil-slick iridescence.
+  oilslick: {
+    stops: [
+      0.03, 0.03, 0.09,   0.36, 0.55, 1.00,   0.08, 0.04, 0.13,   0.20, 0.86, 1.00,
+      0.34, 0.14, 0.42,   0.05, 0.02, 0.08,   1.00, 0.34, 0.48,   0.03, 0.03, 0.09,
+    ],
+    fallbackCls: 'wordmark-metal wordmark-metal--oilslick',
+  },
 } as const
 export type MetalPalette = keyof typeof PALETTES
 
@@ -126,7 +153,7 @@ function compile(gl: WebGLRenderingContext, type: number, src: string) {
 
 type Props = {
   text: string
-  /** Which metal — chrome (default), gold, or holo. */
+  /** Which metal finish — chrome (default), gold, holo, molten, aqua, oilslick. */
   palette?: MetalPalette
   /** Typography classes — applied to the wrapper so the sizer span
       and the rasterised mask share the exact same metrics. */

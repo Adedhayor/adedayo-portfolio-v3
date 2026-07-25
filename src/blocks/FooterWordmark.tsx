@@ -23,11 +23,15 @@ import { usePlaySound } from '@/lib/sensory-ui'
 
 /* ---- The effects registry — every finish runs through the shader
    now (round E #7); the CSS sweeps remain as its no-WebGL fallback.
-   TODO(owner): port these palettes into the effects studio. ---- */
+   molten/aqua/oil-slick are voiced from the Effects Studio shader
+   gallery (Fold Gradient, Water/Mesh, Mesh Gradient). ---- */
 const EFFECTS: { id: string; label: string; palette: MetalPalette }[] = [
   { id: 'chromatic-chrome', label: 'Chromatic chrome', palette: 'chrome' },
   { id: 'chromatic-gold', label: 'Chromatic gold', palette: 'gold' },
   { id: 'chromatic-holo', label: 'Chromatic holo', palette: 'holo' },
+  { id: 'chromatic-molten', label: 'Molten', palette: 'molten' },
+  { id: 'chromatic-aqua', label: 'Aqua', palette: 'aqua' },
+  { id: 'chromatic-oilslick', label: 'Oil slick', palette: 'oilslick' },
 ]
 
 /* Shared responsive type for every wordmark finish */
