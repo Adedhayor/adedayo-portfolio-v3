@@ -26,3 +26,8 @@ dist-ssr
 *storybook.log
 storybook-static
 *.local
+
+# Raw demo recordings — dropped by the owner, transcoded by
+# scripts/build-play-media.mjs into public/play-media/ (committed).
+assets-src/demos/*
+!assets-src/demos/.gitkeep

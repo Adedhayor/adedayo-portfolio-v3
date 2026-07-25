@@ -2,7 +2,11 @@
 // Typographic primitives — Display, SectionTitle, Eyebrow, Lead.
 // One place owns the type ramp. Theme-aware via semantic tokens.
 // ============================================================
-import type { ReactNode, ElementType } from 'react'
+import type { ReactNode } from 'react'
+
+// Kept to HTML tags — a plain ElementType breaks under
+// @react-three/fiber's JSX augmentation (props collapse to never).
+type HeadingTag = 'h1' | 'h2' | 'h3' | 'h4' | 'p' | 'span' | 'div'
 
 export function Eyebrow({ children, className = '' }: { children: ReactNode; className?: string }) {
   return <p className={['eyebrow', className].join(' ')}>{children}</p>
@@ -14,7 +18,7 @@ export function Display({
   className = '',
 }: {
   children: ReactNode
-  as?: ElementType
+  as?: HeadingTag
   className?: string
 }) {
   return (
@@ -36,7 +40,7 @@ export function SectionTitle({
   className = '',
 }: {
   children: ReactNode
-  as?: ElementType
+  as?: HeadingTag
   className?: string
 }) {
   return (

@@ -1,6 +1,5 @@
-import { useEffect } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
-import { Agentation } from 'agentation'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import About from '@/pages/About'
@@ -11,9 +10,13 @@ import Work from '@/pages/Work'
 import NotFound from '@/pages/NotFound'
 import CustomCursor from '@/components/global/CustomCursor'
 import RouteMeta from '@/components/global/RouteMeta'
-import { showPlayground } from '@/lib/release'
+import { isProduction, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
+
+// Lazy so the toolbar ships as its own chunk that production never
+// fetches — the package isn't tree-shakeable from the main bundle.
+const Agentation = lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -35,6 +38,9 @@ function ScrollToHash() {
 }
 
 export default function App() {
+  // The /play world is immersive full-viewport WebGL — the ambient
+  // ASCII field and the chat FAB would fight it for pointer + GPU.
+  const inPlayWorld = useLocation().pathname === '/play'
   return (
     <>
       <ScrollToHash />
@@ -43,7 +49,7 @@ export default function App() {
       <CustomCursor />
 
       {/* Cursor-reactive ASCII background — behind every page (round G) */}
-      <AsciiField />
+      {!inPlayWorld && <AsciiField />}
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />
@@ -67,11 +73,16 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Optimus chat — rides every page (round F #9; released 2026-07-17) */}
-      <FloatingContact />
+      {/* Optimus chat — rides every page except the /play world (round F #9; released 2026-07-17) */}
+      {!inPlayWorld && <FloatingContact />}
 
-      {/* Visual feedback toolbar — dev only */}
-      {import.meta.env.DEV && <Agentation />}
+      {/* Visual feedback toolbar — staging channel only (dev, local
+          preview, and the staging.pages.dev deploy); never production */}
+      {!isProduction && (
+        <Suspense fallback={null}>
+          <Agentation />
+        </Suspense>
+      )}
     </>
   )
 }
