@@ -19,6 +19,7 @@ import { profile } from '@/data'
 import { showWordmarkShuffle } from '@/lib/release'
 import { riseIn, revealOnce } from '@/lib/motion'
 import { useWordmarkDrift } from '@/lib/gsap'
+import { usePlaySound } from '@/lib/sensory-ui'
 
 /* ---- The effects registry — every finish runs through the shader
    now (round E #7); the CSS sweeps remain as its no-WebGL fallback.
@@ -56,6 +57,10 @@ export default function FooterWordmark({
   const scope = useWordmarkDrift(8)
   const [effect, setEffect] = useState(0)
   const [hovering, setHovering] = useState(false)
+  // Easter-egg reward: a synthesized chime (from the ported Effects
+  // Studio sensory-ui packs) on every finish-shuffle. Respects mute,
+  // volume, and prefers-reduced-motion via the provider.
+  const { play: playShuffle } = usePlaySound({ sound: 'notification.success' })
 
   return (
     <footer ref={scope} className={['relative overflow-hidden bg-opt-ink text-opt-paper', className].join(' ')}>
@@ -85,7 +90,10 @@ export default function FooterWordmark({
         {showWordmarkShuffle && (
         <button
           aria-label={`Change wordmark effect (current: ${EFFECTS[effect].label})`}
-          onClick={() => setEffect((e) => (e + 1) % EFFECTS.length)}
+          onClick={() => {
+            playShuffle()
+            setEffect((e) => (e + 1) % EFFECTS.length)
+          }}
           className={[
             'absolute bottom-4 left-4 z-10 grid size-10 cursor-pointer place-items-center rounded-none',
             'border border-white/15 bg-white/5 text-opt-paper/70 backdrop-blur-sm',
