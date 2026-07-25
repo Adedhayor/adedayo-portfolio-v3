@@ -17,6 +17,6 @@ export function isHeldBack(slug: string): boolean {
 /** The /play page — staging-only until it's ready for release. */
 export const showPlayground = !isProduction
 
-/** Wordmark effect shuffle — releases with the effects studio;
-    production stays on the default Chromatic chrome. */
-export const showWordmarkShuffle = !isProduction
+/** Wordmark effect shuffle — released 2026-07-25 alongside Effects
+    Studio going live; on in production and staging alike. */
+export const showWordmarkShuffle = true

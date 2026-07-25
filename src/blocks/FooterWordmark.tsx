@@ -80,8 +80,7 @@ export default function FooterWordmark({
         </div>
 
         {/* Reset/shuffle — revealed on hover (always visible on touch).
-            Staging-only until the effects studio ships (release.ts);
-            production stays on the default Chromatic chrome. */}
+            Live everywhere since Effects Studio shipped (release.ts). */}
         {showWordmarkShuffle && (
         <button
           aria-label={`Change wordmark effect (current: ${FINISHES[effect].label})`}
