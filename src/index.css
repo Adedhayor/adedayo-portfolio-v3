@@ -179,7 +179,8 @@
     );
   }
   /* Ported from Effects Studio (Fold Gradient / Water / Mesh) — see
-     PALETTES in ChromaticMetal.tsx; these are the no-WebGL fallbacks. */
+     the finishes in components/global/shader-text/; these are the
+     no-WebGL2 fallbacks. */
   .wordmark-metal--molten {
     background-image: linear-gradient(
       100deg,
@@ -199,6 +200,14 @@
       100deg,
       #0a0a1a 0%, #5b8cff 20%, #16091f 40%,
       #33d9ff 55%, #c04cff 72%, #ff4d6d 88%, #0a0a1a 100%
+    );
+  }
+  /* Aurora — CSS fallback for the FoldGradient (Aurora) shader finish. */
+  .wordmark-metal--aurora {
+    background-image: linear-gradient(
+      100deg,
+      #0b1030 0%, #1f6f8f 22%, #57e0c4 42%,
+      #eef4ff 55%, #b98cff 74%, #1f6f8f 90%, #0b1030 100%
     );
   }
   @keyframes opt-metal-sweep {
