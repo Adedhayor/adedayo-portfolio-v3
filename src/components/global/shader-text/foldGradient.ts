@@ -56,7 +56,7 @@ float pat(vec2 p, out float hue){
   vec2 q=vec2(fbm(p), fbm(p+vec2(5.2,1.3)));
   vec2 r=vec2(fbm(p+4.0*q+vec2(1.7,9.2)), fbm(p+4.0*q+vec2(8.3,2.8)));
   hue=clamp(r.x*0.95+0.03, 0.0, 1.0);
-  r+=u_time*0.045;
+  r+=u_time*0.075; // paper family: livelier than before, still well under the metal's pace
   return fbm(p+1.76*r);
 }
 vec3 palette(float x){
