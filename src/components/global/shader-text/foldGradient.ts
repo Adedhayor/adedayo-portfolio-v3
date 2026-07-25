@@ -1,5 +1,6 @@
 // ============================================================
-// Aurora finish — a genuinely different shader (not a palette swap):
+// FoldGradient finishes (Aurora / Ember / Nebula) — a genuinely
+// different shader from the metal (not a palette-on-metal swap):
 // Effects Studio's FoldGradient (domain-warped fbm light-sheets, lit,
 // ACES-graded, dithered). Ported here from
 //   ~/conductor/repos/effects-studio/components/shaders/foldGradientShader.ts
@@ -127,30 +128,93 @@ void main(){
 }
 `
 
-// Aurora palette — cool satin steel drifting to violet (5 stops).
-// prettier-ignore
-const COLORS = new Float32Array([
-  0.043, 0.063, 0.188, 1.0, // #0b1030 indigo-black
-  0.122, 0.435, 0.561, 1.0, // #1f6f8f teal
-  0.341, 0.878, 0.769, 1.0, // #57e0c4 mint
-  0.933, 0.957, 1.000, 1.0, // #eef4ff near-white crest
-  0.725, 0.549, 1.000, 1.0, // #b98cff violet
-])
-
-export const foldGradientFinish: Finish = {
-  id: 'aurora-fold',
-  label: 'Aurora',
-  frag: FRAG,
-  cssFallback: 'wordmark-metal wordmark-metal--aurora',
-  setStatic: (gl, prog) => {
-    gl.uniform4fv(gl.getUniformLocation(prog, 'u_colors'), COLORS)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_ncols'), 5)
-    gl.uniform3f(gl.getUniformLocation(prog, 'u_back'), 0.02, 0.024, 0.06)
-    gl.uniform3f(gl.getUniformLocation(prog, 'u_shadow'), 0.039, 0.11, 0.165)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_softness'), 1.0)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_saturation'), 1.08)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_noise'), 0.0)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_rotation'), -8.0)
-    gl.uniform1f(gl.getUniformLocation(prog, 'u_folds'), 8.0)
-  },
+// One shader, several palettes/params → distinctly-voiced satin
+// finishes. FoldGradient's lit, graded output varies far more with
+// palette than the metal ramp does, so these read as separate looks.
+type FoldOpts = {
+  colors: number[] // 5 × [r,g,b] in 0–1
+  back: [number, number, number] // colour of the gaps
+  shadow: [number, number, number] // tint bleeding into shadowed edges
+  folds: number // "zoom" — bigger = larger sheets
+  rotation: number // degrees
+  saturation?: number
 }
+
+function toColors(rgb: number[]): Float32Array {
+  const out = new Float32Array(20)
+  for (let i = 0; i < 5; i++) {
+    out[i * 4] = rgb[i * 3]
+    out[i * 4 + 1] = rgb[i * 3 + 1]
+    out[i * 4 + 2] = rgb[i * 3 + 2]
+    out[i * 4 + 3] = 1
+  }
+  return out
+}
+
+function foldFinish(id: string, label: string, cssFallback: string, o: FoldOpts): Finish {
+  const colors = toColors(o.colors)
+  return {
+    id,
+    label,
+    frag: FRAG,
+    cssFallback,
+    setStatic: (gl, prog) => {
+      gl.uniform4fv(gl.getUniformLocation(prog, 'u_colors'), colors)
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_ncols'), 5)
+      gl.uniform3f(gl.getUniformLocation(prog, 'u_back'), o.back[0], o.back[1], o.back[2])
+      gl.uniform3f(gl.getUniformLocation(prog, 'u_shadow'), o.shadow[0], o.shadow[1], o.shadow[2])
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_softness'), 1.0)
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_saturation'), o.saturation ?? 1.08)
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_noise'), 0.0)
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_rotation'), o.rotation)
+      gl.uniform1f(gl.getUniformLocation(prog, 'u_folds'), o.folds)
+    },
+  }
+}
+
+// Cool satin steel → violet.
+export const auroraFinish = foldFinish('aurora-fold', 'Aurora', 'wordmark-metal wordmark-metal--aurora', {
+  colors: [
+    0.043, 0.063, 0.188, // #0b1030 indigo-black
+    0.122, 0.435, 0.561, // #1f6f8f teal
+    0.341, 0.878, 0.769, // #57e0c4 mint
+    0.933, 0.957, 1.000, // #eef4ff near-white crest
+    0.725, 0.549, 1.000, // #b98cff violet
+  ],
+  back: [0.02, 0.024, 0.06],
+  shadow: [0.039, 0.11, 0.165],
+  folds: 8,
+  rotation: -8,
+})
+
+// Warm lava drape.
+export const emberFinish = foldFinish('ember-fold', 'Ember', 'wordmark-metal wordmark-metal--ember', {
+  colors: [
+    0.098, 0.024, 0.008, // #190602 near-black maroon
+    0.478, 0.118, 0.024, // #7a1e06 burnt umber
+    1.000, 0.416, 0.118, // #ff6a1e orange
+    1.000, 0.824, 0.478, // #ffd27a warm cream crest
+    1.000, 0.231, 0.180, // #ff3b2e red
+  ],
+  back: [0.055, 0.018, 0.01],
+  shadow: [0.16, 0.05, 0.03],
+  folds: 7,
+  rotation: 6,
+  saturation: 1.12,
+})
+
+// Purple/magenta nebula.
+export const nebulaFinish = foldFinish('nebula-fold', 'Nebula', 'wordmark-metal wordmark-metal--nebula', {
+  colors: [
+    0.039, 0.024, 0.125, // #0a0620 indigo-black
+    0.227, 0.122, 0.561, // #3a1f8f deep violet
+    0.561, 0.247, 1.000, // #8f3fff violet
+    1.000, 0.369, 0.769, // #ff5ec4 magenta crest
+    0.435, 0.878, 1.000, // #6fe0ff cyan
+  ],
+  back: [0.03, 0.02, 0.06],
+  shadow: [0.10, 0.06, 0.18],
+  folds: 9,
+  rotation: -14,
+  saturation: 1.1,
+})

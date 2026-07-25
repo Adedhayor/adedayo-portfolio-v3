@@ -1,9 +1,9 @@
 // ============================================================
 // Liquid-metal finish — the original ChromaticMetal shader, moved
 // here and up-ported to GLSL ES 3.00 (texture2D→texture,
-// gl_FragColor→out). One shader, six palettes; each palette is its
-// own registry entry. molten/aqua/oil-slick colour DNA is voiced
-// from the Effects Studio shader gallery.
+// gl_FragColor→out). One shader, three metal palettes
+// (chrome/gold/holo); the paper-shader finishes (Aurora & family,
+// plus paper-design library shaders) carry the rest of the cycle.
 // ============================================================
 import type { Finish } from './types'
 
@@ -82,18 +82,6 @@ export const PALETTES: Record<string, number[]> = {
   holo: [
     0.56, 0.61, 1.00,   1.00, 0.83, 0.94,   0.08, 0.08, 0.16,   0.72, 1.00, 0.88,
     1.00, 0.96, 0.72,   0.63, 0.85, 1.00,   0.89, 0.72, 1.00,   0.56, 0.61, 1.00,
-  ],
-  molten: [
-    0.07, 0.02, 0.02,   1.00, 0.44, 0.14,   0.24, 0.04, 0.02,   1.00, 0.82, 0.50,
-    0.60, 0.14, 0.04,   0.05, 0.02, 0.02,   0.94, 0.28, 0.09,   0.07, 0.02, 0.02,
-  ],
-  aqua: [
-    0.01, 0.05, 0.08,   0.52, 0.92, 1.00,   0.02, 0.11, 0.17,   0.30, 0.82, 1.00,
-    0.10, 0.40, 0.52,   0.01, 0.05, 0.08,   0.62, 0.95, 1.00,   0.01, 0.05, 0.08,
-  ],
-  oilslick: [
-    0.03, 0.03, 0.09,   0.36, 0.55, 1.00,   0.08, 0.04, 0.13,   0.20, 0.86, 1.00,
-    0.34, 0.14, 0.42,   0.05, 0.02, 0.08,   1.00, 0.34, 0.48,   0.03, 0.03, 0.09,
   ],
 }
 

@@ -7,17 +7,18 @@
 // ============================================================
 import type { Finish } from './types'
 import { liquidMetalFinish } from './liquidMetal'
-import { foldGradientFinish } from './foldGradient'
+import { auroraFinish, emberFinish, nebulaFinish } from './foldGradient'
 
 export type { Finish }
 export { default as ShaderText } from './ShaderText'
 
+// Three metals + the paper-shader finishes. The easter egg picks from
+// these at random (FooterWordmark), so order is not meaningful.
 export const FINISHES: Finish[] = [
   liquidMetalFinish('chromatic-chrome', 'Chromatic chrome', 'chrome'),
   liquidMetalFinish('chromatic-gold', 'Chromatic gold', 'gold'),
   liquidMetalFinish('chromatic-holo', 'Chromatic holo', 'holo'),
-  liquidMetalFinish('chromatic-molten', 'Molten', 'molten'),
-  liquidMetalFinish('chromatic-aqua', 'Aqua', 'aqua'),
-  liquidMetalFinish('chromatic-oilslick', 'Oil slick', 'oilslick'),
-  foldGradientFinish,
+  auroraFinish,
+  emberFinish,
+  nebulaFinish,
 ]

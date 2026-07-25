@@ -87,7 +87,13 @@ export default function FooterWordmark({
           aria-label={`Change wordmark effect (current: ${FINISHES[effect].label})`}
           onClick={() => {
             playShuffle()
-            setEffect((e) => (e + 1) % FINISHES.length)
+            // Jump to a random *different* finish each press.
+            setEffect((cur) => {
+              if (FINISHES.length < 2) return cur
+              let next = cur
+              while (next === cur) next = Math.floor(Math.random() * FINISHES.length)
+              return next
+            })
           }}
           className={[
             'absolute bottom-4 left-4 z-10 grid size-10 cursor-pointer place-items-center rounded-none',

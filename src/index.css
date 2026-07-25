@@ -178,36 +178,27 @@
       #fff6b8 55%, #a8d8ff 72%, #e3b8ff 88%, #9aa7ff 100%
     );
   }
-  /* Ported from Effects Studio (Fold Gradient / Water / Mesh) — see
-     the finishes in components/global/shader-text/; these are the
-     no-WebGL2 fallbacks. */
-  .wordmark-metal--molten {
-    background-image: linear-gradient(
-      100deg,
-      #1a0704 0%, #ff7024 24%, #7a1c0a 42%,
-      #ffd7a0 52%, #9a3012 68%, #ef4a1a 86%, #1a0704 100%
-    );
-  }
-  .wordmark-metal--aqua {
-    background-image: linear-gradient(
-      100deg,
-      #04141f 0%, #8fe3ff 24%, #0a2a3a 42%,
-      #5fd0ff 52%, #206a82 68%, #a6ecff 86%, #04141f 100%
-    );
-  }
-  .wordmark-metal--oilslick {
-    background-image: linear-gradient(
-      100deg,
-      #0a0a1a 0%, #5b8cff 20%, #16091f 40%,
-      #33d9ff 55%, #c04cff 72%, #ff4d6d 88%, #0a0a1a 100%
-    );
-  }
-  /* Aurora — CSS fallback for the FoldGradient (Aurora) shader finish. */
+  /* FoldGradient finishes (Aurora / Ember / Nebula) — no-WebGL2
+     fallbacks; see components/global/shader-text/foldGradient.ts. */
   .wordmark-metal--aurora {
     background-image: linear-gradient(
       100deg,
       #0b1030 0%, #1f6f8f 22%, #57e0c4 42%,
       #eef4ff 55%, #b98cff 74%, #1f6f8f 90%, #0b1030 100%
+    );
+  }
+  .wordmark-metal--ember {
+    background-image: linear-gradient(
+      100deg,
+      #190602 0%, #7a1e06 22%, #ff6a1e 42%,
+      #ffd27a 55%, #ff3b2e 74%, #7a1e06 90%, #190602 100%
+    );
+  }
+  .wordmark-metal--nebula {
+    background-image: linear-gradient(
+      100deg,
+      #0a0620 0%, #3a1f8f 22%, #8f3fff 42%,
+      #ff5ec4 55%, #6fe0ff 74%, #3a1f8f 90%, #0a0620 100%
     );
   }
   @keyframes opt-metal-sweep {
