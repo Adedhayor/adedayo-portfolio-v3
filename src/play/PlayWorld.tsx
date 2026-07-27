@@ -15,10 +15,11 @@ import { useSensoryUI } from '@/lib/sensory-ui'
 import { usePlay } from './PlayContext'
 import { useHotspotAction } from './useHotspotAction'
 import { usePlayColors } from './hooks/usePlayColors'
-import { getZone, overviewHotspots, zones } from './data/playground'
+import { getZone, overviewHotspots } from './data/playground'
 import CameraRig, { GATE_POSE } from './scene/CameraRig'
 import Hotspots from './scene/Hotspots'
-import ZonePlaceholder from './scene/ZonePlaceholder'
+import SetDressing from './scene/set/SetDressing'
+import WorldZones from './scene/zones/WorldZones'
 import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
 
@@ -59,21 +60,8 @@ export default function PlayWorld() {
             }
           }}
         >
-          <color attach="background" args={[palette.surfaceBase]} />
-          <fog attach="fog" args={[palette.surfaceBase, 16, 42]} />
-          <ambientLight intensity={0.8} />
-          <hemisphereLight args={[palette.cyan, palette.ink, 0.4]} />
-          <directionalLight position={[6, 10, 4]} intensity={1.4} />
-
-          {/* Ground disc fading into the fog */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-            <circleGeometry args={[42, 48]} />
-            <meshStandardMaterial color={palette.surfaceRaised} roughness={1} />
-          </mesh>
-
-          {zones.map((zone) => (
-            <ZonePlaceholder key={zone.id} zone={zone} palette={palette} onAction={runAction} />
-          ))}
+          <SetDressing palette={palette} />
+          <WorldZones palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
           <Hotspots hotspots={hotspots} palette={palette} onAction={runAction} onHover={hoverSound} />
           <CameraRig
             phase={phase}
