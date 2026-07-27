@@ -232,6 +232,18 @@ export const overviewHotspots: Hotspot[] = [
 // ------------------------------------------------------------
 // Panels — DOM overlay content, keyed by panelId.
 // ------------------------------------------------------------
+
+/** Where each experiment panel points onward. */
+const PANEL_LINKS: Record<string, PlayPanel['links']> = {
+  'sound-study': [
+    // The synthesized sound system powering this world was built there.
+    { label: 'Effects Studio', action: { kind: 'external', href: 'https://effects-studio-zeta.vercel.app' } },
+  ],
+  'staking-motion': [
+    { label: 'Lithium case study', action: { kind: 'route', to: '/case-study/lithium-staking' } },
+  ],
+}
+
 export const panels: Record<string, PlayPanel> = Object.fromEntries(
   labs.map((experiment) => [
     slugify(experiment.title),
@@ -239,6 +251,7 @@ export const panels: Record<string, PlayPanel> = Object.fromEntries(
       heading: experiment.title,
       kicker: `${experiment.tag} · ${experiment.year}`,
       body: experiment.blurb,
+      links: PANEL_LINKS[slugify(experiment.title)],
     } satisfies PlayPanel,
   ]),
 )
