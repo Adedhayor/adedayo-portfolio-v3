@@ -21,6 +21,7 @@ import Hotspots from './scene/Hotspots'
 import ZonePlaceholder from './scene/ZonePlaceholder'
 import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
+import AdaptiveQuality, { initialDpr } from './fallback/AdaptiveQuality'
 
 export default function PlayWorld() {
   const { phase, focusedZoneId, reducedMotion, muted, introDone, goOverview } = usePlay()
@@ -44,7 +45,9 @@ export default function PlayWorld() {
         }}
       >
         <Canvas
-          dpr={[1, 1.75]}
+          // Coarse pointers start capped at 1.5; AdaptiveQuality steps
+          // dpr from here on sustained low fps. Stable value — see initialDpr().
+          dpr={initialDpr()}
           // Idle at the gate (and under reduced motion) renders on demand only.
           frameloop={phase === 'gate' || reducedMotion ? 'demand' : 'always'}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
@@ -59,6 +62,7 @@ export default function PlayWorld() {
             }
           }}
         >
+          <AdaptiveQuality />
           <color attach="background" args={[palette.surfaceBase]} />
           <fog attach="fog" args={[palette.surfaceBase, 16, 42]} />
           <ambientLight intensity={0.8} />
