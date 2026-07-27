@@ -34,6 +34,10 @@ export type ScreenContent = {
   aspect?: [number, number]
   /** Click-through on the screen itself */
   action?: HotspotAction
+  /** Interactive-scenery workstream: renders via RiveScreen instead of
+      VideoScreen when present. `hoverInput`/`clickInput` name specific
+      state-machine inputs; omit to auto-detect by name ("hover", "click"). */
+  rive?: { src: string; stateMachine?: string; hoverInput?: string; clickInput?: string }
 }
 
 export type Hotspot = {
@@ -157,7 +161,14 @@ const tvWall: Zone = {
     })),
     // Side projects from GitHub — not deployed yet (owner, 2026-07-24);
     // covers/videos land later. spotifeed stays unlinked while private.
-    { id: 'spotifeed', title: 'Spotifeed', aspect: [16, 10] as [number, number] },
+    // Prototyping interactive scenery here in the meantime — swap
+    // `rive.src` for real artwork once designed in the Rive editor.
+    {
+      id: 'spotifeed',
+      title: 'Spotifeed',
+      aspect: [16, 10] as [number, number],
+      rive: { src: `${PLAY_MEDIA_BASE}/rive/vehicles.riv` },
+    },
     {
       id: 'family-tree',
       title: 'Family Tree',

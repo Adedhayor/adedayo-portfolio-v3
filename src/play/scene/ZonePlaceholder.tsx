@@ -8,7 +8,7 @@
 import type { SoundRole } from '@/lib/sensory-ui'
 import type { HotspotAction, Zone, ZoneId } from '../data/playground'
 import type { PlayPalette } from '../hooks/usePlayColors'
-import VideoScreen from './media/VideoScreen'
+import ScreenSurface from './media/ScreenSurface'
 
 const ZONE_TINT: Record<ZoneId, keyof PlayPalette> = {
   lab: 'yellow',
@@ -46,7 +46,7 @@ export default function ZonePlaceholder({
         const y = ty + 0.8 + row * -gapY + (Math.ceil(zone.screens.length / cols) - 1) * gapY * 0.5
         return (
           <group key={screen.id} position={[x, y, -1.2]}>
-            <VideoScreen content={screen} palette={palette} onAction={onAction} />
+            <ScreenSurface content={screen} palette={palette} onAction={onAction} />
           </group>
         )
       })}
