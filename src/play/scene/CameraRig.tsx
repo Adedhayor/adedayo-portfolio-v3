@@ -58,6 +58,8 @@ export default function CameraRig({
   const controlsRef = useRef<CameraControlsImpl | null>(null)
   const lastInteraction = useRef(performance.now())
   const parallax = useRef({ az: 0, pol: 0 })
+  const dragging = useRef(false)
+  const reseedParallax = useRef(false)
   const coarsePointer = useMemo(
     () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches,
     [],
@@ -126,10 +128,20 @@ export default function CameraRig({
     lastInteraction.current = performance.now()
   }, [phase, focusedZoneId, reducedMotion, invalidate])
 
-  // Overview life: idle drift + pointer parallax (fine pointers only).
+  // Overview life: idle drift + pointer parallax (fine pointers only),
+  // both suspended while the user is actively dragging the camera.
   useFrame((state, delta) => {
     const controls = controlsRef.current
     if (!controls || reducedMotion || phase !== 'overview') return
+
+    // While dragging: no parallax, no drift. Keep the idle clock fresh so
+    // drift can't snap in the instant the drag ends, and arm a parallax
+    // re-seed so its baseline resets to the drag's final orientation.
+    if (dragging.current) {
+      lastInteraction.current = performance.now()
+      reseedParallax.current = true
+      return
+    }
 
     if (performance.now() - lastInteraction.current > IDLE_DELAY_MS) {
       controls.azimuthAngle += delta * DRIFT_RAD_PER_S
@@ -138,6 +150,12 @@ export default function CameraRig({
     if (!coarsePointer) {
       const targetAz = state.pointer.x * PARALLAX_AZIMUTH
       const targetPol = -state.pointer.y * PARALLAX_POLAR
+      // Re-seed from the live target after a drag so the first post-drag
+      // frame applies a ~zero delta (no sudden camera swing).
+      if (reseedParallax.current) {
+        parallax.current = { az: targetAz, pol: targetPol }
+        reseedParallax.current = false
+      }
       const k = 1 - Math.exp(-3 * delta)
       const nextAz = parallax.current.az + (targetAz - parallax.current.az) * k
       const nextPol = parallax.current.pol + (targetPol - parallax.current.pol) * k
@@ -147,14 +165,26 @@ export default function CameraRig({
     }
   })
 
+  // Track active drags: suspend parallax/drift on start, and on end refresh
+  // the idle clock + re-seed the parallax baseline (see useFrame above).
   useEffect(() => {
     const controls = controlsRef.current
     if (!controls) return
-    const markInteraction = () => {
+    const onStart = () => {
+      dragging.current = true
       lastInteraction.current = performance.now()
     }
-    controls.addEventListener('controlstart', markInteraction)
-    return () => controls.removeEventListener('controlstart', markInteraction)
+    const onEnd = () => {
+      dragging.current = false
+      lastInteraction.current = performance.now()
+      reseedParallax.current = true
+    }
+    controls.addEventListener('controlstart', onStart)
+    controls.addEventListener('controlend', onEnd)
+    return () => {
+      controls.removeEventListener('controlstart', onStart)
+      controls.removeEventListener('controlend', onEnd)
+    }
   }, [])
 
   return (
