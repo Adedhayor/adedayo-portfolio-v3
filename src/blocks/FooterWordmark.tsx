@@ -14,20 +14,16 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight, RotateCcw } from 'lucide-react'
 import { ContactWidget } from '@/blocks/_parts'
 import LocalTime from '@/components/global/LocalTime'
-import ChromaticMetal, { type MetalPalette } from '@/components/global/ChromaticMetal'
+import { ShaderText, FINISHES } from '@/components/global/shader-text'
 import { profile } from '@/data'
 import { showWordmarkShuffle } from '@/lib/release'
 import { riseIn, revealOnce } from '@/lib/motion'
 import { useWordmarkDrift } from '@/lib/gsap'
+import { usePlaySound } from '@/lib/sensory-ui'
 
-/* ---- The effects registry — every finish runs through the shader
-   now (round E #7); the CSS sweeps remain as its no-WebGL fallback.
-   TODO(owner): port these palettes into the effects studio. ---- */
-const EFFECTS: { id: string; label: string; palette: MetalPalette }[] = [
-  { id: 'chromatic-chrome', label: 'Chromatic chrome', palette: 'chrome' },
-  { id: 'chromatic-gold', label: 'Chromatic gold', palette: 'gold' },
-  { id: 'chromatic-holo', label: 'Chromatic holo', palette: 'holo' },
-]
+/* The wordmark finishes live in the shader-text registry — six
+   liquid-metal palettes + Aurora (a distinct FoldGradient shader
+   ported from Effects Studio). The easter egg cycles them in order. */
 
 /* Shared responsive type for every wordmark finish */
 const WORDMARK_TYPE =
@@ -56,6 +52,10 @@ export default function FooterWordmark({
   const scope = useWordmarkDrift(8)
   const [effect, setEffect] = useState(0)
   const [hovering, setHovering] = useState(false)
+  // Easter-egg reward: a synthesized chime (from the ported Effects
+  // Studio sensory-ui packs) on every finish-shuffle. Respects mute,
+  // volume, and prefers-reduced-motion via the provider.
+  const { play: playShuffle } = usePlaySound({ sound: 'notification.success' })
 
   return (
     <footer ref={scope} className={['relative overflow-hidden bg-opt-ink text-opt-paper', className].join(' ')}>
@@ -76,16 +76,24 @@ export default function FooterWordmark({
         onMouseLeave={() => setHovering(false)}
       >
         <div data-wordmark aria-hidden="true" className="will-change-transform">
-          <ChromaticMetal text={wordmark} palette={EFFECTS[effect].palette} className={WORDMARK_TYPE} />
+          <ShaderText text={wordmark} finish={FINISHES[effect]} className={WORDMARK_TYPE} />
         </div>
 
         {/* Reset/shuffle — revealed on hover (always visible on touch).
-            Staging-only until the effects studio ships (release.ts);
-            production stays on the default Chromatic chrome. */}
+            Live everywhere since Effects Studio shipped (release.ts). */}
         {showWordmarkShuffle && (
         <button
-          aria-label={`Change wordmark effect (current: ${EFFECTS[effect].label})`}
-          onClick={() => setEffect((e) => (e + 1) % EFFECTS.length)}
+          aria-label={`Change wordmark effect (current: ${FINISHES[effect].label})`}
+          onClick={() => {
+            playShuffle()
+            // Jump to a random *different* finish each press.
+            setEffect((cur) => {
+              if (FINISHES.length < 2) return cur
+              let next = cur
+              while (next === cur) next = Math.floor(Math.random() * FINISHES.length)
+              return next
+            })
+          }}
           className={[
             'absolute bottom-4 left-4 z-10 grid size-10 cursor-pointer place-items-center rounded-none',
             'border border-white/15 bg-white/5 text-opt-paper/70 backdrop-blur-sm',

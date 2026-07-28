@@ -178,6 +178,29 @@
       #fff6b8 55%, #a8d8ff 72%, #e3b8ff 88%, #9aa7ff 100%
     );
   }
+  /* FoldGradient finishes (Aurora / Ember / Nebula) — no-WebGL2
+     fallbacks; see components/global/shader-text/foldGradient.ts. */
+  .wordmark-metal--aurora {
+    background-image: linear-gradient(
+      100deg,
+      #0b1030 0%, #1f6f8f 22%, #57e0c4 42%,
+      #eef4ff 55%, #b98cff 74%, #1f6f8f 90%, #0b1030 100%
+    );
+  }
+  .wordmark-metal--ember {
+    background-image: linear-gradient(
+      100deg,
+      #190602 0%, #7a1e06 22%, #ff6a1e 42%,
+      #ffd27a 55%, #ff3b2e 74%, #7a1e06 90%, #190602 100%
+    );
+  }
+  .wordmark-metal--nebula {
+    background-image: linear-gradient(
+      100deg,
+      #0a0620 0%, #3a1f8f 22%, #8f3fff 42%,
+      #ff5ec4 55%, #6fe0ff 74%, #3a1f8f 90%, #0a0620 100%
+    );
+  }
   @keyframes opt-metal-sweep {
     from { background-position: 0% 50%; }
     to   { background-position: 220% 50%; }
