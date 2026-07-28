@@ -2,16 +2,17 @@
 // videoPool — OWNED BY THE MEDIA WORKSTREAM (C). Decides which
 // screens may decode video right now (iOS tabs die if every TV
 // plays at once). Module-level store so scene components can
-// subscribe by id without threading props through the zone
+// subscribe by id without threading props through the scene
 // composition (the Canvas runs its own reconciler; no contexts).
 //
 // Budget: 3 concurrent on fine pointers, 1 on coarse (mobile).
-// Priority: screens in the focused zone (data order), then the
-// rest in world data order. Nothing plays before the gate tap.
+// Phase 2: eligibility = the ACTIVE location's screens only, in
+// data order. Outside has no screens today (the stand-in TVs stay
+// on posters); interiors play their own. Nothing before the gate.
 // ============================================================
 import { useEffect, useSyncExternalStore } from 'react'
 import { usePlay } from '../../PlayContext'
-import { zones } from '../../data/playground'
+import { getPlace } from '../../data/playground'
 
 let activeIds: ReadonlySet<string> = new Set()
 const listeners = new Set<() => void>()
@@ -35,7 +36,7 @@ export function useIsActiveScreen(id: string): boolean {
 
 /** DOM-side controller — mount once in PlayWorld, outside the Canvas. */
 export function VideoPoolController() {
-  const { phase, focusedZoneId, reducedMotion } = usePlay()
+  const { phase, location, reducedMotion } = usePlay()
 
   useEffect(() => {
     // No autoplaying screens before the gate or for reduced-motion users.
@@ -44,15 +45,10 @@ export function VideoPoolController() {
       return
     }
     const budget = window.matchMedia('(pointer: coarse)').matches ? 1 : 3
-    const ordered = [
-      ...zones.filter((z) => z.id === focusedZoneId),
-      ...zones.filter((z) => z.id !== focusedZoneId),
-    ]
-      .flatMap((z) => z.screens)
-      .filter((s) => Boolean(s.video))
-      .map((s) => s.id)
+    const screens = location === 'outside' ? [] : getPlace(location).interior.screens
+    const ordered = screens.filter((s) => Boolean(s.video)).map((s) => s.id)
     setActiveScreens(ordered.slice(0, budget))
-  }, [phase, focusedZoneId, reducedMotion])
+  }, [phase, location, reducedMotion])
 
   return null
 }

@@ -1,29 +1,26 @@
 // ============================================================
 // CameraRig — camera choreography for The Yard (workstream B).
 //
-// gate     Low close-up near the TV wall, held while the splash
-//          is up (canvas renders on demand behind it).
-// intro    A gsap crane: sweep low across the front of the set,
-//          then rise and pull back to the overview, settling
-//          framed toward the Lab. Poses are applied per-tick via
-//          setLookAt(..., false) — NOTE: controls must stay
-//          `enabled`, a disabled camera-controls instance skips
-//          update() and freezes transitions (observed; the gate
-//          overlay is what blocks input pre-entry, and the
-//          timeline overwrites any mid-intro drag each tick).
-// overview Idle azimuth drift after 4s + pointer parallax
-//          (±0.03 rad az / ±0.015 rad polar, lerped, fine
-//          pointers only) layered on top of CameraControls.
-// focused  Weightier damped fly-in (smoothTime 0.8), snappier
-//          return (0.55); distance range tightens around the
-//          zone and relaxes again at overview.
+// gate     Low close-up near the world, held while the splash is
+//          up (canvas renders on demand behind it).
+// intro    A gsap crane: sweep low across the front, then rise
+//          and pull back to the outside overview. Poses applied
+//          per-tick via setLookAt(..., false).
+// live     Location-driven. OUTSIDE keeps the overview orbit +
+//          idle drift + pointer parallax + drag. INTERIORS use the
+//          place's standing camera with CLAMPED orbit (turn your
+//          head, don't walk) — no idle drift, parallax stays.
+//
+// Location changes CUT (setLookAt no-transition) behind the door
+// veil — never a damped glide through walls. controls must stay
+// `enabled`; a disabled camera-controls instance skips update().
 // ============================================================
 import { useEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import { CameraControls } from '@react-three/drei'
 import type CameraControlsImpl from 'camera-controls'
 import gsap from 'gsap'
-import { getZone, overviewCamera, type CameraPose, type ZoneId } from '../data/playground'
+import { getPlace, overviewCamera, type CameraPose, type PlayLocation } from '../data/playground'
 import type { PlayPhase } from '../PlayContext'
 
 /** Low close-up the world waits in behind the gate. */
@@ -38,6 +35,12 @@ const CRANE_MID: CameraPose = {
   target: [0, 1.2, 0],
 }
 
+// Outside overview orbit envelope.
+const OUTSIDE_MIN_DIST = 3
+const OUTSIDE_MAX_DIST = 24
+const OUTSIDE_MIN_POLAR = 0.3
+const OUTSIDE_MAX_POLAR = Math.PI / 2 - 0.06
+
 const IDLE_DELAY_MS = 4000
 const DRIFT_RAD_PER_S = 0.05
 const PARALLAX_AZIMUTH = 0.03
@@ -45,12 +48,12 @@ const PARALLAX_POLAR = 0.015
 
 export default function CameraRig({
   phase,
-  focusedZoneId,
+  location,
   reducedMotion,
   onIntroDone,
 }: {
   phase: PlayPhase
-  focusedZoneId: ZoneId | null
+  location: PlayLocation
   reducedMotion: boolean
   onIntroDone: () => void
 }) {
@@ -79,7 +82,7 @@ export default function CameraRig({
     const controls = controlsRef.current
     if (!controls || phase !== 'intro') return
     if (reducedMotion) {
-      // Shouldn't happen (context jump-cuts to overview), but stay safe.
+      // Shouldn't happen (context jump-cuts to live), but stay safe.
       controls.setLookAt(...overviewCamera.position, ...overviewCamera.target, false)
       invalidate()
       onIntroDone()
@@ -113,26 +116,41 @@ export default function CameraRig({
     }
   }, [phase, reducedMotion, onIntroDone, invalidate])
 
-  // Focus fly-in / glide back, with per-direction weight and a
-  // tighter orbit range while inside a zone.
+  // Live: apply the location's pose + orbit clamps. Location changes CUT
+  // behind the veil (setLookAt no-transition) — never a glide through walls.
   useEffect(() => {
     const controls = controlsRef.current
     if (!controls || phase === 'gate' || phase === 'intro') return
-    const focused = focusedZoneId ? getZone(focusedZoneId) : null
-    controls.smoothTime = focused ? 0.8 : 0.55
-    controls.minDistance = focused ? 2 : 3
-    controls.maxDistance = focused ? 11 : 24
-    const pose = focused ? focused.camera : overviewCamera
-    void controls.setLookAt(...pose.position, ...pose.target, !reducedMotion)
+
+    if (location === 'outside') {
+      controls.smoothTime = 0.55
+      controls.minDistance = OUTSIDE_MIN_DIST
+      controls.maxDistance = OUTSIDE_MAX_DIST
+      controls.minAzimuthAngle = -Infinity
+      controls.maxAzimuthAngle = Infinity
+      controls.minPolarAngle = OUTSIDE_MIN_POLAR
+      controls.maxPolarAngle = OUTSIDE_MAX_POLAR
+      controls.setLookAt(...overviewCamera.position, ...overviewCamera.target, false)
+    } else {
+      const { camera, orbit } = getPlace(location).interior
+      controls.smoothTime = 0.4
+      controls.minDistance = orbit.minDistance
+      controls.maxDistance = orbit.maxDistance
+      controls.minAzimuthAngle = orbit.minAzimuth
+      controls.maxAzimuthAngle = orbit.maxAzimuth
+      controls.minPolarAngle = orbit.minPolar
+      controls.maxPolarAngle = orbit.maxPolar
+      controls.setLookAt(...camera.position, ...camera.target, false)
+    }
     invalidate()
     lastInteraction.current = performance.now()
-  }, [phase, focusedZoneId, reducedMotion, invalidate])
+  }, [phase, location, invalidate])
 
-  // Overview life: idle drift + pointer parallax (fine pointers only),
-  // both suspended while the user is actively dragging the camera.
+  // Live life: idle drift (OUTSIDE only) + pointer parallax (everywhere,
+  // fine pointers only), both suspended while actively dragging.
   useFrame((state, delta) => {
     const controls = controlsRef.current
-    if (!controls || reducedMotion || phase !== 'overview') return
+    if (!controls || reducedMotion || phase !== 'live') return
 
     // While dragging: no parallax, no drift. Keep the idle clock fresh so
     // drift can't snap in the instant the drag ends, and arm a parallax
@@ -143,10 +161,12 @@ export default function CameraRig({
       return
     }
 
-    if (performance.now() - lastInteraction.current > IDLE_DELAY_MS) {
+    // Idle drift is an outside-only luxury; interiors stay put.
+    if (location === 'outside' && performance.now() - lastInteraction.current > IDLE_DELAY_MS) {
       controls.azimuthAngle += delta * DRIFT_RAD_PER_S
     }
 
+    // Parallax feels great indoors too — kept everywhere, fine pointers only.
     if (!coarsePointer) {
       const targetAz = state.pointer.x * PARALLAX_AZIMUTH
       const targetPol = -state.pointer.y * PARALLAX_POLAR
@@ -191,10 +211,10 @@ export default function CameraRig({
     <CameraControls
       ref={controlsRef}
       makeDefault
-      minDistance={3}
-      maxDistance={24}
-      minPolarAngle={0.3}
-      maxPolarAngle={Math.PI / 2 - 0.06}
+      minDistance={OUTSIDE_MIN_DIST}
+      maxDistance={OUTSIDE_MAX_DIST}
+      minPolarAngle={OUTSIDE_MIN_POLAR}
+      maxPolarAngle={OUTSIDE_MAX_POLAR}
       truckSpeed={0}
       smoothTime={0.55}
     />

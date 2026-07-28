@@ -18,6 +18,7 @@ import PlayFallback2D from '@/play/fallback/PlayFallback2D'
 import EntryGate from '@/play/EntryGate'
 import PlayHud from '@/play/hud/PlayHud'
 import ZonePanel from '@/play/panels/ZonePanel'
+import TransitionVeil from '@/play/TransitionVeil'
 
 // three + fiber + drei stay out of the main bundle — the world only
 // downloads when someone actually stands at the gate.
@@ -56,6 +57,8 @@ function WorldShell({ onExitToGrid }: { onExitToGrid: () => void }) {
         <AnimatePresence>{phase === 'gate' && <EntryGate key="gate" />}</AnimatePresence>
         <PlayHud onExitToGrid={onExitToGrid} />
         <ZonePanel />
+        {/* Door veil — covers the scene + camera swap on every location change. */}
+        <TransitionVeil />
       </div>
     </SensoryUIProvider>
   )
