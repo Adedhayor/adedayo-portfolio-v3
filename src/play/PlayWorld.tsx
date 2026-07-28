@@ -5,46 +5,45 @@
 // and is passed into the Canvas as props — the Canvas runs its
 // own reconciler, so scene components never reach for contexts.
 //
-// Post-foundation ownership: Canvas perf props → F; the pieces
-// composed here (CameraRig, zones, screens, hotspots, ambient)
-// belong to their own workstreams. Keep composition thin.
+// Phase 2: only the ACTIVE location's scene group is mounted —
+// outside (SetDressing + WorldZones stand-in) OR one interior
+// room. The swap happens behind the door veil. Post-integration
+// ownership: Canvas perf props → F; outside → W1; interiors →
+// W2/W3/W4. Keep composition thin.
 // ============================================================
-import { useCallback, useRef } from 'react'
+import { useCallback } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useSensoryUI } from '@/lib/sensory-ui'
 import { usePlay } from './PlayContext'
 import { useHotspotAction } from './useHotspotAction'
 import { usePlayColors } from './hooks/usePlayColors'
-import { getZone, overviewHotspots } from './data/playground'
+import { hotspotsForLocation } from './data/playground'
 import CameraRig, { GATE_POSE } from './scene/CameraRig'
 import Hotspots from './scene/Hotspots'
 import SetDressing from './scene/set/SetDressing'
 import WorldZones from './scene/zones/WorldZones'
+import GalleryRoom from './scene/interiors/gallery/PlaceholderRoom'
+import WorkspaceRoom from './scene/interiors/workspace/PlaceholderRoom'
+import LabRoom from './scene/interiors/lab/PlaceholderRoom'
 import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
 import AdaptiveQuality, { initialDpr } from './fallback/AdaptiveQuality'
 
 export default function PlayWorld() {
-  const { phase, focusedZoneId, reducedMotion, muted, introDone, goOverview } = usePlay()
+  const { phase, location, reducedMotion, muted, introDone } = usePlay()
   const palette = usePlayColors()
   const runAction = useHotspotAction()
   const { playSound } = useSensoryUI()
-  const pointerDownAt = useRef<{ x: number; y: number } | null>(null)
 
   const hoverSound = useCallback(() => {
     void playSound('interaction.subtle')
   }, [playSound])
 
-  const hotspots = focusedZoneId ? getZone(focusedZoneId).hotspots : overviewHotspots
+  const hotspots = hotspotsForLocation(location)
 
   return (
     <>
-      <div
-        className="absolute inset-0"
-        onPointerDownCapture={(event) => {
-          pointerDownAt.current = { x: event.clientX, y: event.clientY }
-        }}
-      >
+      <div className="absolute inset-0">
         <Canvas
           // Coarse pointers start capped at 1.5; AdaptiveQuality steps
           // dpr from here on sustained low fps. Stable value — see initialDpr().
@@ -53,31 +52,29 @@ export default function PlayWorld() {
           frameloop={phase === 'gate' || reducedMotion ? 'demand' : 'always'}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
           camera={{ fov: 45, position: GATE_POSE.position, near: 0.1, far: 120 }}
-          onPointerMissed={(event) => {
-            // Tap on nothing (not a drag) while focused → back to overview.
-            const down = pointerDownAt.current
-            if (down && Math.hypot(event.clientX - down.x, event.clientY - down.y) > 8) return
-            if (phase === 'focused') {
-              void playSound('navigation.backward')
-              goOverview()
-            }
-          }}
         >
           <AdaptiveQuality />
-          <SetDressing palette={palette} />
-          <WorldZones palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
+
+          {/* Only the active location's scene group is mounted — the perf
+              win that pays for richer interiors, and why you never see the
+              rest of the world from inside a building. */}
+          {location === 'outside' && (
+            <>
+              <SetDressing palette={palette} />
+              <WorldZones palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
+            </>
+          )}
+          {location === 'gallery' && <GalleryRoom palette={palette} onAction={runAction} />}
+          {location === 'workspace' && <WorkspaceRoom palette={palette} onAction={runAction} />}
+          {location === 'lab' && <LabRoom palette={palette} onAction={runAction} />}
+
           <Hotspots hotspots={hotspots} palette={palette} onAction={runAction} onHover={hoverSound} />
-          <CameraRig
-            phase={phase}
-            focusedZoneId={focusedZoneId}
-            reducedMotion={reducedMotion}
-            onIntroDone={introDone}
-          />
+          <CameraRig phase={phase} location={location} reducedMotion={reducedMotion} onIntroDone={introDone} />
         </Canvas>
       </div>
 
-      {/* Keyboard/screen-reader path to every visible hotspot */}
-      <div role="group" aria-label="Places in the yard" className="absolute bottom-24 left-4 z-20">
+      {/* Keyboard/screen-reader path to every visible hotspot in this location */}
+      <div role="group" aria-label="Places you can go" className="absolute bottom-24 left-4 z-20">
         {hotspots.map((hotspot) => (
           <button
             key={hotspot.id}
