@@ -9,6 +9,11 @@ export type PlayView = '2d' | '3d'
 
 const STORAGE_KEY = 'play:view'
 
+/** Fired (on window) by the in-Canvas perf governor when the WebGL
+    context is lost. Defined here — not in AdaptiveQuality — so this
+    hook never imports three/fiber into the main bundle. */
+export const WEBGL_LOST_EVENT = 'play:webgl-lost'
+
 function prefersReducedMotion() {
   return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
@@ -34,6 +39,15 @@ export function useViewMode() {
       // storage unavailable — preference just won't persist
     }
   }, [])
+
+  // The world dispatches this when its WebGL context dies (GPU
+  // pressure, driver reset, context-count cap). Swap to the 2D
+  // fallback rather than leaving a black canvas on screen.
+  useEffect(() => {
+    const onWebglLost = () => setView('2d')
+    window.addEventListener(WEBGL_LOST_EVENT, onWebglLost)
+    return () => window.removeEventListener(WEBGL_LOST_EVENT, onWebglLost)
+  }, [setView])
 
   return [view, setView] as const
 }

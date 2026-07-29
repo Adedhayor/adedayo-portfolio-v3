@@ -18,6 +18,7 @@ import PlayFallback2D from '@/play/fallback/PlayFallback2D'
 import EntryGate from '@/play/EntryGate'
 import PlayHud from '@/play/hud/PlayHud'
 import ZonePanel from '@/play/panels/ZonePanel'
+import TransitionVeil from '@/play/TransitionVeil'
 
 // three + fiber + drei stay out of the main bundle — the world only
 // downloads when someone actually stands at the gate.
@@ -26,7 +27,12 @@ const PlayWorld = lazy(() => import('@/play/PlayWorld'))
 function webglSupported(): boolean {
   try {
     const canvas = document.createElement('canvas')
-    return Boolean(canvas.getContext('webgl2') ?? canvas.getContext('webgl'))
+    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl')
+    if (!gl) return false
+    // Release the probe context immediately — browsers cap live WebGL
+    // contexts (~16) and kill the oldest, which blacks out the world.
+    gl.getExtension('WEBGL_lose_context')?.loseContext()
+    return true
   } catch {
     return false
   }
@@ -51,6 +57,8 @@ function WorldShell({ onExitToGrid }: { onExitToGrid: () => void }) {
         <AnimatePresence>{phase === 'gate' && <EntryGate key="gate" />}</AnimatePresence>
         <PlayHud onExitToGrid={onExitToGrid} />
         <ZonePanel />
+        {/* Door veil — covers the scene + camera swap on every location change. */}
+        <TransitionVeil />
       </div>
     </SensoryUIProvider>
   )

@@ -11,8 +11,25 @@ import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { Tag } from '@/components/ui/tag'
+import { usePlaySound } from '@/lib/sensory-ui'
 import { moreWork, labs } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
+
+/* Side builds from GitHub that haven't shipped yet — mirrors the
+   tv-wall's spotifeed / family-tree screens in the 3D world. */
+const upcoming: { title: string; blurb: string; tag: string; url?: string }[] = [
+  {
+    title: 'Spotifeed',
+    blurb: 'A Spotify side build, private while it comes together — it lands here when it ships.',
+    tag: 'GitHub · in the shop',
+  },
+  {
+    title: 'Family Tree',
+    blurb: 'An interactive family tree. The source is up on GitHub while the deployed demo takes shape.',
+    tag: 'GitHub · in the shop',
+    url: 'https://github.com/Adedhayor/family-tree',
+  },
+]
 
 /* Project card — cover + meta. Links out when a URL exists. */
 function ProjectCard({ item }: { item: (typeof moreWork)[number] }) {
@@ -60,6 +77,8 @@ function ProjectCard({ item }: { item: (typeof moreWork)[number] }) {
 }
 
 export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => void }) {
+  // App-wide provider (main.tsx); degrades silently when audio is off.
+  const { play: playEnterSound } = usePlaySound({ sound: 'navigation.forward' })
   return (
     <div className="min-h-screen">
       <PageFrame />
@@ -83,7 +102,10 @@ export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => 
           {onEnterWorld && (
             <button
               type="button"
-              onClick={onEnterWorld}
+              onClick={() => {
+                playEnterSound()
+                onEnterWorld()
+              }}
               className="mt-8 inline-flex items-center gap-2 border border-opt-border-default px-4 py-2.5 font-opt-mono text-[12px] uppercase tracking-[0.12em] text-opt-text-heading transition-colors hover:bg-opt-surface-low"
             >
               <Boxes size={14} /> Enter the world
@@ -108,7 +130,7 @@ export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => 
         </section>
 
         {/* Experiments */}
-        <section className="container-opt pb-opt-6xl">
+        <section className="container-opt pb-opt-4xl">
           <p className="label mb-opt-lg">Experiments</p>
           <motion.div
             variants={stagger(0.07)}
@@ -131,6 +153,55 @@ export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => 
                 </span>
               </motion.div>
             ))}
+          </motion.div>
+        </section>
+
+        {/* Upcoming — side builds still in the shop */}
+        <section className="container-opt pb-opt-6xl">
+          <p className="label mb-opt-lg">Upcoming</p>
+          <motion.div
+            variants={stagger(0.07)}
+            {...revealOnce}
+            className="grid grid-cols-1 border-t border-opt-border-default sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {upcoming.map((item) => {
+              const body = (
+                <>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <h3 className="inline-flex items-center gap-1.5 text-[16px] font-medium text-opt-text-heading">
+                      {item.title}
+                      {item.url && (
+                        <ArrowUpRight
+                          size={13}
+                          strokeWidth={2.5}
+                          className="text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                        />
+                      )}
+                    </h3>
+                    <span className="shrink-0 text-[12px] text-opt-text-secondary">Soon</span>
+                  </div>
+                  <p className="mt-2 text-[14px] leading-[1.55] text-opt-text-secondary">{item.blurb}</p>
+                  <span className="mt-3 inline-block text-[12px] uppercase tracking-[0.08em] text-opt-text-placeholder">
+                    {item.tag}
+                  </span>
+                </>
+              )
+              return (
+                <motion.div
+                  key={item.title}
+                  variants={riseIn}
+                  className="border-b border-opt-border-subtle sm:border-r sm:last:border-r-0"
+                >
+                  {item.url ? (
+                    <a href={item.url} target="_blank" rel="noreferrer" className="group block p-6">
+                      {body}
+                    </a>
+                  ) : (
+                    <div className="p-6">{body}</div>
+                  )}
+                </motion.div>
+              )
+            })}
           </motion.div>
         </section>
       </main>

@@ -5,86 +5,93 @@
 // and is passed into the Canvas as props — the Canvas runs its
 // own reconciler, so scene components never reach for contexts.
 //
-// Post-foundation ownership: Canvas perf props → F; the pieces
-// composed here (CameraRig, zones, screens, hotspots, ambient)
-// belong to their own workstreams. Keep composition thin.
+// Phase 2: only the ACTIVE location's scene group is mounted —
+// outside (W1's composed Outside root) OR one interior room.
+// The swap happens behind the door veil. Post-integration
+// ownership: Canvas perf props → F; outside → W1; interiors →
+// W2/W3/W4. Keep composition thin.
 // ============================================================
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useSensoryUI } from '@/lib/sensory-ui'
 import { usePlay } from './PlayContext'
 import { useHotspotAction } from './useHotspotAction'
 import { usePlayColors } from './hooks/usePlayColors'
-import { getZone, overviewHotspots, zones } from './data/playground'
+import { hotspotsForLocation } from './data/playground'
 import CameraRig, { GATE_POSE } from './scene/CameraRig'
 import Hotspots from './scene/Hotspots'
-import ZonePlaceholder from './scene/ZonePlaceholder'
+import Outside from './scene/outside/Outside'
+import GalleryRoom from './scene/interiors/gallery/PlaceholderRoom'
+import WorkspaceRoom from './scene/interiors/workspace/PlaceholderRoom'
+import LabRoom from './scene/interiors/lab/PlaceholderRoom'
+import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
+import AdaptiveQuality, { initialDpr } from './fallback/AdaptiveQuality'
+
+// Session-scoped visit tracker — survives world/grid remounts so the
+// all-three-buildings milestone only ever fires once per session.
+const visitedPlaces = new Set<string>()
+let milestonePlayed = false
 
 export default function PlayWorld() {
-  const { phase, focusedZoneId, reducedMotion, muted, introDone, goOverview } = usePlay()
+  const { phase, location, reducedMotion, muted, introDone } = usePlay()
   const palette = usePlayColors()
   const runAction = useHotspotAction()
   const { playSound } = useSensoryUI()
-  const pointerDownAt = useRef<{ x: number; y: number } | null>(null)
 
   const hoverSound = useCallback(() => {
     void playSound('interaction.subtle')
   }, [playSound])
 
-  const hotspots = focusedZoneId ? getZone(focusedZoneId).hotspots : overviewHotspots
+  const stepSound = useCallback(() => {
+    void playSound('navigation.tab')
+  }, [playSound])
+
+  // hero.milestone when the visitor has stepped inside all three buildings.
+  useEffect(() => {
+    if (phase !== 'live' || location === 'outside') return
+    visitedPlaces.add(location)
+    if (!milestonePlayed && visitedPlaces.size >= 3) {
+      milestonePlayed = true
+      void playSound('hero.milestone')
+    }
+  }, [phase, location, playSound])
+
+  const hotspots = hotspotsForLocation(location)
 
   return (
     <>
-      <div
-        className="absolute inset-0"
-        onPointerDownCapture={(event) => {
-          pointerDownAt.current = { x: event.clientX, y: event.clientY }
-        }}
-      >
+      <div className="absolute inset-0">
         <Canvas
-          dpr={[1, 1.75]}
+          // Coarse pointers start capped at 1.5; AdaptiveQuality steps
+          // dpr from here on sustained low fps. Stable value — see initialDpr().
+          dpr={initialDpr()}
           // Idle at the gate (and under reduced motion) renders on demand only.
           frameloop={phase === 'gate' || reducedMotion ? 'demand' : 'always'}
           gl={{ antialias: true, powerPreference: 'high-performance' }}
           camera={{ fov: 45, position: GATE_POSE.position, near: 0.1, far: 120 }}
-          onPointerMissed={(event) => {
-            // Tap on nothing (not a drag) while focused → back to overview.
-            const down = pointerDownAt.current
-            if (down && Math.hypot(event.clientX - down.x, event.clientY - down.y) > 8) return
-            if (phase === 'focused') {
-              void playSound('navigation.backward')
-              goOverview()
-            }
-          }}
         >
-          <color attach="background" args={[palette.surfaceBase]} />
-          <fog attach="fog" args={[palette.surfaceBase, 16, 42]} />
-          <ambientLight intensity={0.8} />
-          <hemisphereLight args={[palette.cyan, palette.ink, 0.4]} />
-          <directionalLight position={[6, 10, 4]} intensity={1.4} />
+          <AdaptiveQuality />
 
-          {/* Ground disc fading into the fog */}
-          <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-            <circleGeometry args={[42, 48]} />
-            <meshStandardMaterial color={palette.surfaceRaised} roughness={1} />
-          </mesh>
+          {/* Only the active location's scene group is mounted — the perf
+              win that pays for richer interiors, and why you never see the
+              rest of the world from inside a building. */}
+          {location === 'outside' && (
+            <Outside palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
+          )}
+          {location === 'gallery' && <GalleryRoom palette={palette} onAction={runAction} />}
+          {location === 'workspace' && (
+            <WorkspaceRoom palette={palette} onAction={runAction} onStepSound={stepSound} />
+          )}
+          {location === 'lab' && <LabRoom palette={palette} onAction={runAction} />}
 
-          {zones.map((zone) => (
-            <ZonePlaceholder key={zone.id} zone={zone} palette={palette} onAction={runAction} />
-          ))}
           <Hotspots hotspots={hotspots} palette={palette} onAction={runAction} onHover={hoverSound} />
-          <CameraRig
-            phase={phase}
-            focusedZoneId={focusedZoneId}
-            reducedMotion={reducedMotion}
-            onIntroDone={introDone}
-          />
+          <CameraRig phase={phase} location={location} reducedMotion={reducedMotion} onIntroDone={introDone} />
         </Canvas>
       </div>
 
-      {/* Keyboard/screen-reader path to every visible hotspot */}
-      <div role="group" aria-label="Places in the yard" className="absolute bottom-24 left-4 z-20">
+      {/* Keyboard/screen-reader path to every visible hotspot in this location */}
+      <div role="group" aria-label="Places you can go" className="absolute bottom-24 left-4 z-20">
         {hotspots.map((hotspot) => (
           <button
             key={hotspot.id}
@@ -97,6 +104,7 @@ export default function PlayWorld() {
         ))}
       </div>
 
+      <VideoPoolController />
       <AmbientBed active={phase !== 'gate'} muted={muted} />
     </>
   )
