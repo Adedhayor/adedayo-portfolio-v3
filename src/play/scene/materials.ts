@@ -8,6 +8,7 @@
 import { useEffect, useMemo } from 'react'
 import * as THREE from 'three'
 import type { PlayPalette } from '../hooks/usePlayColors'
+import type { TimeOfDay } from '../hooks/useTimeOfDay'
 
 export function mixColor(a: string, b: string, t: number): THREE.Color {
   return new THREE.Color(a).lerp(new THREE.Color(b), t)
@@ -62,14 +63,51 @@ export function useWorldMaterials(palette: PlayPalette): WorldMaterials {
   return materials
 }
 
-/** Shared dusk tones derived from the palette — used by backdrop,
-    fog, and ground so the horizon line stays coherent. */
+export type SkyTones = { horizon: THREE.Color; zenith: THREE.Color; groundCenter: THREE.Color }
+
+/** Sky/ground tones per time-of-day band, derived from the palette so the
+    horizon line stays coherent under theme flips (W1). Generalizes the old
+    `duskTones` — dusk is the untouched golden-hour look; day leans pale-blue
+    with a greener ground; night sinks to ink. Consumed by the outside
+    environment lerp AND by interior windows that follow the visitor clock. */
+export function skyTones(palette: PlayPalette, timeOfDay: TimeOfDay): SkyTones {
+  switch (timeOfDay) {
+    case 'day':
+      return {
+        // Pale, luminous horizon → bright blue-cyan zenith.
+        horizon: mixColor(palette.surfaceBase, palette.cyan, 0.5),
+        zenith: mixColor(palette.blue, palette.cyan, 0.4).lerp(
+          new THREE.Color(palette.surfaceRaised),
+          0.18,
+        ),
+        // Warm-lit turf: nudge the raised surface toward a muted grass green
+        // (cyan+yellow with no green token to reach for).
+        groundCenter: new THREE.Color(palette.surfaceRaised).lerp(
+          mixColor(palette.cyan, palette.yellow, 0.5),
+          0.34,
+        ),
+      }
+    case 'night':
+      return {
+        horizon: mixColor(palette.ink, palette.blue, 0.28),
+        zenith: mixColor(palette.ink, palette.blue, 0.08),
+        groundCenter: mixColor(palette.ink, palette.surfaceRaised, 0.12),
+      }
+    case 'dusk':
+    default:
+      return {
+        horizon: mixColor(palette.surfaceBase, palette.coral, 0.16).lerp(
+          new THREE.Color(palette.ink),
+          0.45,
+        ),
+        zenith: mixColor(palette.ink, palette.blue, 0.3),
+        groundCenter: mixColor(palette.surfaceRaised, palette.ink, 0.35),
+      }
+  }
+}
+
+/** Back-compat alias — the golden-hour band. Retained so any consumer that
+    still reaches for the original name keeps resolving to the dusk look. */
 export function duskTones(palette: PlayPalette) {
-  const horizon = mixColor(palette.surfaceBase, palette.coral, 0.16).lerp(
-    new THREE.Color(palette.ink),
-    0.45,
-  )
-  const zenith = mixColor(palette.ink, palette.blue, 0.3)
-  const groundCenter = mixColor(palette.surfaceRaised, palette.ink, 0.35)
-  return { horizon, zenith, groundCenter }
+  return skyTones(palette, 'dusk')
 }

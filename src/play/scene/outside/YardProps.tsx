@@ -1,21 +1,26 @@
 // ============================================================
-// YardZone — wayfinding props at the back of the diorama (A),
-// around [0,0,-9], viewed from [0,2.5,-3]. A mailbox on a post
-// (NOTES), a signpost with two angled boards (ABOUT), a fence
-// run with instanced pickets and a gate frame (LEAVE THE YARD),
-// a warm flickering lamp post, and a few scattered stones.
-// Props are built under the yard hotspots at [-2,1.2,-9] /
-// [0,1.6,-10] / [2,1.2,-9]. Lamp flicker is gated by reducedMotion.
+// YardProps — the wayfinding dressing of the outside world (W1,
+// carried over from the Phase-1 YardZone). Mailbox (NOTES),
+// signpost (ABOUT), gate frame (LEAVE), an instanced picket
+// fence, warm lamp posts and scattered stones — now joined by a
+// scatter of instanced grass tufts that breathe in the daytime.
+//
+// Time-of-day flows through the shared Env: lamp light + bulb glow
+// scale with env.lamp (off by day, full at night); the grass sway
+// amplitude rides env.grass and is silenced entirely under reduced
+// motion (a single seeded pose, painted with one invalidate).
 // ============================================================
 import { useLayoutEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { PlayPalette } from '../../hooks/usePlayColors'
-import type { WorldMaterials } from '../materials'
+import { mixColor, type WorldMaterials } from '../materials'
+import type { Env } from './environment'
 
 type YardProps = {
   palette: PlayPalette
   mats: WorldMaterials
+  env: Env
   reducedMotion: boolean
 }
 
@@ -52,7 +57,6 @@ function Fence({ mats }: { mats: WorldMaterials }) {
     invalidate()
   }, [xs, dummy, invalidate])
 
-  // Rails span the two solid runs either side of the gate.
   const rails: { cx: number; len: number }[] = [
     { cx: (-4 + (GATE_X - GATE_HALF)) / 2, len: GATE_X - GATE_HALF + 4 },
     { cx: (GATE_X + GATE_HALF + 4) / 2, len: 4 - (GATE_X + GATE_HALF) },
@@ -75,17 +79,24 @@ function Fence({ mats }: { mats: WorldMaterials }) {
 }
 
 // ------------------------------------------------------------
-// LampPost — warm point light with an optional gentle flicker.
+// LampPost — warm point light + bulb, both gated by env.lamp so
+// they switch OFF by day and glow at dusk/night. Gentle flicker
+// only while lit and motion is allowed.
 // ------------------------------------------------------------
-function LampPost({ palette, mats, reducedMotion }: YardProps) {
+function LampPost({ palette, mats, env, reducedMotion, position }: YardProps & { position: [number, number, number] }) {
   const light = useRef<THREE.PointLight>(null)
+  const bulb = useRef<THREE.MeshStandardMaterial>(null)
   useFrame((state) => {
-    if (reducedMotion || !light.current) return
-    const t = state.clock.elapsedTime
-    light.current.intensity = 4 + Math.sin(t * 9) * 0.25 + Math.sin(t * 23) * 0.12
+    const l = light.current
+    if (!l) return
+    const flicker = reducedMotion
+      ? 1
+      : 1 + Math.sin(state.clock.elapsedTime * 9) * 0.06 + Math.sin(state.clock.elapsedTime * 23) * 0.03
+    l.intensity = 4 * env.lamp * flicker
+    if (bulb.current) bulb.current.emissiveIntensity = 2.2 * env.lamp
   })
   return (
-    <group position={[3.4, 0, -8]}>
+    <group position={position}>
       <mesh position={[0, 1.1, 0]} material={mats.metal}>
         <cylinderGeometry args={[0.05, 0.07, 2.2, 12]} />
       </mesh>
@@ -98,15 +109,84 @@ function LampPost({ palette, mats, reducedMotion }: YardProps) {
       <mesh position={[-0.45, 1.97, 0]}>
         <sphereGeometry args={[0.06, 12, 12]} />
         <meshStandardMaterial
+          ref={bulb}
           color={palette.yellow}
           emissive={palette.yellow}
           emissiveIntensity={2.2}
           toneMapped={false}
         />
       </mesh>
-      <pointLight ref={light} position={[-0.45, 1.95, 0]} color={palette.yellow} distance={6} intensity={4} />
+      <pointLight ref={light} position={[-0.45, 1.95, 0]} color={palette.yellow} distance={6} intensity={0} />
     </group>
   )
+}
+
+// ------------------------------------------------------------
+// Grass — instanced tufts that lean in the breeze (daytime).
+// Geometry pivots at its base so the sway reads as a bend.
+// ------------------------------------------------------------
+const TUFTS = 46
+function Grass({ palette, env, reducedMotion }: Pick<YardProps, 'palette' | 'env' | 'reducedMotion'>) {
+  const ref = useRef<THREE.InstancedMesh>(null)
+  const dummy = useMemo(() => new THREE.Object3D(), [])
+  const invalidate = useThree((s) => s.invalidate)
+
+  const blades = useMemo(() => {
+    const out: { x: number; z: number; s: number; phase: number }[] = []
+    for (let i = 0; i < TUFTS; i++) {
+      // Scatter across the near yard, skipping the very centre path.
+      const x = (Math.random() - 0.5) * 15
+      const z = -1 + Math.random() * 7
+      if (Math.abs(x) < 1.2 && z > 1) continue
+      out.push({ x, z, s: 0.7 + Math.random() * 0.7, phase: Math.random() * Math.PI * 2 })
+    }
+    return out
+  }, [])
+
+  // Blade pivots at its base (geometry translated up half its height).
+  const geo = useMemo(() => {
+    const g = new THREE.ConeGeometry(0.03, 0.34, 4)
+    g.translate(0, 0.17, 0)
+    return g
+  }, [])
+  const mat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: mixColor(palette.cyan, palette.yellow, 0.5).lerp(new THREE.Color(palette.ink), 0.32),
+        roughness: 0.9,
+        metalness: 0,
+      }),
+    [palette],
+  )
+  useLayoutEffect(() => () => {
+    geo.dispose()
+    mat.dispose()
+  }, [geo, mat])
+
+  const write = (t: number) => {
+    const mesh = ref.current
+    if (!mesh) return
+    for (let i = 0; i < blades.length; i++) {
+      const b = blades[i]
+      const lean = reducedMotion ? 0 : Math.sin(t * 1.6 + b.phase) * 0.22 * env.grass
+      dummy.position.set(b.x, 0, b.z)
+      dummy.rotation.set(0, 0, lean)
+      dummy.scale.set(1, b.s, 1)
+      dummy.updateMatrix()
+      mesh.setMatrixAt(i, dummy.matrix)
+    }
+    mesh.instanceMatrix.needsUpdate = true
+  }
+
+  useLayoutEffect(() => {
+    write(0)
+    invalidate()
+  })
+  useFrame((state) => {
+    if (!reducedMotion) write(state.clock.elapsedTime)
+  })
+
+  return <instancedMesh ref={ref} args={[geo, mat, blades.length]} />
 }
 
 // ------------------------------------------------------------
@@ -119,7 +199,7 @@ const STONES: { p: [number, number, number]; r: number; ico: boolean; rot: numbe
   { p: [-0.8, 0.12, -6.2], r: 0.13, ico: false, rot: 0.3 },
 ]
 
-export default function YardZone({ palette, mats, reducedMotion }: YardProps) {
+export default function YardProps({ palette, mats, env, reducedMotion }: YardProps) {
   return (
     <group>
       {/* Mailbox on a post — NOTES, at x=-2, z=-9 */}
@@ -165,7 +245,9 @@ export default function YardZone({ palette, mats, reducedMotion }: YardProps) {
       </group>
 
       <Fence mats={mats} />
-      <LampPost palette={palette} mats={mats} reducedMotion={reducedMotion} />
+      <LampPost palette={palette} mats={mats} env={env} reducedMotion={reducedMotion} position={[3.4, 0, -8]} />
+      <LampPost palette={palette} mats={mats} env={env} reducedMotion={reducedMotion} position={[-5.6, 0, -6.5]} />
+      <Grass palette={palette} env={env} reducedMotion={reducedMotion} />
 
       {STONES.map((s, i) => (
         <mesh key={i} position={s.p} rotation={[s.rot, s.rot * 1.3, 0]} material={mats.shellDark}>
