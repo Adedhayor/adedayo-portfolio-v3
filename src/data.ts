@@ -30,6 +30,14 @@ import postpaddyCover from './assets/work/postpaddy-cover.jpg'
 import inkwellCover from './assets/work/inkwell-cover.svg'
 import propertyPanelCover from './assets/work/property-panel-cover.svg'
 import portfolioCover from './assets/work/portfolio-cover.svg'
+// Inline figures for the two design-system studies — labeled placeholder
+// SVGs (marked "PLACEHOLDER — SWAP"); replace with real captures, same names.
+import inkwell2 from './assets/work/inkwell-2.svg'
+import inkwell3 from './assets/work/inkwell-3.svg'
+import inkwell4 from './assets/work/inkwell-4.svg'
+import propertyPanel2 from './assets/work/property-panel-2.svg'
+import propertyPanel3 from './assets/work/property-panel-3.svg'
+import propertyPanel4 from './assets/work/property-panel-4.svg'
 import portrait from './assets/portrait.jpg'
 // Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
 import notesContent from './data/notesContent.json'
@@ -135,7 +143,7 @@ const allCaseStudies: CaseStudy[] = [
     client: 'Lithium Digital',
     year: '2024',
     role: 'Lead Product Designer',
-    metric: '$5M+ on-chain',
+    metric: 'Multi-protocol staking',
     accent: '#2b2bff',
     cover: lithiumCover,
     coverPos: 'center',
@@ -145,12 +153,12 @@ const allCaseStudies: CaseStudy[] = [
     index: '02',
     title: 'Lighthouse — Vizible’s first design system',
     blurb:
-      'A token-based system built ground-up: 50+ components, accessibility by default, 50% faster design-to-dev turnaround.',
+      'A token-based system built ground-up: 40+ components, accessibility by default, 50% faster design-to-dev turnaround.',
     tag: 'Design Systems',
     client: 'Vizible Labs',
     year: '2024',
     role: 'Product Designer',
-    metric: '50+ components',
+    metric: '40+ components',
     accent: '#ff7a18',
     cover: lighthouseCover,
     coverPos: 'center',
@@ -180,7 +188,7 @@ const allCaseStudies: CaseStudy[] = [
     client: 'Tabulerasa Inc.',
     year: '2022',
     role: 'Product Designer',
-    metric: '30+ lawyer interviews',
+    metric: 'Modular brief builder',
     accent: '#6c5ce7',
     cover: tabuleraCover,
     coverPos: 'center',
@@ -467,38 +475,62 @@ export type CaseDetail = {
 export const caseDetails: Record<string, CaseDetail> = {
   inkwell: {
     tagline:
-      'A neutral-first, closed-token design system that keeps a dense professional editor calm — built ground-up and carried all the way into shipping React components.',
-    deliverables: ['Three-layer design tokens', 'Component library (Storybook)', 'Contribution rules & docs'],
+      'A design system built after the product already existed — a closed, neutral-first token contract that brings a dense ~44k-line editor to order and ships as real Storybook components.',
+    deliverables: ['System audit', 'Three-layer design tokens', 'Component library (Storybook)', 'Contribution model & docs'],
     overview:
-      'RepliKit is an AI-powered, brand-safe template editor — a tool people live in for hours. As it grew, styling started to creep in ad-hoc: one-off colours, inconsistent spacing, components diverging surface to surface. Inkwell is the design system I lead to fix that: a closed, neutral-first token contract and a component library tuned for editor density, obeyed rather than merely documented.',
+      'RepliKit is an AI-powered, brand-safe template editor — a tool people live in for hours. Inkwell is the design system I lead to bring order to it. The twist: I wasn’t starting from a blank canvas. RepliKit was already a large editor — roughly 44,000 lines of TypeScript, dozens of surfaces, months of product decisions — where shipping had been the priority and consistency hadn’t. So before designing anything new, I had to understand everything that already existed, then give it a single system to obey: a closed, neutral-first token contract and a component library tuned for editor density.',
     sections: [
       {
-        heading: 'A system for people who live in the tool',
+        heading: 'Before you build, you audit',
         body: [
-          'An editor is not a landing page. The people using RepliKit sit in it eight hours a day, so colour has to stay quiet and every control has to be legible at a glance. The friction wasn’t any single ugly screen — it was drift: the same idea styled five different ways because there was no single answer to reach for.',
+          'Most design systems start in Figma. This one started in detective mode. I went through every surface in the product — every panel, dialog, toolbar, and interaction — not looking for beautiful screens but for patterns, and more importantly, broken ones.',
+          'The audit ran at two levels. A surface audit caught the visual drift — buttons that looked different, typography that shifted between screens, inconsistent spacing, mismatched corner radii and hover states. A code audit went underneath it, and this is where Claude earned its seat: inspecting the implementation while I focused on the product, turning weeks of documentation into hours. I still made every decision; it just removed the searching.',
         ],
         list: [
-          'Ad-hoc colours and off-step neutrals appearing per feature.',
-          'Controls sized and spaced differently across surfaces.',
-          'No shared contract between design files and the shipped UI.',
+          'Hardcoded colours and spacing, with tokens bypassed entirely.',
+          'Different typography scales living side by side.',
+          'Duplicate components and mixed interaction patterns for the same action.',
+          'Native browser dialogs sitting beside custom UI.',
+        ],
+        figure: { src: inkwell2, caption: 'The audit board — every surface catalogued for drift before a single token was drawn.', wide: true },
+      },
+      {
+        heading: 'Documentation became the product',
+        body: [
+          'Every finding went into Notion, then found a permanent home in Obsidian — not because documentation is exciting, but because memory doesn’t scale. Future decisions should never depend on someone remembering why a button is blue. Good documentation lets the next designer inherit context instead of confusion.',
         ],
       },
       {
-        heading: 'Tokens before components',
+        heading: 'Building from atoms',
         body: [
-          'Inkwell is built as three layers — primitive → semantic → component — under a single `--rk-*` namespace, and the schema is deliberately closed: no new colours, no off-step neutrals, ever. It’s neutral-first by design. Chroma is reserved for exactly four semantic roles — info, success, warning, danger — and never spent on a generic UI accent. Getting the foundations right first meant every component assembled from an already-aligned palette.',
+          'I studied chemistry before I studied design, so atomic design always made intuitive sense — matter becomes molecules, molecules become compounds, small things become complex systems. Inkwell works the same way: primitive tokens → semantic tokens → components → experiences.',
+          'The primitives are raw material — colour scales, spacing, type, elevation, radius, motion — with no meaning yet, only values; I explored many of these visually in Paper first, where relationships are easier to feel before implementation. The semantic layer gives those values jobs: instead of asking “what shade of grey is this?” you ask “what role does this element play?”. The whole schema lives under a single `--rk-*` namespace and is deliberately closed — no new colours, no off-step neutrals, ever. It’s neutral-first: chroma is reserved for exactly four semantic roles — info, success, warning, danger — and never spent on a generic UI accent.',
         ],
+        list: [
+          'Primitive — raw colour, spacing, type, elevation, radius, motion.',
+          'Semantic — roles, not shades: primary, surface, info, success, warning, danger.',
+          'Component — atoms and molecules assembled from an already-aligned palette.',
+        ],
+        figure: { src: inkwell3, caption: 'Token layers — primitive → semantic → component, one closed `--rk-*` schema.', wide: true },
       },
       {
         heading: 'The Ink aesthetic',
         body: [
           'The visual language is tuned for density and calm: a 300px rail, 32px controls at a 2px radius, hairline dividers instead of shadows, numeric values in monospace, and Lucide for standard glyphs. A no-pills rule and a quiet neutral state keep the surface from shouting. Constraints like these aren’t a cage — an off-token colour is just a sign the real answer hasn’t been found yet.',
         ],
+        figure: { src: inkwell4, caption: 'Ink components — dense, quiet, and assembled entirely from tokens.', wide: true },
       },
       {
-        heading: 'Shipped, not just documented',
+        heading: 'AI accelerated it — it didn’t build it',
         body: [
-          'Inkwell isn’t a static kit — it’s a living system that ships. Components are built as real, token-driven React in Storybook, reusing shared atoms rather than hand-rolling, so the design-to-code handoff gap closes instead of widening. That discipline is exactly what let the Property Panel redesign stand on solid ground.',
+          'People ask if AI built Inkwell. It didn’t — it accelerated it, and the difference matters. Claude never chose our interaction patterns, our information architecture, our priorities, or our users. What it removed was the repetitive work: searching, documenting, finding inconsistencies, explaining code, generating implementation drafts. That changed the speed of the work, not the thinking behind it — the bottleneck stopped being production and became judgement. For a designer, that’s a much better problem to have.',
+        ],
+      },
+      {
+        heading: 'A system built to evolve',
+        body: [
+          'No design system is ever finished — new problems appear, new patterns emerge, new components become necessary — so Inkwell is built to grow. It isn’t a static kit; it ships as real, token-driven React in Storybook, reusing shared atoms rather than hand-rolling, so the design-to-code handoff gap closes instead of widening. When someone builds a useful molecule, they open a pull request; I review it, we refine it, we merge it, and everyone inherits it. That discipline is exactly what let the Property Panel redesign stand on solid ground.',
+          'None of this started with Inkwell. Building Lighthouse taught me how design systems work; Inkwell is teaching me how they evolve. What it ultimately gave RepliKit wasn’t just consistency — it was confidence: that new features would feel like they belonged, and that the editor could keep growing without becoming harder to maintain.',
         ],
       },
     ],
@@ -511,15 +543,23 @@ export const caseDetails: Record<string, CaseDetail> = {
 
   'property-panel': {
     tagline:
-      'The editor’s most overloaded surface — a 197KB, 800px-tall wall of fields — taken apart, researched against eleven competing tools, and rebuilt as a labeled, semantic-first inspector grounded in a closed design-token schema.',
-    deliverables: ['UX audit', 'Competitive research (11 tools)', 'IA & feature briefs', 'React / Storybook components'],
+      'The editor’s most overloaded surface — a 197KB, 800px-tall wall of fields that had no opinion about what mattered — taken apart, researched against eleven tools, and rebuilt as a labeled, semantic-first inspector.',
+    deliverables: ['UX audit', 'Competitive research (11 tools)', 'Node × Section matrix', 'IA & feature briefs', 'React / Storybook components'],
     overview:
-      'In a canvas editor, the property panel is where the work happens — sizing a node, styling it, binding it to a token, tagging it with meaning. In RepliKit it was also the single most overloaded thing in the product: the largest file in the codebase, rendering 10+ context-driven sections as one continuous 800px scroll. And it was quietly doing two jobs at once — inspecting a node and authoring a template schema — while only really doing the first.',
+      'In a canvas editor, the property panel is where the work happens — sizing a node, styling it, binding it to a token, tagging it with meaning. In RepliKit it was also the single most overloaded thing in the product: the largest file in the codebase, rendering 10+ context-driven sections as one continuous 800px scroll. It was quietly doing two jobs at once — inspecting a node and authoring a template schema — while only really doing the first. And for all it exposed, it had no opinion about what mattered. Rebuilding it changed how I think about product design: from arranging controls to designing a surface that communicates priority, meaning, and intent.',
     sections: [
       {
-        heading: 'The most overloaded surface',
+        heading: 'The panel had no opinion',
         body: [
-          'The work began inside a surface-by-surface UX audit of the editor, framed as the delta between the intended flow (the PRDs) and the actual implementation (the code). The Property Panel was one of the worst offenders, and the audit produced a concrete friction inventory.',
+          'Every editor has one surface people quietly live in, and for a canvas tool it’s the property panel. They’re hard to get right because they have to hold everything a node can be — and RepliKit’s is harder still, because RepliKit isn’t only styling pixels; it’s authoring a semantic template schema, where a node has a meaning, a zone, and token bindings, not just a width.',
+          'The old panel exposed all of it, flat: 10+ sections stacked in a single 800px scroll, separated only by thin dividers, in no dependable order. It showed you everything and told you nothing. The panel had no opinion.',
+        ],
+        figure: { src: propertyPanel2, caption: 'Before — 800px of unlabelled scroll, no grouping, zone tagging dead last.', wide: true },
+      },
+      {
+        heading: 'Stop designing, start investigating',
+        body: [
+          'So I didn’t start by redesigning. I started by investigating. The work began inside a surface-by-surface UX audit of the editor, framed as the delta between the intended flow (the PRDs) and the actual implementation (the code) — evidence, not opinions. The Property Panel was one of the worst offenders, and the audit produced a concrete friction inventory.',
         ],
         list: [
           'Zone tagging — a core workflow — sat dead last, under an 800px scroll.',
@@ -529,9 +569,9 @@ export const caseDetails: Record<string, CaseDetail> = {
         ],
       },
       {
-        heading: 'Research earns the right to an opinion',
+        heading: 'Every editor has an opinion',
         body: [
-          'I wanted decisions grounded in precedent, not taste — so for each state (empty and selected) I ran a structured teardown of eleven tools, ordered closest-precedent to most-distinctive, with Figma Buzz weighted heaviest as the direct competitor. Every claim was tied to a source; gaps were flagged, not smoothed over.',
+          'If the panel needed an opinion, it had to come from somewhere. I wanted decisions grounded in precedent, not taste — so for each state (empty and selected) I ran a structured teardown of eleven tools, ordered closest-precedent to most-distinctive, with Figma Buzz weighted heaviest as the direct competitor. Figma, Sketch, Penpot, Webflow, Adobe, Paper — every claim tied to a source, gaps flagged rather than smoothed over. I wasn’t collecting interfaces; I was collecting opinions.',
         ],
         list: [
           'Buzz — the template schema literally is the marketer’s UI; order typed/semantic controls first.',
@@ -541,9 +581,17 @@ export const caseDetails: Record<string, CaseDetail> = {
         ],
       },
       {
-        heading: 'Semantic-first — lead with meaning',
+        heading: 'Research doesn’t build products, decisions do',
         body: [
-          'The teardowns collapsed into named patterns so the conversation could happen at the level of ideas. Two of the best — a live-preview feedback loop and full token-chain transparency — turned out to already exist inside the product, just siloed; a lot of the “redesign” was propagating internal wins. The confirmed bet layered three directions: a grouped, collapsible IA as the foundation, a pinned “Identity” group (Semantic Type · Zone · Variant binding · Token bindings) as the organising principle, and an override model for components — with Penpot’s “Mixed” cross-cutting all of it.',
+          'Research tells you what to pay attention to, not what to build. To cross that gap I made the Node × Section Matrix — the hero artifact of the whole project. It maps every node type against every panel section and decides, cell by cell, which controls should exist, which get promoted, and which disappear. It turned pages of teardown notes into one answerable question per intersection.',
+          'Two of the best patterns — a live-preview feedback loop and full token-chain transparency — turned out to already exist inside the product, just siloed; a lot of the “redesign” was propagating internal wins.',
+        ],
+        figure: { src: propertyPanel3, caption: 'The Node × Section Matrix — what should exist, promote, or disappear, per node type.', wide: true },
+      },
+      {
+        heading: 'Teaching the panel what mattered',
+        body: [
+          'The matrix answered what should exist; it didn’t answer what people should see first. That was the next problem, and the answer was to lead with meaning. The confirmed bet layered three directions: a grouped, collapsible IA as the foundation; a pinned “Identity” group — Semantic Type · Zone · Variant binding · Token bindings — as the organising principle; and an override model for components, with Penpot’s “Mixed” cross-cutting all of it.',
         ],
         list: [
           'Align & distribute pinned at the top, always — the one control identical across every node.',
@@ -552,16 +600,18 @@ export const caseDetails: Record<string, CaseDetail> = {
         ],
       },
       {
-        heading: 'Grounded in Inkwell — and in subtraction',
+        heading: 'Complexity deserves a reason',
         body: [
-          'None of this floats free of Inkwell’s closed token schema: every surface, divider, tone, radius, and step had to resolve to a token already wired in the system — a constraint that caught a stray blue active-ring more than once. The clearest lesson came from the Stroke section, the most-iterated of all: it cycled through cap/join/dash and per-side models before resetting to basics only, because the underlying stroke is just a CSS border. When the model is simple, fight to keep the UI simple. The Fill picker, by contrast, earned its complexity — near-duplicate detection, contrast checks, and token-drift re-linking that operationalise “keep the palette closed” at the point of creation.',
+          'None of this floats free of Inkwell’s closed token schema: every surface, divider, tone, radius, and step had to resolve to a token already wired in the system — a constraint that caught a stray blue active-ring more than once. The clearest lesson came from the Stroke section, the most-iterated of all: it cycled through cap/join/dash and per-side models before resetting to basics only, because the underlying stroke is just a CSS border. When the model is simple, fight to keep the UI simple. The Fill picker, by contrast, earned its complexity — near-duplicate detection, contrast checks, and token-drift re-linking that operationalise “keep the palette closed” at the point of creation. Complexity is allowed; it just has to earn its place.',
         ],
       },
       {
-        heading: 'Finished in code',
+        heading: 'The best tool wasn’t AI',
         body: [
-          'A panel design that only lives in design files isn’t finished. The molecules convert into real, token-driven React shipped to Storybook — reusing Inkwell atoms rather than hand-rolling. Shipped so far: FillSection + FillPicker, StrokeSection, and a wave of section components (Intelligence, Effects, Guides, Typography, Fit & Asset), with Position + Layout mid-flight. The work isn’t real until it’s a component an engineer can build from.',
+          'By this point the design felt complete. It wasn’t — ideas don’t ship, systems do. The molecules convert into real, token-driven React in Storybook, reusing Inkwell atoms rather than hand-rolling: FillSection + FillPicker, StrokeSection, and a wave of section components (Intelligence, Effects, Guides, Typography, Fit & Asset), with Position + Layout mid-flight.',
+          'The best design tool I used through all of it wasn’t AI. It was the loop — Paper to think, Claude to search and draft, Storybook and Inkwell to make it real — with judgement staying human at every step. The panel finally had an opinion: it knows what matters, leads with it, and says so.',
         ],
+        figure: { src: propertyPanel4, caption: 'After — grouped, labelled, Identity pinned first. An opinion, at last.', wide: true },
       },
     ],
     outcomes: [
@@ -615,8 +665,8 @@ export const caseDetails: Record<string, CaseDetail> = {
       },
     ],
     outcomes: [
-      { value: '$5M+', label: 'on-chain value managed' },
       { value: 'Multi-chain', label: 'protocols unified' },
+      { value: 'Wallet-last', label: 'connection deferred until needed' },
       { value: 'Mobile-first', label: 'IA that scales to desktop' },
     ],
   },
@@ -663,6 +713,13 @@ export const caseDetails: Record<string, CaseDetail> = {
       'As the product evolved and the visual identity took shape, design started to feel fragmented — each page, component, and flow styled in isolation. We needed a system that was foundational, scalable, and true to the brand we were building. That’s how Lighthouse was born.',
     sections: [
       {
+        heading: 'What I stepped into',
+        body: [
+          'Vizible was in the middle of a major product redesign while also redefining its brand identity. We were shipping new features, improving mobile responsiveness, and adding content types — and every change meant more UI patterns, more one-off elements, and more room for visual drift.',
+          'It became clear that scaling without losing our identity needed a unified system — one that reflected the evolving brand and could be applied across every touchpoint with speed and precision. I was the product designer building it from the ground up, working closely with our design lead, brand designer, and developer.',
+        ],
+      },
+      {
         heading: 'What wasn’t working',
         body: ['Before Lighthouse, the design process faced compounding friction:'],
         list: [
@@ -677,23 +734,32 @@ export const caseDetails: Record<string, CaseDetail> = {
       {
         heading: 'Foundations before components',
         body: [
-          'We audited every existing component and logged its variants in Linear. One early decision shaped everything: start with typography and colour tokens before touching components, so all visual styles aligned before assembly. Accessibility — contrast, focus states, keyboard navigation — was built into the defaults, and components were tested in Chromatic for cross-browser consistency.',
+          'We audited every existing component and logged its variants in Linear, then designed each one in Figma as its own dedicated page — atoms, molecules, organisms. One early decision shaped everything: start with typography and colour tokens before touching components, so all visual styles aligned before assembly.',
+          'Accessibility — contrast ratios, focus states, keyboard navigation — was built into the defaults rather than bolted on. Components were tested in Chromatic for cross-browser consistency, edge cases (empty states, error messages, loading spinners) were considered upfront, and every change was logged so developers could track it.',
         ],
         figure: { src: lighthouse3, caption: 'Colour tokens — accessible by default, consistent across surfaces.', wide: true },
       },
       {
         heading: 'A living system',
-        body: ['Lighthouse needed to be more than a UI kit — a living system that reflected the brand, empowered developers with Storybook-ready components, scaled with the product, and reduced decision fatigue so designers could focus on user problems instead of button radii.'],
+        body: ['Lighthouse needed to be more than a UI kit — a living system that reflected the brand, empowered developers with Storybook-ready, production-accurate components, scaled with the product without breaking, and reduced decision fatigue so designers could focus on user problems instead of button radii.'],
         figure: { src: lighthouse4, caption: 'Component library — production-accurate, documented for self-serve.', wide: true },
       },
       {
         heading: 'Where we landed',
-        body: ['Lighthouse became Vizible’s design backbone — and is now baked into every new feature release.'],
+        body: [
+          'Lighthouse became Vizible’s design backbone: a library of reusable components, consistent branding across every redesigned page, clear documentation for usage and states, and a shared visual language between design and engineering. It powered the platform redesign and is now baked into every new feature release.',
+        ],
         figure: { src: lighthouse5, caption: 'Components in context — states, variants, and interactions documented.', wide: true },
+      },
+      {
+        heading: 'What I learned',
+        body: [
+          'Building Lighthouse reinforced that a design system is never “done” — it’s a living product that grows with the thing it serves. More than a toolkit, it gave Vizible speed, clarity, and a cohesive identity, no matter how fast the product evolved.',
+        ],
       },
     ],
     outcomes: [
-      { value: '50+', label: 'reusable components' },
+      { value: '40+', label: 'reusable components' },
       { value: '50%', label: 'faster design-to-dev turnaround' },
       { value: '1', label: 'shared language for design & eng' },
     ],
@@ -709,7 +775,7 @@ export const caseDetails: Record<string, CaseDetail> = {
       {
         heading: 'Research & insights',
         body: [
-          'I ran interviews and stakeholder sessions with lawyers from pilot firms. The product had to work for solo practitioners and large legal teams alike, so flexibility and clarity were top priorities throughout.',
+          'I ran interviews and stakeholder sessions with lawyers from pilot firms. The product had to work for solo practitioners and large legal teams alike, so flexibility and clarity were top priorities throughout. The early iterations surfaced clear, recurring friction:',
         ],
         list: [
           'Slow, repetitive brief-creation workflows.',
@@ -720,8 +786,17 @@ export const caseDetails: Record<string, CaseDetail> = {
         figure: { src: tabulera2, caption: 'Flow mapping — every interaction from onboarding to handoff.', wide: true },
       },
       {
+        heading: 'Design strategy',
+        body: ['Three objectives guided the redesign — enough to give the work a spine without over-constraining it:'],
+        list: [
+          'Build a brief builder powerful enough to adapt to different legal use cases.',
+          'Centralise lawyer–client collaboration through structured, guided forms and messaging.',
+          'Reimagine document management and team visibility across legal teams.',
+        ],
+      },
+      {
         heading: 'Design & prototyping',
-        body: ['Working with product and engineering, I led the UX/UI in Figma and redesigned three core surfaces:'],
+        body: ['Working with product and engineering, I led the UX/UI in Figma — mapping complete user flows and building high-fidelity prototypes that accounted for conditional logic, status changes, and revision tracking. Three core surfaces:'],
         list: [
           'The Brief Builder — a modular system to create, duplicate, and send forms to clients.',
           'The Messaging & Collaboration space — a shared lawyer/client timeline for updates and documents.',
@@ -730,17 +805,29 @@ export const caseDetails: Record<string, CaseDetail> = {
         figure: { src: tabulera3, caption: 'Client feed — structured, guided collaboration.', wide: true },
       },
       {
-        heading: 'Testing & outcome',
+        heading: 'Testing & iterations',
         body: [
-          'We tested with internal teams and pilot-firm lawyers in continuous feedback loops, iterating to address both legal and technical needs. The result lets legal teams focus less on repetitive admin and more on high-value work — while giving clients a clearer, more professional experience.',
+          'We tested with internal teams and pilot-firm lawyers in continuous feedback loops, iterating to balance the legal and technical requirements against each other. Each cycle sharpened the flows around how lawyers actually work rather than how the system wanted them to.',
         ],
         figure: { src: tabulera4, caption: 'Lawyer feed — visibility across matters and team.', wide: true },
       },
+      {
+        heading: 'Outcome',
+        body: [
+          'The redesign lets legal teams spend less on repetitive admin and more on high-value work — while giving clients a clearer, more professional experience. One platform now carries a solo practitioner and a large firm through the same guided workflow, each at their own scale.',
+        ],
+      },
+      {
+        heading: 'Reflection',
+        body: [
+          'The lasting lessons were about systems, not screens: designing something scalable across genuinely diverse use cases, balancing control and flexibility for professionals who each work their own way, and prioritising clarity when serving a specialised domain where the details carry real weight.',
+        ],
+      },
     ],
     outcomes: [
-      { value: '30+', label: 'lawyer interviews' },
-      { value: '10%', label: 'drafting-time reduction' },
       { value: 'Solo → firm', label: 'one system, every tier' },
+      { value: 'Brief builder', label: 'modular, reusable forms' },
+      { value: 'Central', label: 'matters, messaging & docs in one place' },
     ],
   },
 

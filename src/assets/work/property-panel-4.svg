@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Identity-first inspector">
+  <rect width="1600" height="1000" fill="#111111"/>
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+  </g>
+  <text x="120" y="140" fill="#f5f3ef" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">AFTER · GROUPED, LABELLED, SEMANTIC-FIRST</text>
+  <text x="116" y="330" fill="#f5f3ef" font-family="Georgia, 'Times New Roman', serif" font-size="112" font-weight="600" letter-spacing="-4">An opinion, at last</text>
+  <!-- inspector with pinned Identity group -->
+  <g font-family="'Helvetica Neue', Arial, sans-serif">
+    <rect x="1160" y="170" width="320" height="760" fill="#161616" stroke="#ffffff" stroke-opacity="0.12"/>
+    <rect x="1180" y="196" width="280" height="46" rx="2" fill="#1f1f1f" stroke="#ffffff" stroke-opacity="0.12"/>
+    <text x="1196" y="226" fill="#f5f3ef" fill-opacity="0.7" font-size="24">Align &amp; distribute</text>
+    <rect x="1180" y="262" width="280" height="150" rx="2" fill="#12203f" stroke="#3b6ef5" stroke-opacity="0.5"/>
+    <text x="1196" y="298" fill="#8fb0ff" font-size="24">Identity</text>
+    <text x="1196" y="336" fill="#f5f3ef" fill-opacity="0.6" font-size="22">Semantic type · Zone</text>
+    <text x="1196" y="372" fill="#f5f3ef" fill-opacity="0.6" font-size="22">Variant · Token bindings</text>
+    <g stroke="#ffffff" stroke-opacity="0.1">
+      <line x1="1180" y1="452" x2="1460" y2="452"/>
+      <line x1="1180" y1="532" x2="1460" y2="532"/>
+      <line x1="1180" y1="612" x2="1460" y2="612"/>
+    </g>
+  </g>
+  <text x="120" y="560" fill="#f5f3ef" fill-opacity="0.6" font-size="32" font-family="'Helvetica Neue', Arial, sans-serif">Identity pinned first · predictable order · collapse that persists.</text>
+  <text x="120" y="930" fill="#c8ff2d" fill-opacity="0.7" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" letter-spacing="3">PLACEHOLDER — SWAP FOR REAL AFTER-STATE CAPTURE</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Inkwell audit board">
+  <rect width="1600" height="1000" fill="#111111"/>
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="800" y1="0" x2="800" y2="1000"/>
+    <line x1="1200" y1="0" x2="1200" y2="1000"/>
+  </g>
+  <text x="120" y="150" fill="#f5f3ef" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">AUDIT · SURFACE + CODE</text>
+  <text x="116" y="470" fill="#f5f3ef" font-family="Georgia, 'Times New Roman', serif" font-size="150" font-weight="600" letter-spacing="-4">The audit board</text>
+  <text x="120" y="560" fill="#f5f3ef" fill-opacity="0.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="30">Every surface catalogued — drift, hardcoded values, bypassed tokens.</text>
+  <!-- sticky-note grid suggestion -->
+  <g>
+    <rect x="120" y="640" width="200" height="140" fill="#1a1a1a" stroke="#ffffff" stroke-opacity="0.14"/>
+    <rect x="344" y="640" width="200" height="140" fill="#1a1a1a" stroke="#ffffff" stroke-opacity="0.14"/>
+    <rect x="568" y="640" width="200" height="140" fill="#1a1a1a" stroke="#d1483f" stroke-opacity="0.5"/>
+    <rect x="792" y="640" width="200" height="140" fill="#1a1a1a" stroke="#ffffff" stroke-opacity="0.14"/>
+    <rect x="1016" y="640" width="200" height="140" fill="#1a1a1a" stroke="#d98a1f" stroke-opacity="0.5"/>
+  </g>
+  <text x="120" y="930" fill="#c8ff2d" fill-opacity="0.7" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" letter-spacing="3">PLACEHOLDER — SWAP FOR REAL AUDIT CAPTURE</text>
+</svg>

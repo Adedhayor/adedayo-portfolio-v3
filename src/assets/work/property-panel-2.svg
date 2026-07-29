@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="The overloaded property panel">
+  <rect width="1600" height="1000" fill="#111111"/>
+  <g stroke="#ffffff" stroke-opacity="0.06" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+  </g>
+  <text x="120" y="140" fill="#f5f3ef" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">BEFORE · 800PX OF UNLABELLED SCROLL</text>
+  <text x="116" y="330" fill="#f5f3ef" font-family="Georgia, 'Times New Roman', serif" font-size="120" font-weight="600" letter-spacing="-4">The panel had no opinion</text>
+  <!-- a tall, undifferentiated rail of fields -->
+  <g>
+    <rect x="1180" y="180" width="300" height="740" fill="#161616" stroke="#ffffff" stroke-opacity="0.12"/>
+    <g stroke="#ffffff" stroke-opacity="0.1">
+      <line x1="1180" y1="240" x2="1480" y2="240"/>
+      <line x1="1180" y1="300" x2="1480" y2="300"/>
+      <line x1="1180" y1="360" x2="1480" y2="360"/>
+      <line x1="1180" y1="420" x2="1480" y2="420"/>
+      <line x1="1180" y1="480" x2="1480" y2="480"/>
+      <line x1="1180" y1="540" x2="1480" y2="540"/>
+      <line x1="1180" y1="600" x2="1480" y2="600"/>
+      <line x1="1180" y1="660" x2="1480" y2="660"/>
+      <line x1="1180" y1="720" x2="1480" y2="720"/>
+      <line x1="1180" y1="780" x2="1480" y2="780"/>
+      <line x1="1180" y1="840" x2="1480" y2="840"/>
+    </g>
+  </g>
+  <text x="120" y="520" fill="#f5f3ef" fill-opacity="0.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="32">10+ sections, no grouping, no labels — zone tagging dead last.</text>
+  <text x="120" y="930" fill="#c8ff2d" fill-opacity="0.7" font-family="'Helvetica Neue', Arial, sans-serif" font-size="20" letter-spacing="3">PLACEHOLDER — SWAP FOR REAL BEFORE-STATE CAPTURE</text>
+</svg>
