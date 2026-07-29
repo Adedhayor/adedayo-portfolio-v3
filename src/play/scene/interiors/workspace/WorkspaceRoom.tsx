@@ -37,9 +37,12 @@ const WORKSPACE = getPlace('workspace')
 export default function WorkspaceRoom({
   palette,
   onAction,
+  onStepSound,
 }: {
   palette: PlayPalette
   onAction: (action: HotspotAction, sound?: SoundRole) => void
+  /** Carousel step sting — threaded from PlayWorld to MonitorCarousel. */
+  onStepSound?: () => void
 }) {
   const mats = useWorldMaterials(palette)
   // matchMedia-backed hook (no React context) — safe inside the Canvas.
@@ -110,7 +113,13 @@ export default function WorkspaceRoom({
       <group position={[0, 0, -3.0]}>
         <Desk mats={mats} />
         <group position={[0, 0.96, -0.28]}>
-          <MonitorCarousel screens={screens} palette={palette} mats={mats} onAction={onAction} />
+          <MonitorCarousel
+            screens={screens}
+            palette={palette}
+            mats={mats}
+            onAction={onAction}
+            onStepSound={onStepSound}
+          />
         </group>
         <group position={[-1.0, 0.96, 0.22]} rotation={[0, 0.35, 0]}>
           <Laptop palette={palette} mats={mats} />

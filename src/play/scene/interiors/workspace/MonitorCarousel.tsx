@@ -132,11 +132,14 @@ export default function MonitorCarousel({
   palette,
   mats,
   onAction,
+  onStepSound,
 }: {
   screens: ScreenContent[]
   palette: PlayPalette
   mats: WorldMaterials
   onAction: (action: HotspotAction, sound?: SoundRole) => void
+  /** navigation.tab sting per step — threaded from PlayWorld (DOM side). */
+  onStepSound?: () => void
 }) {
   const invalidate = useThree((s) => s.invalidate)
   const [index, setIndex] = useState(0)
@@ -157,11 +160,10 @@ export default function MonitorCarousel({
     (dir: -1 | 1) => {
       if (!total) return
       setIndex((i) => (i + dir + total) % total)
-      // NOTE for the integrator: `navigation.tab` sting belongs here —
-      // see the header comment. Steps are silent in this build.
+      onStepSound?.()
       invalidate()
     },
-    [total, invalidate],
+    [total, invalidate, onStepSound],
   )
 
   const onWheel = useCallback(

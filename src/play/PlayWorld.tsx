@@ -11,7 +11,7 @@
 // ownership: Canvas perf props → F; outside → W1; interiors →
 // W2/W3/W4. Keep composition thin.
 // ============================================================
-import { useCallback } from 'react'
+import { useCallback, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { useSensoryUI } from '@/lib/sensory-ui'
 import { usePlay } from './PlayContext'
@@ -28,6 +28,11 @@ import { VideoPoolController } from './scene/media/videoPool'
 import AmbientBed from './audio/AmbientBed'
 import AdaptiveQuality, { initialDpr } from './fallback/AdaptiveQuality'
 
+// Session-scoped visit tracker — survives world/grid remounts so the
+// all-three-buildings milestone only ever fires once per session.
+const visitedPlaces = new Set<string>()
+let milestonePlayed = false
+
 export default function PlayWorld() {
   const { phase, location, reducedMotion, muted, introDone } = usePlay()
   const palette = usePlayColors()
@@ -37,6 +42,20 @@ export default function PlayWorld() {
   const hoverSound = useCallback(() => {
     void playSound('interaction.subtle')
   }, [playSound])
+
+  const stepSound = useCallback(() => {
+    void playSound('navigation.tab')
+  }, [playSound])
+
+  // hero.milestone when the visitor has stepped inside all three buildings.
+  useEffect(() => {
+    if (phase !== 'live' || location === 'outside') return
+    visitedPlaces.add(location)
+    if (!milestonePlayed && visitedPlaces.size >= 3) {
+      milestonePlayed = true
+      void playSound('hero.milestone')
+    }
+  }, [phase, location, playSound])
 
   const hotspots = hotspotsForLocation(location)
 
@@ -61,7 +80,9 @@ export default function PlayWorld() {
             <Outside palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
           )}
           {location === 'gallery' && <GalleryRoom palette={palette} onAction={runAction} />}
-          {location === 'workspace' && <WorkspaceRoom palette={palette} onAction={runAction} />}
+          {location === 'workspace' && (
+            <WorkspaceRoom palette={palette} onAction={runAction} onStepSound={stepSound} />
+          )}
           {location === 'lab' && <LabRoom palette={palette} onAction={runAction} />}
 
           <Hotspots hotspots={hotspots} palette={palette} onAction={runAction} onHover={hoverSound} />
