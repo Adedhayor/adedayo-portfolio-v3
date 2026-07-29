@@ -6,8 +6,8 @@
 // own reconciler, so scene components never reach for contexts.
 //
 // Phase 2: only the ACTIVE location's scene group is mounted —
-// outside (SetDressing + WorldZones stand-in) OR one interior
-// room. The swap happens behind the door veil. Post-integration
+// outside (W1's composed Outside root) OR one interior room.
+// The swap happens behind the door veil. Post-integration
 // ownership: Canvas perf props → F; outside → W1; interiors →
 // W2/W3/W4. Keep composition thin.
 // ============================================================
@@ -20,8 +20,7 @@ import { usePlayColors } from './hooks/usePlayColors'
 import { hotspotsForLocation } from './data/playground'
 import CameraRig, { GATE_POSE } from './scene/CameraRig'
 import Hotspots from './scene/Hotspots'
-import SetDressing from './scene/set/SetDressing'
-import WorldZones from './scene/zones/WorldZones'
+import Outside from './scene/outside/Outside'
 import GalleryRoom from './scene/interiors/gallery/PlaceholderRoom'
 import WorkspaceRoom from './scene/interiors/workspace/PlaceholderRoom'
 import LabRoom from './scene/interiors/lab/PlaceholderRoom'
@@ -59,10 +58,7 @@ export default function PlayWorld() {
               win that pays for richer interiors, and why you never see the
               rest of the world from inside a building. */}
           {location === 'outside' && (
-            <>
-              <SetDressing palette={palette} />
-              <WorldZones palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
-            </>
+            <Outside palette={palette} onAction={runAction} reducedMotion={reducedMotion} />
           )}
           {location === 'gallery' && <GalleryRoom palette={palette} onAction={runAction} />}
           {location === 'workspace' && <WorkspaceRoom palette={palette} onAction={runAction} />}
