@@ -1,21 +1,7 @@
 // ============================================================
 // Workspace (desk interior) — W3 OWNS THIS FILE.
-// W0 placeholder: the shared room shell fed the workspace place.
-// Replace with the real room (desk/chair/laptop + the monitor
-// case-study carousel) — keep the same props so PlayWorld's mount
-// stays stable.
+// The W0 placeholder is replaced by the real room; this file stays
+// as the stable mount point PlayWorld imports (same default export,
+// same { palette, onAction } props). See WorkspaceRoom.tsx.
 // ============================================================
-import type { SoundRole } from '@/lib/sensory-ui'
-import { getPlace, type HotspotAction } from '../../../data/playground'
-import type { PlayPalette } from '../../../hooks/usePlayColors'
-import PlaceholderRoomShell from '../PlaceholderRoomShell'
-
-export default function WorkspaceRoom({
-  palette,
-  onAction,
-}: {
-  palette: PlayPalette
-  onAction: (action: HotspotAction, sound?: SoundRole) => void
-}) {
-  return <PlaceholderRoomShell place={getPlace('workspace')} palette={palette} onAction={onAction} />
-}
+export { default } from './WorkspaceRoom'
