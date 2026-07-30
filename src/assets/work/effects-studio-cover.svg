@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="Effects Studio playground">
+  <rect width="1600" height="1000" fill="#FBFBF9"/>
+  <!-- hairline grid -->
+  <g stroke="#111111" stroke-opacity="0.08" stroke-width="1">
+    <line x1="0" y1="250" x2="1600" y2="250"/>
+    <line x1="0" y1="500" x2="1600" y2="500"/>
+    <line x1="0" y1="750" x2="1600" y2="750"/>
+    <line x1="400" y1="0" x2="400" y2="1000"/>
+    <line x1="800" y1="0" x2="800" y2="1000"/>
+    <line x1="1200" y1="0" x2="1200" y2="1000"/>
+  </g>
+  <!-- generative concentric ripples (nod to shaders + UI sound) -->
+  <g fill="none" stroke="#111111" stroke-opacity="0.14" stroke-width="1.5">
+    <circle cx="1300" cy="300" r="70"/>
+    <circle cx="1300" cy="300" r="130"/>
+    <circle cx="1300" cy="300" r="190"/>
+    <circle cx="1300" cy="300" r="250"/>
+  </g>
+  <circle cx="1300" cy="300" r="26" fill="#c8ff2d"/>
+  <text x="120" y="150" fill="#111111" fill-opacity="0.5" font-family="'Helvetica Neue', Arial, sans-serif" font-size="26" letter-spacing="6" font-weight="500">PLAYGROUND · GENERATIVE</text>
+  <text x="116" y="560" fill="#111111" font-family="Georgia, 'Times New Roman', serif" font-size="150" font-weight="600" letter-spacing="-5">Effects Studio.</text>
+  <text x="120" y="670" fill="#111111" fill-opacity="0.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="34" letter-spacing="0">Shaders, generative patterns, and UI sound.</text>
+  <!-- ink / paper / lime swatches, sharp -->
+  <g>
+    <rect x="120" y="770" width="120" height="120" fill="#111111"/>
+    <rect x="256" y="770" width="120" height="120" fill="#FBFBF9" stroke="#111111" stroke-opacity="0.2"/>
+    <rect x="392" y="770" width="120" height="120" fill="#c8ff2d"/>
+  </g>
+</svg>
