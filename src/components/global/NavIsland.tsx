@@ -26,9 +26,9 @@ const LINKS: NavLink[] = [
   { label: 'Home', href: '/#top' },
   { label: 'Work', href: '/work' },
   { label: 'Play', href: '/play' },
-  { label: 'Notes', href: '/notes' },
+  { label: 'Blog', href: '/blog' },
   { label: 'About', href: '/about' },
-  { label: 'Résumé', href: profile.resumeUrl, external: true },
+  { label: 'Resume', href: profile.resumeUrl, external: true },
 ]
 // Drop dead external links (e.g. résumé before the PDF is hosted)
 // and staging-only pages (src/lib/release.ts).

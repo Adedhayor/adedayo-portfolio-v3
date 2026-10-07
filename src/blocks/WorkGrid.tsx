@@ -1,225 +1,102 @@
 // ============================================================
-// WorkGrid block — the bento work section (BRIEF §4.2).
-// Case studies only — live projects & experiments moved to the
-// /work page (feedback 2026-07-12 #9). One unified card style —
-// Recoleta titles, a mini summary on every card, content-hugging
-// height. Spans vary (2/4 · 4/2 · 3/3) so it reads as a true
-// bento. NDA-fenced studies navigate to the detail page, which
-// asks for the password inline (round F #1 — no modal). Home
-// shows a curated FIVE (round F #3); the rest live on /work.
+// WorkGrid — the five selected studies on Home. Desktop uses a
+// native CSS sticky stack: the heading remains visible while each
+// opaque project row replaces the one before it. Mobile falls back
+// to a straightforward vertical list.
 // ============================================================
-import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight, Lock } from 'lucide-react'
 import { Link } from 'react-router-dom'
-import { Tag } from '@/components/ui/tag'
 import { buttonVariants } from '@/components/ui/button'
 import { isNdaUnlocked } from '@/lib/nda'
-import { caseStudies, type CaseStudy } from '@/data'
-import { dur, easeExpo } from '@/lib/motion'
+import { caseStudies, featuredSlugs, type CaseStudy } from '@/data'
 
-/* The flagship case study — rendered large + horizontal to emphasise
-   design-systems work (feedback #5). It's the one passworded study
-   shown on the home page. */
-const FEATURED_SLUG = 'inkwell'
-
-/* The home selection — five studies, one of them passworded (round
-   F #3). Everything else lives on /work. */
-const HOME_SLUGS = [FEATURED_SLUG, 'lithium-staking', 'lighthouse-ds', 'zilliqa-migration', 'tabulerasa']
-
-/* Bento rhythm for the non-featured cards — 6-col grid, rows of
-   2+4 / 4+2 (round E #5/#6: small card left, large right on the
-   first row). Anything past the pattern goes full-width. */
-const BENTO_SPANS = [
-  'md:col-span-2',
-  'md:col-span-4',
-  'md:col-span-4',
-  'md:col-span-2',
-]
-const bentoSpan = (i: number) => BENTO_SPANS[i] ?? 'md:col-span-6'
-
-/* Decorative colored tags — random-but-stable per label (feedback B#3) */
-const TAG_COLORS = ['accent', 'success', 'warning', 'danger'] as const
-function tagColor(s: string): (typeof TAG_COLORS)[number] {
-  let h = 0
-  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0
-  return TAG_COLORS[h % TAG_COLORS.length]
+const HOME_SLUGS = featuredSlugs
+const DISPLAY_TITLES: Record<string, string> = {
+  inkwell: 'Inkwell Design System',
 }
-function TagRow({ tags }: { tags: string[] }) {
+
+function SelectedProject({ study, index }: { study: CaseStudy; index: number }) {
+  const locked = Boolean(study.nda) && !isNdaUnlocked()
+  const tags = study.tag.split('·').map((tag) => tag.trim())
+
   return (
-    <div className="mt-4 flex flex-wrap gap-1.5">
-      {tags.map((t) => (
-        <Tag key={t} variant={tagColor(t)} size="sm">
-          {t}
-        </Tag>
-      ))}
+    <div
+      className={[
+        'selected-work-sticky w-full lg:sticky',
+        index === 0 ? 'lg:top-0' : 'lg:top-[11.25rem]',
+      ].join(' ')}
+      style={{ zIndex: index + 1 }}
+    >
+      {index === 0 && (
+        <div className="flex min-h-[11.25rem] items-end border-b border-opt-border-default bg-opt-surface-base pb-5">
+          <h2 className="font-display text-[clamp(2.8rem,6vw,5.5rem)] leading-[0.92] tracking-[-0.035em] text-opt-text-heading">
+            Selected work
+          </h2>
+        </div>
+      )}
+
+      <Link
+        to={`/case-study/${study.slug}`}
+        className="group relative isolate grid w-full overflow-hidden border border-opt-border-default bg-opt-surface-base p-3 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-opt-text-heading lg:min-h-[454px] lg:grid-cols-12 lg:gap-x-3 lg:px-0 lg:py-4"
+      >
+        <div className="relative aspect-[16/10] overflow-hidden border border-opt-border-subtle bg-opt-surface-low lg:col-span-7 lg:aspect-auto lg:h-[420px]">
+          <img
+            src={study.cover}
+            alt={study.title}
+            loading={index < 2 ? 'eager' : 'lazy'}
+            style={{ objectPosition: study.coverPos }}
+            className="absolute inset-0 size-full object-cover transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.025]"
+          />
+          <span className="absolute bottom-4 left-4 inline-flex items-center gap-1.5 border border-white/30 bg-black/45 px-3 py-2 text-[12px] font-semibold text-white opacity-0 backdrop-blur-sm transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100 group-focus-visible:opacity-100">
+            {locked && <Lock size={12} aria-hidden="true" />}
+            Read case study
+            <ArrowUpRight size={13} aria-hidden="true" />
+          </span>
+        </div>
+
+        <div className="flex flex-col justify-between gap-8 py-5 lg:col-span-3 lg:py-0">
+          <p className="text-[clamp(1rem,1.35vw,1.2rem)] font-medium leading-[1.12] text-opt-text-primary">
+            {study.blurb}
+          </p>
+          <div>
+            <p className="text-[12px] text-opt-text-secondary">
+              {[study.client, study.year].filter(Boolean).join(' · ')}
+            </p>
+            <p className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[11px] uppercase tracking-[0.08em] text-opt-text-secondary">
+              {tags.map((tag) => <span key={tag}>{tag}</span>)}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-[minmax(0,1fr)_18px] items-start gap-3 pb-2 lg:col-span-2 lg:py-0">
+          <h3 className="min-w-0 font-display text-[clamp(1.65rem,2.4vw,2.45rem)] leading-[0.98] tracking-[-0.025em] text-opt-text-heading">
+            {DISPLAY_TITLES[study.slug] ?? study.title}
+          </h3>
+          <ArrowRight
+            size={18}
+            aria-hidden="true"
+            className="mt-1 shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1"
+          />
+        </div>
+      </Link>
     </div>
   )
 }
 
-const cardMotion = {
-  layout: true,
-  initial: { opacity: 0, y: 16 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: 8 },
-  transition: { duration: dur.slow, ease: easeExpo },
-}
-
-/* ---------- Unified project card — cover flush on top, text in the
-   same bordered shell; hover reveals a CTA over the image. Height
-   hugs its content (round E #4). */
-type CardProps = {
-  cover: string
-  coverPos?: string
-  title: string
-  meta: string
-  blurb?: string
-  tags: string[]
-  cta: string
-  to?: string
-  href?: string
-  locked?: boolean
-  /** Stretch to the grid row so every card in a uniform grid is the
-      same height, tags pinned to the bottom (round G — /work). */
-  fill?: boolean
-  onClick?: (e: React.MouseEvent) => void
-}
-export function ProjectCard({ cover, coverPos, title, meta, blurb, tags, cta, to, href, locked, fill, onClick }: CardProps) {
-  const hasDest = Boolean(to || href)
-  const body = (
-    <>
-      <div className="relative aspect-[16/10] w-full overflow-hidden bg-opt-surface-low">
-        <img
-          src={cover}
-          alt={title}
-          loading="lazy"
-          style={{ objectPosition: coverPos }}
-          className="absolute inset-0 size-full object-cover transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.04]"
-        />
-        {hasDest && (
-          <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
-            <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
-              {locked && <Lock size={12} strokeWidth={2.5} />}
-              {cta}
-              <ArrowUpRight size={14} strokeWidth={2.5} />
-            </span>
-          </div>
-        )}
-      </div>
-      <div className={fill ? 'flex flex-1 flex-col p-5' : 'p-5'}>
-        <h3 className="font-display text-[19px] font-medium leading-snug text-opt-text-heading">{title}</h3>
-        <p className="mt-1 text-[13px] text-opt-text-secondary">{meta}</p>
-        {blurb && <p className="mt-2.5 text-[13px] leading-[1.5] text-opt-text-secondary">{blurb}</p>}
-        <div className={fill ? 'mt-auto' : undefined}>
-          <TagRow tags={tags} />
-        </div>
-      </div>
-    </>
-  )
-  const shell = [
-    'group flex flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default',
-    fill ? 'h-full' : '',
-  ].join(' ')
-  if (to)
-    return (
-      <Link to={to} onClick={onClick} className={shell}>
-        {body}
-      </Link>
-    )
-  if (href)
-    return (
-      <a href={href} target="_blank" rel="noreferrer" className={shell}>
-        {body}
-      </a>
-    )
-  return <div className={shell}>{body}</div>
-}
-
-function CaseCell({ cs, span }: { cs: CaseStudy; span: string }) {
-  const locked = Boolean(cs.nda) && !isNdaUnlocked()
-  return (
-    <motion.div {...cardMotion} className={span}>
-      <ProjectCard
-        cover={cs.cover}
-        coverPos={cs.coverPos}
-        title={cs.title}
-        meta={`${cs.client} · ${cs.year}`}
-        blurb={cs.blurb}
-        tags={cs.tag.split('·').map((t) => t.trim())}
-        cta="Read case study"
-        to={`/case-study/${cs.slug}`}
-        locked={locked}
-      />
-    </motion.div>
-  )
-}
-
-/* Flagship — full-width, image + copy side by side. */
-function FeaturedCaseCell({ cs }: { cs: CaseStudy }) {
-  const locked = Boolean(cs.nda) && !isNdaUnlocked()
-  return (
-    <motion.div {...cardMotion} className="md:col-span-6">
-      <Link
-        to={`/case-study/${cs.slug}`}
-        className="group flex flex-col overflow-hidden rounded-none border border-opt-border-subtle bg-opt-surface-raised transition-colors duration-[var(--opt-motion-base)] hover:border-opt-border-default md:min-h-[360px] md:flex-row"
-      >
-        <div className="relative aspect-[16/10] w-full overflow-hidden bg-opt-surface-low md:aspect-auto md:w-[56%]">
-          <img
-            src={cs.cover}
-            alt={cs.title}
-            loading="lazy"
-            style={{ objectPosition: cs.coverPos }}
-            className="absolute inset-0 size-full object-cover transition-transform duration-[var(--opt-motion-slower)] [transition-timing-function:var(--opt-easing-expo)] group-hover:scale-[1.04]"
-          />
-          <div className="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/50 via-black/0 to-transparent opacity-0 transition-opacity duration-[var(--opt-motion-base)] group-hover:opacity-100">
-            <span className="m-4 inline-flex items-center gap-1.5 text-[13px] font-semibold text-white">
-              {locked && <Lock size={12} strokeWidth={2.5} />}
-              Read case study
-              <ArrowUpRight size={14} strokeWidth={2.5} />
-            </span>
-          </div>
-        </div>
-        <div className="flex flex-1 flex-col justify-between gap-5 p-6 md:p-8">
-          <div>
-            <h3 className="font-display text-[clamp(1.4rem,2.4vw,1.75rem)] font-medium leading-[1.1] text-opt-text-heading">
-              {cs.title}
-            </h3>
-            <p className="mt-1 text-[13px] text-opt-text-secondary">{`${cs.client} · ${cs.year}`}</p>
-            <p className="mt-4 max-w-[46ch] text-[15px] leading-[1.5] text-opt-text-secondary">{cs.blurb}</p>
-          </div>
-          <TagRow tags={cs.tag.split('·').map((t) => t.trim())} />
-        </div>
-      </Link>
-    </motion.div>
-  )
-}
-
 export default function WorkGrid({ className = '' }: { className?: string }) {
-  const featured = caseStudies.find((cs) => cs.slug === FEATURED_SLUG)
-  const rest = HOME_SLUGS.slice(1)
-    .map((slug) => caseStudies.find((cs) => cs.slug === slug))
-    .filter((cs): cs is CaseStudy => Boolean(cs))
+  const studies = HOME_SLUGS
+    .map((slug) => caseStudies.find((study) => study.slug === slug))
+    .filter((study): study is CaseStudy => Boolean(study))
 
   return (
     <section className={['container-opt py-opt-5xl', className].join(' ')}>
-      {/* Header row */}
-      <div className="mb-opt-2xl flex flex-wrap items-end justify-between gap-4">
-        <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
-          Selected work
-        </h2>
+      <div className="selected-work-stack isolate">
+        {studies.map((study, index) => (
+          <SelectedProject key={study.slug} study={study} index={index} />
+        ))}
       </div>
 
-      {/* Bento — flagship spans the full row, the rest alternate widths */}
-      <motion.div layout className="grid grid-cols-1 items-start gap-4 md:grid-cols-6">
-        <AnimatePresence mode="popLayout">
-          {featured && <FeaturedCaseCell key={featured.slug} cs={featured} />}
-          {rest.map((cs, i) => (
-            <CaseCell key={cs.slug} cs={cs} span={bentoSpan(i)} />
-          ))}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* See all */}
-      <div className="mt-opt-2xl flex justify-center">
+      <div className="relative z-10 flex justify-center bg-opt-surface-base pt-opt-2xl">
         <Link to="/work" className={buttonVariants({ variant: 'ghost', iconPosition: 'trailing' })}>
           See all work
           <ArrowRight size={14} strokeWidth={2.5} />

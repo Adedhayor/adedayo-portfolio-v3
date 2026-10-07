@@ -9,6 +9,7 @@
 // ============================================================
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { nativeArticles } from '@/data/nativeArticles'
 import { caseStudies, writing } from '@/data'
 import { trackPageview } from '@/lib/analytics'
 
@@ -22,8 +23,10 @@ const STATIC_META: Record<string, { title: string; desc?: string }> = {
   '/': { title: DEFAULT_TITLE },
   '/work': { title: `Work — ${SITE}`, desc: 'Deep dives into the work — systems, research, and the decisions behind them.' },
   '/about': { title: `About — ${SITE}`, desc: 'Engineer turned design engineer — the story, the process, and the people behind the work.' },
-  '/notes': { title: `Notes — ${SITE}`, desc: 'Essays on design, momentum, and doing fewer things with more meaning.' },
-  '/play': { title: `Play — ${SITE}`, desc: 'Side projects, live builds, and small experiments.' },
+  '/blog': { title: `Blog — ${SITE}`, desc: 'Essays on design, momentum, and doing fewer things with more meaning.' },
+  '/blog/tech-511': { title: `tech_511 (the guide) — ${SITE}`, desc: 'A resource base for learning how to look, think, make, and keep going.' },
+  '/play': { title: `Playground — ${SITE}`, desc: 'Side projects, live builds, and small experiments.' },
+  '/play/world': { title: `The Yard — ${SITE}`, desc: 'An interactive Three.js field for experiments and play.' },
 }
 
 function metaFor(pathname: string): { title: string; desc: string } {
@@ -36,9 +39,9 @@ function metaFor(pathname: string): { title: string; desc: string } {
     if (study) return { title: `${study.title} — ${SITE}`, desc: study.blurb }
   }
 
-  const note = pathname.match(/^\/notes\/([^/]+)$/)
+  const note = pathname.match(/^\/blog\/([^/]+)$/)
   if (note) {
-    const essay = writing.find((w) => w.slug === note[1])
+    const essay = [...nativeArticles, ...writing].find((w) => w.slug === note[1])
     if (essay) return { title: `${essay.title} — ${SITE}`, desc: DEFAULT_DESC }
   }
 

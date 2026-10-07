@@ -140,7 +140,7 @@ export default function About() {
                   </p>
                 ))}
                 <Link
-                  to="/notes"
+                  to="/blog"
                   className="link-underline inline-flex items-center gap-1 text-[14px] font-medium text-opt-text-heading"
                 >
                   Read the notes <ArrowUpRight size={14} strokeWidth={2.5} />

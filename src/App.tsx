@@ -1,9 +1,11 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import About from '@/pages/About'
 import Play from '@/pages/Play'
+const YardWorld = lazy(() => import('@/pages/YardWorld'))
+const Guide = lazy(() => import('@/pages/Guide'))
 import Notes from '@/pages/Notes'
 import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
@@ -28,7 +30,7 @@ function ScrollToHash() {
       const id = decodeURIComponent(hash.slice(1))
       // Wait a frame so the target route has rendered.
       requestAnimationFrame(() => {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+        document.getElementById(id)?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })
       })
       return
     }
@@ -37,16 +39,19 @@ function ScrollToHash() {
   return null
 }
 
+function LegacyNoteRedirect() { const { slug } = useParams(); return <Navigate to={`/blog/${slug}`} replace /> }
+
 export default function App() {
   // The /play world is immersive full-viewport WebGL — the ambient
   // ASCII field and the chat FAB would fight it for pointer + GPU.
-  const inPlayWorld = useLocation().pathname === '/play'
+  const { pathname } = useLocation()
+  const inPlayWorld = pathname.startsWith('/play') || pathname === '/blog/tech-511'
   return (
     <>
       <ScrollToHash />
       {/* Per-route titles/canonical + analytics pageviews */}
       <RouteMeta />
-      <CustomCursor />
+      {pathname !== '/blog/tech-511' && <CustomCursor />}
 
       {/* Cursor-reactive ASCII background — behind every page (round G) */}
       {!inPlayWorld && <AsciiField />}
@@ -57,13 +62,16 @@ export default function App() {
 
         {/* Full pages */}
         <Route path="/about" element={<About />} />
-        {/* Staging-only until release (src/lib/release.ts) — falls to 404 in production */}
-        {showPlayground && <Route path="/play" element={<Play />} />}
-        <Route path="/notes" element={<Notes />} />
-        <Route path="/notes/:slug" element={<NoteReader />} />
+        {/* Playground index and its interactive Three.js field. */}
+        {showPlayground && <><Route path="/play" element={<Play />} /><Route path="/play/world" element={<Suspense fallback={<p>Opening The Yard…</p>}><YardWorld /></Suspense>} /></>}
+        <Route path="/blog" element={<Notes />} />
+        <Route path="/blog/tech-511" element={<Suspense fallback={<p>Opening the guide…</p>}><Guide /></Suspense>} />
+        <Route path="/notes" element={<Navigate to="/blog" replace />} />
+        <Route path="/notes/:slug" element={<LegacyNoteRedirect />} />
+        <Route path="/blog/:slug" element={<NoteReader />} />
 
-        {/* Renamed: /writing → /notes (feedback #9) */}
-        <Route path="/writing" element={<Navigate to="/notes" replace />} />
+        {/* Renamed: /writing → /blog (feedback #9) */}
+        <Route path="/writing" element={<Navigate to="/blog" replace />} />
 
         {/* Renamed: Tabulera → Tabulerasa (round G) — keep the old live URL working */}
         <Route path="/case-study/tabulera" element={<Navigate to="/case-study/tabulerasa" replace />} />

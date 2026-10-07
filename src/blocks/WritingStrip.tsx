@@ -19,7 +19,7 @@ function WritingList() {
       {writing.map((w) => (
         <motion.li key={w.title} variants={riseIn}>
           <Link
-            to={`/notes/${w.slug}`}
+            to={`/blog/${w.slug}`}
             className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
           >
             <span className="text-[13px] text-opt-text-secondary">
@@ -79,7 +79,7 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="font-display text-[clamp(2rem,4.4vw,var(--opt-font-size-h2))] leading-[1.04] text-opt-text-heading">
-            Essays, not case studies.
+            Writing & resources.
           </h2>
           <p className="mt-3 text-[15px] leading-[1.5] text-opt-text-secondary">
             Notes on building, movement, and the human side of the work.
@@ -87,10 +87,10 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <Link
-            to="/notes"
+            to="/blog"
             className="group inline-flex items-center gap-1.5 text-[14px] font-semibold text-opt-text-heading"
           >
-            <span className="link-underline">All notes</span>
+            <span className="link-underline">All articles</span>
             <ArrowRight
               size={14}
               strokeWidth={2.5}
@@ -110,6 +110,19 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
         </div>
       </div>
 
+      <div className="mt-8">
+        <Link to="/blog/tech-511" className="guide-teaser text-opt-text-heading group mb-10 grid gap-6 border border-opt-border-default bg-opt-surface-raised p-8 md:grid-cols-[1fr_2fr] md:p-10">
+          <div>
+            <span className="font-mono text-xs tracking-widest">A RESOURCE BASE / TECH_511</span>
+            <p className="mt-5 font-display text-4xl">the guide.</p>
+          </div>
+          <div className="max-w-[58ch]">
+            <h2 className="font-display text-2xl">Learning to look, think, make, and keep going.</h2>
+            <p className="mt-3 max-w-[52ch] text-opt-text-secondary">The resources I’d keep close if I were starting over as a designer. Five sections to explore at your own pace.</p>
+            <span className="mt-5 inline-block text-sm font-semibold link-underline">Open the guide →</span>
+          </div>
+        </Link>
+      </div>
       {variant === 'cards' ? <WritingCards /> : <WritingList />}
     </section>
   )

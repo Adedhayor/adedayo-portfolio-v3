@@ -50,13 +50,13 @@ export default function Hero({ className = '' }: Props) {
               View work
             </ButtonLink>
             <ButtonLink
-              href={profile.calendly}
+              href={profile.resumeUrl}
               target="_blank"
               rel="noreferrer"
               variant="secondary"
               trailingIcon={<ArrowUpRight size={14} strokeWidth={2.5} />}
             >
-              Book a call
+              Read resume
             </ButtonLink>
           </motion.div>
         </motion.div>

@@ -52,7 +52,7 @@ const SURPRISES: Msg[] = [
   {
     from: 'agent',
     text: 'Plot twist: he writes essays. This one’s a birthday letter to his mum.',
-    actions: [{ label: 'Read on Notes', to: '/notes/for-my-27th-i-write-to-my-mum', icon: BookOpen }],
+    actions: [{ label: 'Read on Notes', to: '/blog/for-my-27th-i-write-to-my-mum', icon: BookOpen }],
   },
   {
     from: 'agent',

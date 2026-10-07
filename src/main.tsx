@@ -1,3 +1,4 @@
+import { MotionConfig } from 'framer-motion'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
@@ -14,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
         {/* UI sound (synthesized, silent until something plays a role).
             /play nests its own provider with the world's pack config. */}
         <SensoryUIProvider>
-          <App />
+          <MotionConfig reducedMotion="user"><App /></MotionConfig>
         </SensoryUIProvider>
       </ThemeProvider>
     </BrowserRouter>

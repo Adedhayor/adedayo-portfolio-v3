@@ -25,6 +25,7 @@ import emonieCover from './assets/work/emonie-cover.jpg'
 import westgateCover from './assets/work/westgate-cover.jpg'
 import nukodesCover from './assets/work/nukodes-cover.jpg'
 import postpaddyCover from './assets/work/postpaddy-cover.jpg'
+import directokunboCover from './assets/work/directokunbo-cover.jpg'
 // Design-system studies — title-card placeholders (swap for real
 // Storybook captures once grabbed). SVGs resolve to URLs in Vite.
 import inkwellCover from './assets/work/inkwell-cover.svg'
@@ -93,6 +94,8 @@ export type CaseStudy = {
 // Staged-only studies (src/lib/release.ts) are filtered out below, so
 // production builds never list, route, or link to them.
 const allCaseStudies: CaseStudy[] = [
+  { slug: 'apeere-iyi', index: '05', title: 'Apeere Iyi', blurb: 'An architectural studio’s work, translated into a digital portfolio.', tag: 'Architecture · Web Design', client: 'Apeere Iyi', year: '', role: 'Designer', metric: 'Digital storytelling', cover: '/images/apeere-iyi-cover.svg' },
+
   {
     slug: 'inkwell',
     index: '01',
@@ -128,9 +131,9 @@ const allCaseStudies: CaseStudy[] = [
   {
     slug: 'lithium-staking',
     index: '03',
-    title: 'Unified multi-protocol staking',
+    title: 'Stakin',
     blurb:
-      'A single platform that makes staking across blockchains feel certain — designed for “minimum certainty in 10 seconds.”',
+      'Simplifying multi-network staking into one clear, unified experience.',
     tag: 'Web3 · Fintech',
     client: 'Lithium Digital',
     year: '2024',
@@ -143,9 +146,9 @@ const allCaseStudies: CaseStudy[] = [
   {
     slug: 'lighthouse-ds',
     index: '02',
-    title: 'Lighthouse — Vizible’s first design system',
+    title: 'Lighthouse Design System',
     blurb:
-      'A token-based system built ground-up: 50+ components, accessibility by default, 50% faster design-to-dev turnaround.',
+      'Connecting product and brand through a shared system, built with design, marketing, and engineering.',
     tag: 'Design Systems',
     client: 'Vizible Labs',
     year: '2024',
@@ -188,25 +191,25 @@ const allCaseStudies: CaseStudy[] = [
   {
     slug: 'westgate',
     index: '07',
-    title: 'Westgate — an electronics store that converts',
+    title: 'Westgate',
     blurb:
-      'An electronics retailer with traffic but a leaky checkout — rebuilt around a faster, clearer path from product to purchase.',
+      'Designing the customer journey for a nationwide electronics retailer.',
     tag: 'eCommerce · B2C',
     client: 'Westgate Technologies',
     year: '2026',
     role: 'Product Designer',
-    metric: '+25% completed checkouts',
+    metric: 'End-to-end commerce',
     accent: '#d98a1f',
     cover: westgateCover,
     coverPos: 'center',
-    comingSoon: true,
+
   },
   {
     slug: 'building-this-portfolio',
     index: '08',
     title: 'Building this portfolio',
     blurb:
-      'The site you’re on — an editorial one-pager built on its own design system (Optimus), a WebGL chrome footer, and an AI pair-programmer in the loop.',
+      'The site you’re on — an editorial one-pager built on its own design system (Optimus), an interactive Play surface, and an AI pair-programmer in the loop.',
     tag: 'Claude Code · Design Engineering',
     client: 'Self-initiated',
     year: '2026',
@@ -225,6 +228,10 @@ export const caseStudies: CaseStudy[] = allCaseStudies
   .filter((cs) => !isHeldBack(cs.slug))
   .sort((a, b) => Number(b.year) - Number(a.year))
 
+export const featuredSlugs = ['lithium-staking', 'westgate', 'inkwell', 'lighthouse-ds', 'apeere-iyi']
+export const featuredWork = featuredSlugs.map(slug => caseStudies.find(cs => cs.slug === slug)!).filter(Boolean)
+export const otherWork = caseStudies.filter(cs => !featuredSlugs.includes(cs.slug))
+
 // Lighter "more work" row — real covers from the vault gallery
 export type MoreWorkItem = {
   title: string
@@ -235,10 +242,11 @@ export type MoreWorkItem = {
   url?: string // TODO: live project URL — activates the "View project" hover CTA
 }
 export const moreWork: MoreWorkItem[] = [
-  { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase', cover: emonieCover },
-  { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system', cover: ebankCover },
+  { title: 'DirecTokunbo', tag: 'Automotive marketplace', year: '2026', note: 'Cars from China, clearly sourced', cover: directokunboCover, url: 'https://directokunbo.adedayobabalola.com/' },
+  { title: 'eMonie', tag: 'Fintech web', year: '2025', note: '40% engagement increase', cover: emonieCover, url: 'https://www.emonieapp.com/' },
+  { title: 'eBank Group', tag: 'Fintech web', year: '2025', note: 'Modular web system', cover: ebankCover, url: 'https://www.ebankgroupco.com/' },
   { title: 'Nukodes', tag: 'Bookkeeping', year: '2026', note: 'Coming soon', cover: nukodesCover },
-  { title: 'PostPaddy', tag: 'Social', year: '2022', note: '2K+ active users', cover: postpaddyCover },
+  { title: 'PostPaddy', tag: 'Social', year: '2022', note: '2K+ active users', cover: postpaddyCover, url: 'https://www.postpaddy.com/' },
 ]
 
 // ============================================================
@@ -455,6 +463,8 @@ export type Section = {
   body: string[]
   list?: string[]
   figure?: Figure
+  video?: { src: string; poster: string; caption: string; captions: string }
+  prototype?: { url: string; label: string }
 }
 export type CaseDetail = {
   tagline: string
@@ -744,44 +754,19 @@ export const caseDetails: Record<string, CaseDetail> = {
     ],
   },
 
-  // NOTE: Westgate content is a first draft — verify specifics (funnel
-  // numbers, exact scope, timeline) against your own record before ship.
   westgate: {
-    tagline:
-      'An electronics retailer with real demand but a leaky checkout — rebuilt around a faster, clearer path from product to purchase.',
-    deliverables: ['UX audit', 'Storefront & product-page redesign', 'Checkout flow'],
-    overview:
-      'Westgate Technologies had products people wanted and traffic to match — but too many shoppers dropped out between the product page and a completed order. The redesign focused on one thing: reduce the friction and uncertainty on the path to buy, so intent turns into purchases.',
-    sections: [
-      {
-        heading: 'Where the funnel leaked',
-        body: [
-          'The store wasn’t short on interest; it was short on follow-through. Carts filled and stalled. Mapping the journey from landing to confirmation surfaced the usual, costly culprits — unclear pricing and shipping, a long multi-step checkout, and too little reassurance at the exact moments a buyer hesitates.',
-        ],
-        list: [
-          'Total cost (shipping, fees) surfaced late — a classic abandonment trigger.',
-          'Checkout asked for too much, too early, with no guest path.',
-          'Thin trust cues at the point of payment.',
-        ],
-      },
-      {
-        heading: 'A clearer path to buy',
-        body: [
-          'The redesign tightened the whole path from product to purchase: cleaner product pages that answer the buying questions up front, transparent pricing before checkout, a condensed flow with a guest option, and trust cues placed where doubt actually shows up. Fewer steps, fewer surprises, more completed orders.',
-        ],
-      },
-      {
-        heading: 'What moved',
-        body: [
-          'The clearer, shorter path paid off where it counts — a 25% lift in completed checkouts, with the biggest gains on the steps that used to leak most.',
-        ],
-      },
-    ],
-    outcomes: [
-      { value: '+25%', label: 'completed checkouts' },
-      { value: 'Guest', label: 'checkout, fewer steps' },
-      { value: 'Upfront', label: 'pricing & trust cues' },
-    ],
+    tagline: 'The customer-facing journey for a nationwide electronics retailer.',
+    deliverables: ['Customer journey', 'Storefront design'],
+    overview: 'A commerce project focused on how customers discover and explore electronics online.',
+    sections: [{ heading: 'The storefront', body: ['The website brings the retailer’s products into a customer-facing digital experience.'], figure: { src: westgateCover, caption: 'Westgate — storefront design from the project archive.', wide: true } }],
+    outcomes: [],
+  },
+  'apeere-iyi': {
+    tagline: 'Translating an architectural studio’s work into a digital portfolio.',
+    deliverables: ['Digital portfolio', 'Visual storytelling'],
+    overview: 'A web experience centred on the studio’s architectural work and the way it is presented online.',
+    sections: [{ heading: 'Let the work lead', body: ['The project connects brand expression, visual design, and the presentation of architectural work.'] }],
+    outcomes: [],
   },
 
   // The meta case study — linked from the footer credit. In the works;
@@ -833,12 +818,14 @@ export const caseDetails: Record<string, CaseDetail> = {
 
 /** Returns the next case study in the list (wraps around). */
 export function nextCaseStudy(slug: string): CaseStudy {
-  const i = caseStudies.findIndex((c) => c.slug === slug)
-  return caseStudies[(i + 1) % caseStudies.length]
+  const ordered = [...featuredWork, ...otherWork]
+  const i = ordered.findIndex((c) => c.slug === slug)
+  return ordered[(i + 1) % ordered.length]
 }
 
 /** Returns the previous case study in the list (wraps around). */
 export function prevCaseStudy(slug: string): CaseStudy {
-  const i = caseStudies.findIndex((c) => c.slug === slug)
-  return caseStudies[(i - 1 + caseStudies.length) % caseStudies.length]
+  const ordered = [...featuredWork, ...otherWork]
+  const i = ordered.findIndex((c) => c.slug === slug)
+  return ordered[(i - 1 + ordered.length) % ordered.length]
 }

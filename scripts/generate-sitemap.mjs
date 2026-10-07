@@ -28,11 +28,11 @@ stagedList.forEach((s) => staged.add(s))
 const caseSlugs = slugsIn(slice(data, 'const allCaseStudies', 'export const caseStudies')).filter((s) => !staged.has(s))
 const noteSlugs = slugsIn(slice(data, 'export const writing', 'export function getNote'))
 
-const staticPaths = ['/', '/work', '/about', '/notes']
+const staticPaths = ['/', '/work', '/about', '/blog', '/blog/tech-511']
 const paths = [
   ...staticPaths,
   ...caseSlugs.map((s) => `/case-study/${s}`),
-  ...noteSlugs.map((s) => `/notes/${s}`),
+  ...noteSlugs.map((s) => `/blog/${s}`),
 ]
 
 const today = new Date().toISOString().slice(0, 10)

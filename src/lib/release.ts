@@ -14,8 +14,8 @@ export function isHeldBack(slug: string): boolean {
   return isProduction && STAGED_CASE_STUDIES.has(slug)
 }
 
-/** The /play page — staging-only until it's ready for release. */
-export const showPlayground = !isProduction
+/** The Playground is public; individual private experiments gate themselves. */
+export const showPlayground = true
 
 /** Wordmark effect shuffle — released 2026-07-25 alongside Effects
     Studio going live; on in production and staging alike. */

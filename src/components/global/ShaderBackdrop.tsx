@@ -6,6 +6,7 @@
 // initial load. Placeholder until the in-house effects studio lands.
 // ============================================================
 import { MeshGradient } from '@paper-design/shaders-react'
+import { useReducedMotion } from 'framer-motion'
 
 type Props = {
   colors: string[]
@@ -24,6 +25,8 @@ export default function ShaderBackdrop({
   opacity = 1,
   className = '',
 }: Props) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <div
       aria-hidden="true"
@@ -32,7 +35,7 @@ export default function ShaderBackdrop({
     >
       <MeshGradient
         colors={colors}
-        speed={speed}
+        speed={reduceMotion ? 0 : speed}
         distortion={distortion}
         swirl={swirl}
         style={{ width: '100%', height: '100%' }}

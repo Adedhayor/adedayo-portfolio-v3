@@ -7,6 +7,8 @@
 // NDA-fenced studies (cs.nda) ask for a password before the
 // content renders; unlock persists for the session.
 // ============================================================
+import CaseJourney from '@/components/global/CaseJourney'
+import SystemWorkflow from '@/components/global/SystemWorkflow'
 import { useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
@@ -180,7 +182,7 @@ export default function CaseStudy() {
           <motion.div variants={stagger(0.08)} {...revealOnMount} className="mx-auto max-w-[68ch]">
             <motion.div variants={riseIn}>
               <Link
-                to="/#work"
+                to="/work"
                 className="link-underline inline-flex items-center gap-1.5 text-[13px] font-medium text-opt-text-secondary"
               >
                 <ArrowLeft size={13} /> All work
@@ -225,10 +227,12 @@ export default function CaseStudy() {
                 {...revealOnMount}
                 src={cs.cover}
                 alt={cs.title}
-                className="mx-auto w-full max-w-[68ch] rounded-none border border-opt-border-subtle"
+                className="mx-auto w-full max-h-[760px] object-contain rounded-none border border-opt-border-subtle"
               />
             </section>
 
+            <CaseJourney key={cs.slug} detail={detail} />
+            {cs.slug === 'inkwell' && <SystemWorkflow />}
             {/* Meta strip */}
             <section className="container-opt pb-opt-4xl">
               <div className="mx-auto max-w-[68ch]">
@@ -259,7 +263,7 @@ export default function CaseStudy() {
             {/* Narrative sections — understand → design → test → land */}
             {detail.sections.map((s) => (
               <section key={s.heading} className="container-opt pb-opt-4xl">
-                <motion.div variants={stagger(0.08)} {...revealOnce} className="mx-auto max-w-[68ch]">
+                <motion.div variants={stagger(0.08)} {...revealOnce} className="case-story">
                   <motion.h2
                     variants={riseIn}
                     className="max-w-[24ch] font-display text-[clamp(1.6rem,3vw,var(--opt-font-size-h3))] leading-[1.12] text-opt-text-heading"
@@ -285,15 +289,17 @@ export default function CaseStudy() {
                       ))}
                     </motion.ul>
                   )}
+                  {s.video && <figure className="case-figure mt-opt-2xl"><video controls playsInline preload="metadata" poster={s.video.poster} className="w-full"><source src={s.video.src} /><track kind="captions" src={s.video.captions} srcLang="en" label="English" default /></video><figcaption className="label mt-3">{s.video.caption}</figcaption></figure>}
+                  {s.prototype && <a href={s.prototype.url} target="_blank" rel="noreferrer" className="mt-6 inline-flex border border-opt-border-default px-5 py-3 text-opt-text-heading">{s.prototype.label} ↗</a>}
                   {s.figure && (
-                    <motion.figure variants={riseIn} className="mt-opt-2xl">
-                      <img
+                    <motion.figure variants={riseIn} className="case-figure mt-opt-2xl">
+                      <a href={s.figure.src} target="_blank" rel="noreferrer" aria-label={`Open full-size image: ${s.figure.caption}`}><img
                         src={s.figure.src}
                         alt={s.figure.caption}
                         loading="lazy"
                         className="w-full rounded-none border border-opt-border-subtle"
                       />
-                      <figcaption className="label mt-3">{s.figure.caption}</figcaption>
+                      </a><figcaption className="label mt-3">{s.figure.caption}</figcaption>
                     </motion.figure>
                   )}
                 </motion.div>
@@ -301,7 +307,7 @@ export default function CaseStudy() {
             ))}
 
             {/* Outcomes */}
-            <section className="container-opt pb-opt-5xl">
+            {detail.outcomes.length > 0 && <section className="container-opt pb-opt-5xl">
               <motion.div
                 variants={stagger(0.08)}
                 {...revealOnce}
@@ -320,7 +326,7 @@ export default function CaseStudy() {
                   </motion.div>
                 ))}
               </motion.div>
-            </section>
+            </section>}
           </>
         )}
 

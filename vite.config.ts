@@ -24,7 +24,7 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
+      '@': path.resolve(dirname, './src')
     },
     // Single React instance — agentation does `import React from 'react'`
     // and would otherwise hit an invalid-hook-call (null React).
