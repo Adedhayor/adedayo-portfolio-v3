@@ -12,12 +12,14 @@ import RouteMeta from '@/components/global/RouteMeta'
 import { isProduction, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
+import RouteLoader from '@/components/global/RouteLoader'
 
 // Lazy so the toolbar ships as its own chunk that production never
 // fetches — the package isn't tree-shakeable from the main bundle.
 const Agentation = lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
 const Guide = lazy(() => import('@/pages/Guide'))
 const Playground = lazy(() => import('@/pages/Play'))
+const YardWorld = lazy(() => import('@/pages/YardWorld'))
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -39,8 +41,10 @@ function ScrollToHash() {
 }
 
 export default function App() {
+  // The /play world is immersive full-viewport WebGL — the ambient
+  // ASCII field and the chat FAB would fight it for pointer + GPU.
   const pathname = useLocation().pathname
-  const inImmersivePage = pathname === '/blog/tech-511'
+  const inImmersivePage = pathname.startsWith('/play') || pathname === '/blog/tech-511'
   return (
     <>
       <ScrollToHash />
@@ -62,21 +66,28 @@ export default function App() {
             <Route
               path="/play"
               element={
-                <Suspense fallback={<p>Opening the playground…</p>}>
+                <Suspense fallback={<RouteLoader label="Opening the Playground" />}>
                   <Playground />
                 </Suspense>
               }
             />
+            <Route
+              path="/play/yard"
+              element={
+                <Suspense fallback={<RouteLoader label="Opening The Yard" />}>
+                  <YardWorld />
+                </Suspense>
+              }
+            />
+            <Route path="/play/world" element={<Navigate to="/play/yard" replace />} />
           </>
         )}
-        <Route path="/play/yard" element={<Navigate to="/play" replace />} />
-        <Route path="/play/world" element={<Navigate to="/play" replace />} />
         <Route path="/notes" element={<Notes />} />
         <Route path="/notes/:slug" element={<NoteReader />} />
         <Route
           path="/blog/tech-511"
           element={
-            <Suspense fallback={<p>Opening the guide…</p>}>
+            <Suspense fallback={<RouteLoader label="Opening the guide" />}>
               <Guide />
             </Suspense>
           }
@@ -93,7 +104,7 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Routes>
 
-      {/* Optimus chat — rides every standard page (round F #9; released 2026-07-17) */}
+      {/* Optimus chat — rides every page except the /play world (round F #9; released 2026-07-17) */}
       {!inImmersivePage && <FloatingContact />}
 
       {/* Visual feedback toolbar — staging channel only (dev, local

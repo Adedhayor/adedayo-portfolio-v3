@@ -309,6 +309,86 @@
   }
 }
 
+/* Route loading signal — CSS stays smooth while lazy chunks are loading. */
+.route-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  background: var(--opt-surface-base);
+  opacity: 0;
+  animation: route-loader-enter var(--opt-motion-default) var(--opt-easing-expo) var(--opt-motion-fast) both;
+}
+.route-loader__signal {
+  position: relative;
+  display: grid;
+  grid-template: repeat(4, 7px) / repeat(4, 7px);
+  gap: 9px;
+  padding: 18px;
+}
+.route-loader__signal::before {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--opt-border-subtle);
+  content: '';
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.route-loader__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+}
+.route-loader__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--opt-text-heading);
+  opacity: 0.16;
+  transform: scale(0.9);
+  animation: route-loader-pulse var(--opt-motion-loader-loop) linear infinite;
+  animation-delay: calc(var(--route-loader-step) * -80ms);
+  will-change: transform, opacity;
+}
+
+@keyframes route-loader-enter {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes route-loader-pulse {
+  0%, 100% { opacity: 0.16; transform: scale(0.9); }
+  12% { opacity: 1; transform: scale(1.12); }
+  28% { opacity: 0.32; transform: scale(1); }
+}
+
+@keyframes route-loader-fade {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.72; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-loader { animation-name: route-loader-enter-reduced; }
+  .route-loader__dot {
+    transform: none;
+    animation-name: route-loader-fade;
+    will-change: opacity;
+  }
+}
+
+@keyframes route-loader-enter-reduced {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Playground index: quiet motion, visible keyboard paths, and distinct experiments. */
 .yard-art { min-height: 260px; position: relative; overflow: hidden; display: grid; place-items: center; }
 .yard-mark { font-family: Georgia, serif; font-size: 130px; line-height: 1; transition: transform 240ms cubic-bezier(.23, 1, .32, 1); }
@@ -317,12 +397,22 @@
 .yard-effects { background: repeating-linear-gradient(90deg, #403f49 0 12px, #535361 12px 24px); color: #f0dcb5; }
 .yard-directokunbo { background: linear-gradient(135deg, #e7eadf 0 48%, #1f3a34 48% 52%, #d3a36f 52% 100%); color: #17342e; }
 .yard-card:focus-visible,
+.yard-feature:focus-visible,
 .guide-teaser:focus-visible { outline: 2px solid var(--opt-text-heading); outline-offset: 4px; }
+.yard-feature-art { background: radial-gradient(circle at 50% 54%, #d5ea77 0 5%, #bd7257 6% 16%, #303f42 17% 31%, #1d2021 32% 100%); }
+.yard-feature-art::before { content: ""; position: absolute; inset: 0; opacity: .35; background-image: linear-gradient(rgba(255,255,255,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.18) 1px, transparent 1px); background-size: 30px 30px; mask-image: radial-gradient(circle at center, black, transparent 72%); }
+.yard-feature-core { position: absolute; left: 50%; top: 54%; width: 56px; height: 56px; border-radius: 999px; transform: translate(-50%, -50%); background: #eefc9e; box-shadow: 0 0 42px rgba(238,252,158,.72); }
+.yard-feature-orbit { position: absolute; left: 50%; top: 54%; border: 1px solid rgba(255,248,236,.52); border-radius: 50%; transform: translate(-50%, -50%) rotate(-15deg); transition: transform 500ms cubic-bezier(.23, 1, .32, 1); }
+.yard-feature-orbit-a { width: 58%; height: 42%; }
+.yard-feature-orbit-b { width: 76%; height: 64%; transform: translate(-50%, -50%) rotate(28deg); }
 
 @media (hover: hover) and (pointer: fine) {
   .yard-card:hover .yard-mark { transform: rotate(-8deg) scale(1.05); }
+  .yard-feature:hover .yard-feature-orbit-a { transform: translate(-50%, -50%) rotate(2deg) scale(1.04); }
+  .yard-feature:hover .yard-feature-orbit-b { transform: translate(-50%, -50%) rotate(14deg) scale(1.03); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .yard-mark { transition: none !important; }
+  .yard-mark,
+  .yard-feature-orbit { transition: none !important; }
 }

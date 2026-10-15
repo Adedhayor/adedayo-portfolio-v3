@@ -1,12 +1,10 @@
 // ============================================================
-// PlayFallback2D — the former flat /play page, now the world's
-// 2D fallback (WebGL failure, reduced-motion first visit, or
-// user preference). OWNED BY THE FALLBACK/PERF WORKSTREAM (F)
-// for polish. Content still pulls moreWork + labs from data.
+// PlayFallback2D — a safety fallback when WebGL is unavailable.
+// Content still pulls moreWork + labs from data.
 // ============================================================
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { ArrowLeft, ArrowUpRight, Boxes } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
@@ -59,7 +57,7 @@ function ProjectCard({ item }: { item: (typeof moreWork)[number] }) {
   )
 }
 
-export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => void }) {
+export default function PlayFallback2D() {
   return (
     <div className="min-h-screen">
       <PageFrame />
@@ -80,15 +78,6 @@ export default function PlayFallback2D({ onEnterWorld }: { onEnterWorld?: () => 
             Side projects, live builds, and small experiments — the things I made to figure
             something out, learn a tool, or just because they were fun.
           </p>
-          {onEnterWorld && (
-            <button
-              type="button"
-              onClick={onEnterWorld}
-              className="mt-8 inline-flex items-center gap-2 border border-opt-border-default px-4 py-2.5 font-opt-mono text-[12px] uppercase tracking-[0.12em] text-opt-text-heading transition-colors hover:bg-opt-surface-low"
-            >
-              <Boxes size={14} /> Enter the world
-            </button>
-          )}
         </section>
 
         {/* Projects */}

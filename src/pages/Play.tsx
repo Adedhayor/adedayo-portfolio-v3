@@ -1,4 +1,5 @@
-import { ArrowUpRight } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
@@ -67,6 +68,31 @@ export default function Play() {
         </p>
 
         <div className="mt-12 grid gap-5 md:grid-cols-2">
+          <Link
+            to="/play/yard"
+            className="yard-feature group relative grid min-h-[360px] overflow-hidden border border-[#6d5747] bg-[#201d1d] text-[#fff8ec] md:col-span-2 md:grid-cols-[1.15fr_0.85fr]"
+          >
+            <div aria-hidden="true" className="yard-feature-art relative min-h-[280px] overflow-hidden">
+              <span className="yard-feature-orbit yard-feature-orbit-a" />
+              <span className="yard-feature-orbit yard-feature-orbit-b" />
+              <span className="yard-feature-core" />
+            </div>
+            <div className="relative flex flex-col justify-end border-t border-white/15 p-8 md:border-t-0 md:border-l md:p-10">
+              <h2 className="font-display text-[clamp(2.4rem,5vw,4.5rem)] leading-none">The Yard.</h2>
+              <p className="mt-5 max-w-[34ch] text-[15px] leading-relaxed text-[#fff8ec]/75">
+                An explorable Three.js field where the practice gets stranger, more tactile, and more playful.
+              </p>
+              <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold">
+                Enter the field
+                <ArrowRight
+                  size={16}
+                  aria-hidden="true"
+                  className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1"
+                />
+              </span>
+            </div>
+          </Link>
+
           {experiments.map((item, index) => (
             <a
               key={item.title}

@@ -1,16 +1,16 @@
 // ============================================================
 // PlayHud — OWNED BY THE GATE/HUD WORKSTREAM (E) for styling.
 // Foundation version: functional chrome only — back-to-overview,
-// mute toggle, grid-view escape hatch, zone breadcrumb, and the
-// Escape-key handling (panel first, then unfocus).
+// mute toggle, zone breadcrumb, and Escape-key handling (panel
+// first, then unfocus).
 // ============================================================
 import { useEffect } from 'react'
-import { ArrowLeft, Volume2, VolumeX, Grid2x2 } from 'lucide-react'
+import { ArrowLeft, Volume2, VolumeX } from 'lucide-react'
 import { useSensoryUI } from '@/lib/sensory-ui'
 import { usePlay } from '../PlayContext'
 import { getZone } from '../data/playground'
 
-export default function PlayHud({ onExitToGrid }: { onExitToGrid: () => void }) {
+export default function PlayHud() {
   const { phase, focusedZoneId, activePanelId, muted, setMuted, goOverview, closePanel } = usePlay()
   const { playSound } = useSensoryUI()
   const inWorld = phase === 'overview' || phase === 'focused'
@@ -56,7 +56,7 @@ export default function PlayHud({ onExitToGrid }: { onExitToGrid: () => void }) 
         )}
       </div>
 
-      {/* Top-right: mute + grid escape hatch */}
+      {/* Top-right: sound control */}
       <div className="absolute right-4 top-4 flex items-center gap-2">
         <button
           type="button"
@@ -71,17 +71,6 @@ export default function PlayHud({ onExitToGrid }: { onExitToGrid: () => void }) 
           }}
         >
           {muted ? <VolumeX size={12} /> : <Volume2 size={12} />}
-        </button>
-        <button
-          type="button"
-          className={chip}
-          aria-label="Switch to grid view"
-          onClick={() => {
-            void playSound('navigation.tab')
-            onExitToGrid()
-          }}
-        >
-          <Grid2x2 size={12} /> Grid
         </button>
       </div>
 
