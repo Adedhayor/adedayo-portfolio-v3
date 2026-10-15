@@ -38,7 +38,7 @@ import inkwell4 from './assets/work/inkwell-4.svg'
 import propertyPanel2 from './assets/work/property-panel-2.svg'
 import propertyPanel3 from './assets/work/property-panel-3.svg'
 import propertyPanel4 from './assets/work/property-panel-4.svg'
-import portrait from './assets/portrait.jpg'
+import portrait from './assets/about/dy-04ii.jpg'
 // Pre-fetched Substack article bodies (cleaned HTML, keyed by slug)
 import notesContent from './data/notesContent.json'
 import { isHeldBack } from './lib/release'
