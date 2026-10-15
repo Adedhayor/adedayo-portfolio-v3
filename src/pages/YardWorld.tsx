@@ -9,6 +9,7 @@ import PlayFallback2D from '@/play/fallback/PlayFallback2D'
 import EntryGate from '@/play/EntryGate'
 import PlayHud from '@/play/hud/PlayHud'
 import ZonePanel from '@/play/panels/ZonePanel'
+import RouteLoader from '@/components/global/RouteLoader'
 
 // Three, Fiber, and Drei stay out of the main bundle until someone
 // opens the immersive world.
@@ -29,13 +30,7 @@ function WorldShell() {
   return (
     <SensoryUIProvider config={{ ...WORLD_SOUND_CONFIG, enabled: !muted }}>
       <div className="fixed inset-0 z-10 bg-opt-surface-base" aria-label="The Yard — interactive playground">
-        <Suspense
-          fallback={
-            <p className="absolute inset-0 flex items-center justify-center font-opt-mono text-[12px] uppercase tracking-[0.14em] text-opt-text-secondary">
-              Setting up the yard…
-            </p>
-          }
-        >
+        <Suspense fallback={<RouteLoader label="Setting up The Yard" />}>
           <PlayWorld />
         </Suspense>
         <AnimatePresence>{phase === 'gate' ? <EntryGate key="gate" /> : null}</AnimatePresence>

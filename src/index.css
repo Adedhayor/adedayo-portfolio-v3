@@ -309,6 +309,86 @@
   }
 }
 
+/* Route loading signal — CSS stays smooth while lazy chunks are loading. */
+.route-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  min-height: 100svh;
+  place-items: center;
+  overflow: hidden;
+  background: var(--opt-surface-base);
+  opacity: 0;
+  animation: route-loader-enter var(--opt-motion-default) var(--opt-easing-expo) var(--opt-motion-fast) both;
+}
+.route-loader__signal {
+  position: relative;
+  display: grid;
+  grid-template: repeat(4, 7px) / repeat(4, 7px);
+  gap: 9px;
+  padding: 18px;
+}
+.route-loader__signal::before {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 52px;
+  height: 52px;
+  border: 1px solid var(--opt-border-subtle);
+  content: '';
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.route-loader__mark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+}
+.route-loader__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--opt-text-heading);
+  opacity: 0.16;
+  transform: scale(0.9);
+  animation: route-loader-pulse var(--opt-motion-loader-loop) linear infinite;
+  animation-delay: calc(var(--route-loader-step) * -80ms);
+  will-change: transform, opacity;
+}
+
+@keyframes route-loader-enter {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes route-loader-pulse {
+  0%, 100% { opacity: 0.16; transform: scale(0.9); }
+  12% { opacity: 1; transform: scale(1.12); }
+  28% { opacity: 0.32; transform: scale(1); }
+}
+
+@keyframes route-loader-fade {
+  0%, 100% { opacity: 0.18; }
+  50% { opacity: 0.72; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .route-loader { animation-name: route-loader-enter-reduced; }
+  .route-loader__dot {
+    transform: none;
+    animation-name: route-loader-fade;
+    will-change: opacity;
+  }
+}
+
+@keyframes route-loader-enter-reduced {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 /* Playground index: quiet motion, visible keyboard paths, and distinct experiments. */
 .yard-art { min-height: 260px; position: relative; overflow: hidden; display: grid; place-items: center; }
 .yard-mark { font-family: Georgia, serif; font-size: 130px; line-height: 1; transition: transform 240ms cubic-bezier(.23, 1, .32, 1); }

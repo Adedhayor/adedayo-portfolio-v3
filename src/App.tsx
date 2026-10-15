@@ -12,6 +12,7 @@ import RouteMeta from '@/components/global/RouteMeta'
 import { isProduction, showPlayground } from '@/lib/release'
 import FloatingContact from '@/components/global/FloatingContact'
 import AsciiField from '@/components/global/AsciiField'
+import RouteLoader from '@/components/global/RouteLoader'
 
 // Lazy so the toolbar ships as its own chunk that production never
 // fetches — the package isn't tree-shakeable from the main bundle.
@@ -65,7 +66,7 @@ export default function App() {
             <Route
               path="/play"
               element={
-                <Suspense fallback={<p>Opening the playground…</p>}>
+                <Suspense fallback={<RouteLoader label="Opening the Playground" />}>
                   <Playground />
                 </Suspense>
               }
@@ -73,7 +74,7 @@ export default function App() {
             <Route
               path="/play/yard"
               element={
-                <Suspense fallback={<p>Opening The Yard…</p>}>
+                <Suspense fallback={<RouteLoader label="Opening The Yard" />}>
                   <YardWorld />
                 </Suspense>
               }
@@ -86,7 +87,7 @@ export default function App() {
         <Route
           path="/blog/tech-511"
           element={
-            <Suspense fallback={<p>Opening the guide…</p>}>
+            <Suspense fallback={<RouteLoader label="Opening the guide" />}>
               <Guide />
             </Suspense>
           }

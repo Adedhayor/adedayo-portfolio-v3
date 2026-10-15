@@ -428,6 +428,7 @@
   /* Motion additions (Framer/GSAP share these) */
   --opt-motion-base:   250ms;
   --opt-motion-slower: 700ms;
+  --opt-motion-loader-loop: 1500ms;
   --opt-easing-expo:  cubic-bezier(0.16, 1, 0.3, 1);
   --opt-easing-quint: cubic-bezier(0.22, 1, 0.36, 1);
 
