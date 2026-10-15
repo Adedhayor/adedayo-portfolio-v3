@@ -4,6 +4,7 @@
 // read here without leaving the site; the Substack link stays for
 // subscribing. Content pre-fetched from the Substack RSS feed.
 // ============================================================
+import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
@@ -11,8 +12,10 @@ import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { ButtonLink } from '@/components/ui/button'
-import { guideEntry, writing, substackUrl } from '@/data'
+import { writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
+
+const ShaderBackdrop = lazy(() => import('@/components/global/ShaderBackdrop'))
 
 export default function Notes() {
   return (
@@ -51,30 +54,41 @@ export default function Notes() {
         </section>
 
         <section className="container-opt pb-opt-6xl">
-          <motion.ul variants={stagger(0.07)} {...revealOnce} className="border-t border-opt-border-default">
-            <motion.li variants={riseIn}>
-              <Link
-                to={guideEntry.href}
-                className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
-              >
-                <span className="text-[13px] text-opt-text-secondary">
-                  {guideEntry.date} · {guideEntry.readTime}
-                </span>
-                <div className="min-w-0">
-                  <h2 className="font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
-                    {guideEntry.title}
-                  </h2>
-                  <p className="mt-2 max-w-[62ch] text-[14px] leading-[1.55] text-opt-text-secondary">
-                    {guideEntry.excerpt}
-                  </p>
-                </div>
-                <ArrowRight
-                  size={18}
+          <Link
+            to="/blog/tech-511"
+            className="guide-teaser group relative mb-10 block min-h-[290px] overflow-hidden border border-opt-border-default bg-[#e99b68] p-4 text-opt-text-heading md:p-6"
+          >
+            <Suspense
+              fallback={
+                <span
                   aria-hidden="true"
-                  className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
+                  className="absolute inset-0 bg-[linear-gradient(120deg,#ffd8a8,#7795ff,#d5f26a)]"
                 />
-              </Link>
-            </motion.li>
+              }
+            >
+              <ShaderBackdrop
+                colors={['#FFD8A8', '#EF835F', '#7896FF', '#D8F46C']}
+                speed={0.14}
+                distortion={0.58}
+                swirl={0.32}
+                opacity={0.82}
+              />
+            </Suspense>
+            <div className="relative z-[1] grid min-h-[242px] items-center gap-8 border border-white/25 bg-opt-surface-raised/92 p-8 backdrop-blur-[4px] md:grid-cols-2 md:p-10">
+              <div>
+                <span className="font-mono text-xs tracking-widest">A RESOURCE BASE / TECH_511</span>
+                <p className="mt-5 font-display text-4xl">the guide.</p>
+              </div>
+              <div>
+                <h2 className="font-display text-2xl">Learning to look, think, make, and keep going.</h2>
+                <p className="mt-3 max-w-[52ch] text-opt-text-secondary">
+                  The resources I’d keep close if I were starting over as a designer. Five sections to explore at your own pace.
+                </p>
+                <span className="link-underline mt-5 inline-block text-sm font-semibold">Open the guide →</span>
+              </div>
+            </div>
+          </Link>
+          <motion.ul variants={stagger(0.07)} {...revealOnce} className="border-t border-opt-border-default">
             {writing.map((w) => (
               <motion.li key={w.slug} variants={riseIn}>
                 <Link
