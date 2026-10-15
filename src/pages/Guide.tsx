@@ -12,6 +12,14 @@ export default function Guide() {
     const updateHash = () => links.forEach(link => { if (link.hash === window.location.hash) link.setAttribute('aria-current', 'location'); else link.removeAttribute('aria-current') })
     window.addEventListener('hashchange', updateHash)
     updateHash()
+    if (window.location.hash) {
+      const id = decodeURIComponent(window.location.hash.slice(1))
+      requestAnimationFrame(() => {
+        document.getElementById(id)?.scrollIntoView({
+          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+        })
+      })
+    }
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue
