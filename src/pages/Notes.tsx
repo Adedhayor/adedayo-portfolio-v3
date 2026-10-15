@@ -11,7 +11,7 @@ import PageFrame from '@/components/global/PageFrame'
 import NavIsland from '@/components/global/NavIsland'
 import FooterWordmark from '@/blocks/FooterWordmark'
 import { ButtonLink } from '@/components/ui/button'
-import { writing, substackUrl } from '@/data'
+import { guideEntry, writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 export default function Notes() {
@@ -33,7 +33,7 @@ export default function Notes() {
                 Notes.
               </h1>
               <p className="mt-4 max-w-[48ch] text-[var(--opt-font-size-lead)] leading-[1.5] text-opt-text-secondary">
-                Personal essays — on building, movement, and the human side of the work.
+                Essays and resources — on building, movement, and the human side of the work.
                 Read them right here; subscribe if you’d like new ones in your inbox.
               </p>
             </div>
@@ -52,6 +52,29 @@ export default function Notes() {
 
         <section className="container-opt pb-opt-6xl">
           <motion.ul variants={stagger(0.07)} {...revealOnce} className="border-t border-opt-border-default">
+            <motion.li variants={riseIn}>
+              <Link
+                to={guideEntry.href}
+                className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
+              >
+                <span className="text-[13px] text-opt-text-secondary">
+                  {guideEntry.date} · {guideEntry.readTime}
+                </span>
+                <div className="min-w-0">
+                  <h2 className="font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
+                    {guideEntry.title}
+                  </h2>
+                  <p className="mt-2 max-w-[62ch] text-[14px] leading-[1.55] text-opt-text-secondary">
+                    {guideEntry.excerpt}
+                  </p>
+                </div>
+                <ArrowRight
+                  size={18}
+                  aria-hidden="true"
+                  className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
+                />
+              </Link>
+            </motion.li>
             {writing.map((w) => (
               <motion.li key={w.slug} variants={riseIn}>
                 <Link
@@ -69,6 +92,7 @@ export default function Notes() {
                   </div>
                   <ArrowRight
                     size={18}
+                    aria-hidden="true"
                     className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
                   />
                 </Link>

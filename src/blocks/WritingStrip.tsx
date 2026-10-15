@@ -9,13 +9,31 @@ import { motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { ButtonLink } from '@/components/ui/button'
-import { writing, substackUrl } from '@/data'
+import { guideEntry, writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 /* ---------- List (default) — links to the in-app reader ---------- */
 function WritingList() {
   return (
     <motion.ul variants={stagger(0.07)} {...revealOnce} className="mt-opt-xl border-t border-opt-border-default">
+      <motion.li variants={riseIn}>
+        <Link
+          to={guideEntry.href}
+          className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
+        >
+          <span className="text-[13px] text-opt-text-secondary">
+            {guideEntry.date} · {guideEntry.readTime}
+          </span>
+          <h3 className="min-w-0 font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
+            {guideEntry.title}
+          </h3>
+          <ArrowRight
+            size={18}
+            aria-hidden="true"
+            className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
+          />
+        </Link>
+      </motion.li>
       {writing.map((w) => (
         <motion.li key={w.title} variants={riseIn}>
           <Link
@@ -30,6 +48,7 @@ function WritingList() {
             </h3>
             <ArrowRight
               size={18}
+              aria-hidden="true"
               className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
             />
           </Link>
@@ -94,6 +113,7 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
             <ArrowRight
               size={14}
               strokeWidth={2.5}
+              aria-hidden="true"
               className="transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1"
             />
           </Link>
