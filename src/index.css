@@ -18,6 +18,7 @@
   src: url('./assets/fonts/recoleta-medium.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
 }
+
 @font-face {
   font-family: 'Recoleta';
   src: url('./assets/fonts/recoleta-semibold.woff2') format('woff2');
@@ -307,3 +308,18 @@
     text-align: center;
   }
 }
+
+.social-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  color: inherit;
+  opacity: 0.7;
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.social-icon:hover,
+.social-icon:focus-visible { opacity: 1; }
+.social-icon:active { transform: scale(0.96); }
+.social-icon:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
