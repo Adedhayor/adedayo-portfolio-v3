@@ -24,7 +24,8 @@ const STATIC_META: Record<string, { title: string; desc?: string }> = {
   '/about': { title: `About — ${SITE}`, desc: 'Engineer turned design engineer — the story, the process, and the people behind the work.' },
   '/notes': { title: `Notes — ${SITE}`, desc: 'Essays on design, momentum, and doing fewer things with more meaning.' },
   '/blog/tech-511': { title: `tech_511 (the guide) — ${SITE}`, desc: 'A resource base for learning how to look, think, make, and keep going.' },
-  '/play': { title: `Play — ${SITE}`, desc: 'Side projects, live builds, and small experiments.' },
+  '/play': { title: `Playground — ${SITE}`, desc: 'Side projects, live builds, and small experiments.' },
+  '/play/world': { title: `The Yard — ${SITE}`, desc: 'An interactive Three.js field for experiments and play.' },
 }
 
 function metaFor(pathname: string): { title: string; desc: string } {

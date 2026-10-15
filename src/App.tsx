@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Home from '@/pages/Home'
 import CaseStudy from '@/pages/CaseStudy'
 import About from '@/pages/About'
-import Play from '@/pages/Play'
 import Notes from '@/pages/Notes'
 import NoteReader from '@/pages/NoteReader'
 import Work from '@/pages/Work'
@@ -18,6 +17,8 @@ import AsciiField from '@/components/global/AsciiField'
 // fetches — the package isn't tree-shakeable from the main bundle.
 const Agentation = lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
 const Guide = lazy(() => import('@/pages/Guide'))
+const Playground = lazy(() => import('@/pages/Play'))
+const YardWorld = lazy(() => import('@/pages/YardWorld'))
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -42,7 +43,7 @@ export default function App() {
   // The /play world is immersive full-viewport WebGL — the ambient
   // ASCII field and the chat FAB would fight it for pointer + GPU.
   const pathname = useLocation().pathname
-  const inImmersivePage = pathname === '/play' || pathname === '/blog/tech-511'
+  const inImmersivePage = pathname.startsWith('/play') || pathname === '/blog/tech-511'
   return (
     <>
       <ScrollToHash />
@@ -59,8 +60,26 @@ export default function App() {
 
         {/* Full pages */}
         <Route path="/about" element={<About />} />
-        {/* Staging-only until release (src/lib/release.ts) — falls to 404 in production */}
-        {showPlayground && <Route path="/play" element={<Play />} />}
+        {showPlayground && (
+          <>
+            <Route
+              path="/play"
+              element={
+                <Suspense fallback={<p>Opening the playground…</p>}>
+                  <Playground />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/play/world"
+              element={
+                <Suspense fallback={<p>Opening The Yard…</p>}>
+                  <YardWorld />
+                </Suspense>
+              }
+            />
+          </>
+        )}
         <Route path="/notes" element={<Notes />} />
         <Route path="/notes/:slug" element={<NoteReader />} />
         <Route
