@@ -396,6 +396,14 @@ export const now = {
 // in-app on /notes/:slug without leaving the site. Re-run the
 // scratchpad extractor to refresh when new essays publish.
 export const substackUrl = 'https://dedayo.substack.com/'
+export const guideEntry = {
+  title: 'tech_511 — The Guide',
+  date: 'Oct 2026',
+  readTime: 'Resource guide',
+  href: '/blog/tech-511',
+  excerpt: 'A resource base for learning how to look, think, make, and keep going.',
+} as const
+
 export const writing = [
   {
     slug: 'channeling-your-inner-child-chasing',

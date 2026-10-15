@@ -71,13 +71,14 @@ export default function App() {
               }
             />
             <Route
-              path="/play/world"
+              path="/play/yard"
               element={
                 <Suspense fallback={<p>Opening The Yard…</p>}>
                   <YardWorld />
                 </Suspense>
               }
             />
+            <Route path="/play/world" element={<Navigate to="/play/yard" replace />} />
           </>
         )}
         <Route path="/notes" element={<Notes />} />

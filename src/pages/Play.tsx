@@ -69,7 +69,7 @@ export default function Play() {
 
         <div className="mt-12 grid gap-5 md:grid-cols-2">
           <Link
-            to="/play/world"
+            to="/play/yard"
             className="yard-feature group relative grid min-h-[360px] overflow-hidden border border-[#6d5747] bg-[#201d1d] text-[#fff8ec] md:col-span-2 md:grid-cols-[1.15fr_0.85fr]"
           >
             <div aria-hidden="true" className="yard-feature-art relative min-h-[280px] overflow-hidden">

@@ -1,4 +1,4 @@
-// The Yard's immersive WebGL world lives on /play/world, while /play
+// The Yard's immersive WebGL world lives on /play/yard, while /play
 // remains a browsable index of public experiments.
 import { lazy, Suspense, useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
