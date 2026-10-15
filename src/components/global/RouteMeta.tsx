@@ -23,6 +23,7 @@ const STATIC_META: Record<string, { title: string; desc?: string }> = {
   '/work': { title: `Work — ${SITE}`, desc: 'Deep dives into the work — systems, research, and the decisions behind them.' },
   '/about': { title: `About — ${SITE}`, desc: 'Engineer turned design engineer — the story, the process, and the people behind the work.' },
   '/notes': { title: `Notes — ${SITE}`, desc: 'Essays on design, momentum, and doing fewer things with more meaning.' },
+  '/blog/tech-511': { title: `tech_511 (the guide) — ${SITE}`, desc: 'A resource base for learning how to look, think, make, and keep going.' },
   '/play': { title: `Play — ${SITE}`, desc: 'Side projects, live builds, and small experiments.' },
 }
 

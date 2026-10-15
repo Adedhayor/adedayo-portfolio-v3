@@ -17,6 +17,7 @@ import AsciiField from '@/components/global/AsciiField'
 // Lazy so the toolbar ships as its own chunk that production never
 // fetches — the package isn't tree-shakeable from the main bundle.
 const Agentation = lazy(() => import('agentation').then((m) => ({ default: m.Agentation })))
+const Guide = lazy(() => import('@/pages/Guide'))
 
 /* Makes /#section links scroll to their target after navigation, and
    resets to the top on plain route changes (react-router doesn't do
@@ -40,16 +41,17 @@ function ScrollToHash() {
 export default function App() {
   // The /play world is immersive full-viewport WebGL — the ambient
   // ASCII field and the chat FAB would fight it for pointer + GPU.
-  const inPlayWorld = useLocation().pathname === '/play'
+  const pathname = useLocation().pathname
+  const inImmersivePage = pathname === '/play' || pathname === '/blog/tech-511'
   return (
     <>
       <ScrollToHash />
       {/* Per-route titles/canonical + analytics pageviews */}
       <RouteMeta />
-      <CustomCursor />
+      {pathname !== '/blog/tech-511' && <CustomCursor />}
 
       {/* Cursor-reactive ASCII background — behind every page (round G) */}
-      {!inPlayWorld && <AsciiField />}
+      {!inImmersivePage && <AsciiField />}
       <Routes>
         {/* The composed portfolio, assembled from Optimus blocks. */}
         <Route path="/" element={<Home />} />
@@ -61,6 +63,14 @@ export default function App() {
         {showPlayground && <Route path="/play" element={<Play />} />}
         <Route path="/notes" element={<Notes />} />
         <Route path="/notes/:slug" element={<NoteReader />} />
+        <Route
+          path="/blog/tech-511"
+          element={
+            <Suspense fallback={<p>Opening the guide…</p>}>
+              <Guide />
+            </Suspense>
+          }
+        />
 
         {/* Renamed: /writing → /notes (feedback #9) */}
         <Route path="/writing" element={<Navigate to="/notes" replace />} />
@@ -74,7 +84,7 @@ export default function App() {
       </Routes>
 
       {/* Optimus chat — rides every page except the /play world (round F #9; released 2026-07-17) */}
-      {!inPlayWorld && <FloatingContact />}
+      {!inImmersivePage && <FloatingContact />}
 
       {/* Visual feedback toolbar — staging channel only (dev, local
           preview, and the staging.pages.dev deploy); never production */}
