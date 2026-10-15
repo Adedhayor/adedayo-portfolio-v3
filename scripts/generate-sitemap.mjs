@@ -28,7 +28,7 @@ stagedList.forEach((s) => staged.add(s))
 const caseSlugs = slugsIn(slice(data, 'const allCaseStudies', 'export const caseStudies')).filter((s) => !staged.has(s))
 const noteSlugs = slugsIn(slice(data, 'export const writing', 'export function getNote'))
 
-const staticPaths = ['/', '/work', '/about', '/notes', '/blog/tech-511', '/play', '/play/yard']
+const staticPaths = ['/', '/work', '/about', '/notes', '/blog/tech-511', '/play']
 const paths = [
   ...staticPaths,
   ...caseSlugs.map((s) => `/case-study/${s}`),

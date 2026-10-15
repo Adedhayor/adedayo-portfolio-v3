@@ -9,31 +9,13 @@ import { motion } from 'framer-motion'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { ButtonLink } from '@/components/ui/button'
-import { guideEntry, writing, substackUrl } from '@/data'
+import { writing, substackUrl } from '@/data'
 import { riseIn, stagger, revealOnce } from '@/lib/motion'
 
 /* ---------- List (default) — links to the in-app reader ---------- */
 function WritingList() {
   return (
     <motion.ul variants={stagger(0.07)} {...revealOnce} className="mt-opt-xl border-t border-opt-border-default">
-      <motion.li variants={riseIn}>
-        <Link
-          to={guideEntry.href}
-          className="group grid grid-cols-1 gap-2 border-b border-opt-border-subtle py-6 md:grid-cols-[132px_1fr_auto] md:items-baseline md:gap-8"
-        >
-          <span className="text-[13px] text-opt-text-secondary">
-            {guideEntry.date} · {guideEntry.readTime}
-          </span>
-          <h3 className="min-w-0 font-display text-[clamp(1.25rem,2.4vw,1.6rem)] leading-[1.2] text-opt-text-heading transition-colors group-hover:text-opt-text-secondary">
-            {guideEntry.title}
-          </h3>
-          <ArrowRight
-            size={18}
-            aria-hidden="true"
-            className="hidden shrink-0 text-opt-text-secondary transition-transform duration-[var(--opt-motion-base)] [transition-timing-function:var(--opt-easing-expo)] group-hover:translate-x-1 group-hover:text-opt-text-heading md:block"
-          />
-        </Link>
-      </motion.li>
       {writing.map((w) => (
         <motion.li key={w.title} variants={riseIn}>
           <Link
@@ -130,6 +112,24 @@ export default function WritingStrip({ variant = 'list', className = '' }: Props
         </div>
       </div>
 
+      <div className="mt-8">
+        <Link
+          to="/blog/tech-511"
+          className="guide-teaser group mb-10 grid gap-6 border border-opt-border-default bg-opt-surface-raised p-8 text-opt-text-heading md:grid-cols-[1fr_2fr] md:p-10"
+        >
+          <div>
+            <span className="font-mono text-xs tracking-widest">A RESOURCE BASE / TECH_511</span>
+            <p className="mt-5 font-display text-4xl">the guide.</p>
+          </div>
+          <div className="max-w-[58ch]">
+            <h3 className="font-display text-2xl">Learning to look, think, make, and keep going.</h3>
+            <p className="mt-3 max-w-[52ch] text-opt-text-secondary">
+              The resources I’d keep close if I were starting over as a designer. Five sections to explore at your own pace.
+            </p>
+            <span className="link-underline mt-5 inline-block text-sm font-semibold">Open the guide →</span>
+          </div>
+        </Link>
+      </div>
       {variant === 'cards' ? <WritingCards /> : <WritingList />}
     </section>
   )
